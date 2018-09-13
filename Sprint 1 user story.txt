@@ -1,0 +1,8 @@
+﻿1. On the registration page, parents and teachers can register by using full name, an email address, a password, and a security question with an answer set by themselves.
+2. On the log in page, they can log in with email address and password.
+3. On the reset password page, they can reset password with email address and the security question.
+4. Once parents are logged in, they will be able to add kids and subscribe the class on the parents’ page. 
+5. The parents’ page has a message board which lists all the messages the parents get from teachers. Parents can open those message and reply.
+6. On teachers’ page, they can add classes, send message to a whole class, open the class and also see all the kids in that class. 
+7. The teachers’ page has several classes, they can add, delete, and archive kids in the classes.
+8. The teacher can also go into a class, receive message from parents under kids’ name and choose one or more kids to send messages.
