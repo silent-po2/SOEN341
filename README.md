@@ -1,2 +1,7 @@
-# SOEN341
-Repository for SOEN341 project 
+# TeamName
+
+## Contributors
+- Sandra Buchen 26317987
+- Sean
+- Jesse
+- ...
