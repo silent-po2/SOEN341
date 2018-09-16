@@ -7,6 +7,7 @@
 
 ## Registration Page
 - A parent and teacher can register by using full name, an email address, a password, a passord confirmation, and a security question with an answer set by themselves.
+-Depending on if "parent" and/or "teacher" are selected the former can specify which of their children are enrolled and the latter can specify their class(es).
 
 ## Reset Password Page
 - One can reset password with email address, security question and new password.
