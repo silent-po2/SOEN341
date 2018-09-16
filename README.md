@@ -1,4 +1,4 @@
-# TeamName
+# Kiwi
 
 ## Contributors
 - Sandra Buchen 26317987
