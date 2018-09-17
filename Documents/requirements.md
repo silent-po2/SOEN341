@@ -1,7 +1,7 @@
 ﻿# Requirements
 ## Login Page
 - The page contains an options to login as either teacher or parent.
-- Login is made with email and passoword.
+- Login is made with email and password.
 - There is an option to reset a password.
 - The page contains an option to register for an account.
 
@@ -18,9 +18,13 @@
 - A parent can select a child to view further messages or pictures related to that child.
 - A parent has an option to message teachers related to their children.
 - A parent can like and add replies to posts (message, pictures).
+- A parent can see the acedemic progress of their child.
+- A parent can see the upcoming school events for the children.
 
 ## Teacher Dashboard
 - A teacher can teach only one class.
 - A teacher can see a list of students part of the class.
 - A teacher can select a child to post a message or picture related to him.
-- A teacher can contact the parent of a selected child.
+- A teacher can contact the parent of a selected child through a message.
+- A teacher can share the childern acedemic reports with their respective parents.
+- A teacher can post various school events in which the children can participate.
