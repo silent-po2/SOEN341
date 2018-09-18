@@ -30,5 +30,10 @@ app.get('/teacherLogin', urlencodedParser, function (req,res){
   res.render('teacherLogin', {qs: req.query});
 });
 
+app.post('/teacherLogin', urlencodedParser, function (req,res){
+  console.log(req.body);
+  res.render('teacherLogin', {qs: req.query});
+});
+
 app.listen(3000, '127.0.0.1');
 console.log('listening to port 3000');
