@@ -1,0 +1,13 @@
+{
+  "extends": ["google", "plugin:prettier/recommended"],
+  "rules": {
+    "linebreak-style": 0
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  }
+}
