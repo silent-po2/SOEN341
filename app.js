@@ -16,8 +16,12 @@ app.set('view engine','ejs');
 //   //res.end();
 // });
 
-// set public folder
-app.use(express.static(path.join(__dirname, 'public')));
+// set css folder
+app.use(express.static(path.join(__dirname, 'css')));
+
+app.get('/home', function (req,res){
+  res.sendFile('/home.html', {root: __dirname})
+});
 
 app.get('/', function (req,res){
   res.sendFile('/home.html', {root: __dirname})
