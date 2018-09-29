@@ -29,3 +29,9 @@
 - A teacher can contact the parent of a selected child through a message.
 - A teacher can share the childern acedemic reports with their respective parents.
 - A teacher can post various school events in which the children can participate.
+
+
+## Assumptions
+- A child has either a mother or a father registered but not both.
+
+As a < type of user >, I want < some goal > so that < some reason >.
