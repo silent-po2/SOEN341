@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  br  
+  br
   h3 Parent Register
   br
   form#register-form(method='post', placeholder='/parentregister')
@@ -20,12 +20,12 @@ block content
     .form-group
       label(for='password') Confrim your password: 
       input#password2.form-control(type='password', name='password2', placeholder='password')
-    .form-group
-      label(for='text') Security question: 
-      input#squestion.form-control(type='text', name='squestion', placeholder='security question')
-    .form-group
-      label(for='text') Answer: 
-      input#sanswer.form-control(type='text', name='sanswer', placeholder='security sanswer')
+    //- .form-group
+    //-   label(for='text') Security question: 
+    //-   input#squestion.form-control(type='text', name='squestion', placeholder='security question')
+    //- .form-group
+    //-   label(for='text') Answer: 
+    //-   input#sanswer.form-control(type='text', name='sanswer', placeholder='security sanswer')
     br
     button.btn.btn-primary.form-control(type='submit') Register
     a(href='/parentlogin') Already have an account?

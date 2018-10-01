@@ -6,7 +6,7 @@ html(lang='en')
     meta(name='description', content='')
     meta(name='author', content='')
     link(rel='icon', href='../../../../favicon.ico')
-    title Starter Template for Bootstrap
+    title KiWi - Parents and Teachers
     // Bootstrap core CSS
     link(href='/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
     // Custom styles for this template
@@ -22,7 +22,7 @@ html(lang='en')
               | Home 
               span.sr-only (current)
           li.nav-item
-            a.nav-link(href='#') Dashboard
+            a.nav-link(href='dashboard') Dashboard
           li.nav-item
             a.nav-link.disabled(href='#') Disabled
           li.nav-item.dropdown
@@ -36,8 +36,12 @@ html(lang='en')
         //-   button.btn.btn-outline-success.my-2.my-sm-0(type='submit') Search
     main.container(role='main')
       .starter-template
-        
-        block content
+    .container
+      != messages('message', locals)
+      if errors
+        each error, i in errors
+          div(class="alert alert-danger") #{error.msg}
+      block content
     //
       Bootstrap core JavaScript
       ==================================================
