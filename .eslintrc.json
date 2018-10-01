@@ -2,7 +2,8 @@
   "extends": ["google", "plugin:prettier/recommended"],
   "rules": {
     "linebreak-style": 0,
-    "require-jsdoc": 0
+    "require-jsdoc": 0,
+    "singleQuote": true 
   },
   "parserOptions": {
     "ecmaVersion": 6,

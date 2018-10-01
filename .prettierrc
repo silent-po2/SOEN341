@@ -1,3 +1,4 @@
 {
-  "semicolon": true
+  "semicolon": true,
+  "singleQuote": true
 }
