@@ -1,0 +1,32 @@
+extends layout
+
+block content
+	br
+	h3 Teacher Register
+	br
+	form#register-form(method='post', placeholder='/teacherregister')
+		.form-group
+			label(for='text') Firstname: 
+			input#firstname.form-control(type='text', name='firstname', placeholder='firstname')
+		.form-group
+			label(for='text') Lastname: 
+			input#lastname.form-control(type='text', name='lastname', placeholder='lastname')
+		.form-group
+			label(for='email') Email: 
+			input#email.form-control(type='email', name='email', placeholder='email')
+		.form-group
+			label(for='password') Password: 
+			input#password.form-control(type='password', name='password', placeholder='password')
+		.form-group
+			label(for='password') Confrim your password: 
+			input#password2.form-control(type='password', name='password2', placeholder='password')
+		//- .form-group
+		//- 	label(for='text') Security question: 
+		//- 	input#squestion.form-control(type='text', name='squestion', placeholder='security question')
+		//- .form-group
+		//- 	label(for='text') Answer: 
+		//- 	input#sanswer.form-control(type='text', name='sanswer', placeholder='security answer')
+		br
+		button.btn.btn-primary.form-control(type='submit') Register
+		a(href='/teacherlogin') Already have an account?
+		a(href='/parentregister') Not a teacher?

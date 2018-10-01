@@ -38,7 +38,6 @@ class Db {
       "' and Password=MD5('" +
       password +
       "');";
-
     return new Promise((resolve, reject) => {
       this.query(query).then(rows => {
         if (rows.length === 0) reject(new Error("User not found"));

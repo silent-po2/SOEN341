@@ -1,0 +1,12 @@
+{
+  "editor.formatOnSave": true,
+  "[javascript]": {
+    "editor.formatOnSave": true
+  },
+  "eslint.alwaysShowStatus": true,
+  "eslint.autoFixOnSave": true,
+  "prettier.disableLanguages": ["vue"],
+  "files.autoSave": "onFocusChange",
+  "git.ignoreMissingGitWarning": true,
+  "prettier.eslintIntegration": true
+}
