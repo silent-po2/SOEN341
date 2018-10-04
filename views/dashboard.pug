@@ -1,9 +1,13 @@
 extends layout
 
 block content
-  br
-  .container
+  h1 #{result} 
+  //- each Message, i in result
+  //-   li.Message
+  form(method='POST', action='/dashboard')
+    #form-group
+      label Message:
+      textarea.form-control(name='message')
     br
-    h2 DashBoard 
-    br
-    
+    input.btn.btn-primary(type='submit',value='Submit')
+
