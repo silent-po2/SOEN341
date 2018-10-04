@@ -12,7 +12,9 @@ let md5 = require('md5');
 let session = require('express-session');
 const expressValidator = require('express-validator');
 const flash = require('connect-flash');
+
 // load view engine
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 // set css and bootstrap folder
@@ -65,7 +67,43 @@ app.get('/', (req, res) => {
 
 // GET AND POST DASHBOARD
 app.get('/dashboard', (req, res) => {
-  res.render('dashboard', { qs: req.query });
+  let sql = 'SELECT * FROM messages';
+  db.query(sql, function(err, result) {
+    if (err) throw err;
+    let jr = JSON.stringify(result);
+    res.render('dashboard', {
+      result: jr,
+      qs: req.query
+    });
+  });
+});
+// test code
+// app.get('/dashboard', (req, res) => {
+//   let sql = 'SELECT * FROM messages';
+//   db.query(sql, function(err, result) {
+//     if (err) throw err;
+//     // let resultlen = result.length;
+//     console.log(result);
+//     res.render('dashboard', { resultlen: '123123' });
+//   });
+// });
+
+app.post('/dashboard', urlencodedParser, (req, res) => {
+  let message = req.body.message;
+  let errors = req.validationErrors();
+  req.checkBody('message', 'Message is required').notEmpty();
+  if (errors) {
+    res.render('dashboard', {
+      errors: errors
+    });
+  } else {
+    let sql = 'INSERT INTO messages (Message) VALUES (?)';
+    db.query(sql, [message], function(err, result) {
+      if (err) throw err;
+      console.log('1 message inserted');
+    });
+    res.redirect('back');
+  }
 });
 
 // GET AND POST parentLogin
@@ -139,14 +177,17 @@ app.post('/parentregister', urlencodedParser, (req, res) => {
     });
   } else {
     console.log(uEmail, uFirstName, uLastName, uPassword);
+    console.log('1 record ');
     let sql =
       'INSERT INTO user (Email, FirstName, LastName, Password) VALUES (?,?,?,?)';
+    console.log('1 record ');
     db.query(sql, [uEmail, uFirstName, uLastName, uPassword], function(
       err,
       result
     ) {
-      if (err) throw err;
       console.log('1 record inserted');
+      if (err) throw err;
+
       req.flash('success', 'You are registered, please log in.');
       res.render('parentlogin', { qs: req.query });
     });
@@ -255,6 +296,7 @@ let db = new Database({
   password: 'soen341'
 });
 
+// text code:
 // db.login("admin@gmail.com", "admin").catch(err => {
 //   console.log(err);
 // });
@@ -266,13 +308,33 @@ let db = new Database({
 //   console.log(result);
 // });
 
-// var sql = "DELETE FROM user WHERE Email = ''";
-// db.query(sql, function (err, result) {
+// let sql = "DELETE FROM user WHERE Email = 'davidseechan@gmail.ca'";
+// db.query(sql, function(err, result) {
 //   if (err) throw err;
-//   console.log("Number of records deleted: " + result.affectedRows);
+//   console.log('Number of records deleted: ' + result.affectedRows);
 // });
 
-// db.query("SELECT * FROM user", function (err, result, fields) {
+db.query('SELECT * FROM user', function(err, result, fields) {
+  if (err) throw err;
+  console.log(result);
+});
+
+// db.query('CREATE TABLE messages (Message VARCHAR(255))', function(
+//   err,
+//   result,
+//   fields
+// ) {
 //   if (err) throw err;
 //   console.log(result);
+// });
+
+// db.query('SELECT * FROM messages', function(err, result, fields) {
+//   if (err) throw err;
+//   console.log(result);
+// });
+
+// let sql = "DELETE FROM messages WHERE Message = 'test2'";
+// db.query(sql, function(err, result) {
+//   if (err) throw err;
+//   console.log('Number of records deleted: ' + result.affectedRows);
 // });

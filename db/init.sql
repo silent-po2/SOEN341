@@ -69,3 +69,6 @@ foreign key (CourseId) references course(CourseId),
 primary key (StudentID, CourseId)
 );
 
+create table messages (
+Message varchar(256),
+);
