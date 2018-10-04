@@ -134,7 +134,15 @@ app.post('/parentLogin', urlencodedParser, (req, res) => {
           if (result[0].Password == uPassword) {
             console.log('logged in');
             req.flash('success', 'You are logged in.');
-            res.render('dashboard', { qs: req.query });
+            let sql = 'SELECT * FROM messages';
+            db.query(sql, function(err, result) {
+              if (err) throw err;
+              let jr = JSON.stringify(result);
+              res.render('dashboard', {
+                result: jr,
+                qs: req.query
+              });
+            });
           } else {
             req.flash('danger', 'Password incorrect, please try again');
             console.log('password incorrect');
@@ -177,10 +185,10 @@ app.post('/parentregister', urlencodedParser, (req, res) => {
     });
   } else {
     console.log(uEmail, uFirstName, uLastName, uPassword);
-    console.log('1 record ');
+
     let sql =
       'INSERT INTO user (Email, FirstName, LastName, Password) VALUES (?,?,?,?)';
-    console.log('1 record ');
+
     db.query(sql, [uEmail, uFirstName, uLastName, uPassword], function(
       err,
       result
@@ -222,7 +230,15 @@ app.post('/teacherLogin', urlencodedParser, (req, res) => {
           if (result[0].Password == uPassword) {
             console.log('logged in');
             req.flash('success', 'You are logged in.');
-            res.render('dashboard', { qs: req.query });
+            let sql = 'SELECT * FROM messages';
+            db.query(sql, function(err, result) {
+              if (err) throw err;
+              let jr = JSON.stringify(result);
+              res.render('dashboard', {
+                result: jr,
+                qs: req.query
+              });
+            });
           } else {
             console.log('password incorrect');
             req.flash('danger', 'Password incorrect, please try again');
@@ -308,7 +324,7 @@ let db = new Database({
 //   console.log(result);
 // });
 
-// let sql = "DELETE FROM user WHERE Email = 'davidseechan@gmail.ca'";
+// let sql = "DELETE FROM user WHERE FirstName = 'Xi'";
 // db.query(sql, function(err, result) {
 //   if (err) throw err;
 //   console.log('Number of records deleted: ' + result.affectedRows);
@@ -333,7 +349,7 @@ db.query('SELECT * FROM user', function(err, result, fields) {
 //   console.log(result);
 // });
 
-// let sql = "DELETE FROM messages WHERE Message = 'test2'";
+// let sql = "DELETE FROM messages WHERE Message = 'hello'";
 // db.query(sql, function(err, result) {
 //   if (err) throw err;
 //   console.log('Number of records deleted: ' + result.affectedRows);
