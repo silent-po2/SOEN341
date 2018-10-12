@@ -1,0 +1,32 @@
+extends layout
+
+block content
+  br
+  h3 Register
+  br
+  .container
+    form#register-form(method='post', action='/register')
+      .form-group
+        label(for='text') Firstname: 
+        input#firstname.form-control(type='text', name='firstname', placeholder='firstname')
+      .form-group
+        label(for='text') Lastname: 
+        input#lastname.form-control(type='text', name='lastname', placeholder='lastname')
+      .form-group
+        label(for='email') Email: 
+        input#email.form-control(type='email', name='email', placeholder='email')
+      .form-group
+        label(for='password') Password: 
+        input#password.form-control(type='password', name='password', placeholder='password')
+      .form-group
+        label(for='password') Confrim your password: 
+        input#password2.form-control(type='password', name='password2', placeholder='password')
+      label(for='userType') 
+      input(type='radio', name='userType', value='teacher', checked='checked')
+      |I am a teacher
+      label(for='userType') 
+      input(type='radio', name='userType', value='parent')
+      |I am a parent
+      button.btn.btn-primary.form-control(type='submit') Register
+      a(href='/login') Already have an account?
+    
