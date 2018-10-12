@@ -61,7 +61,17 @@ class Database {
         winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
         if (res.length === 0) reject(new Error('User not found'));
-        else resolve(res[0]);
+        else {
+          let result = [
+            res[0].Id,
+            res[0].Email,
+            res[0].FirstName,
+            res[0].LastName,
+            res[0].Password,
+            'teacher'
+          ];
+          resolve(result);
+        }
       });
     });
     // return new Promise((resolve, reject) => {
@@ -136,10 +146,15 @@ class Database {
   }
 
   // Returns the user id given a user object
-  getId(user) {
-    let query = "select * from user where Email='" + user.email + "';";
-    this.query(query, (err, rows) => {
-      if (err) throw err;
+  getId(email) {
+    let query = "select Id from user where Email='" + email + "';";
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, rows) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) reject(err);
+        else resolve(rows[0].Id);
+      });
     });
 
     // return new Promise((resolve, reject) => {

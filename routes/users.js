@@ -14,6 +14,8 @@ module.exports = function(app) {
 
   app.get('/register', userController.register);
 
+  app.get('/profile', userController.profile);
+
   app.get('/dashboard', userController.dashboard);
 
   app.post('/dashboard', userController.dashboardPost);
