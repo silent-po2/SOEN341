@@ -6,7 +6,8 @@
  */
 
 // constructor
-function User(email, firstName, lastName, password, type) {
+function User(id, email, firstName, lastName, password, type) {
+  this.id = id;
   this.email = email;
   this.firstName = firstName;
   this.lastName = lastName;
@@ -24,6 +25,9 @@ User.prototype.login = () => {
 
 User.prototype.getType = () => {
   return type;
+};
+User.prototype.getId = () => {
+  return id;
 };
 
 module.exports = User;

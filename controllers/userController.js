@@ -20,6 +20,25 @@ exports.login = function(req, res) {
   });
 };
 
+// Responds with profile
+exports.profile = function(req, res) {
+  // let userArr;
+  // let userInfo = req.session.user;
+  // for (let i = 0; i < userInfo.length; i++) {
+  //   userArr.add;
+  // }
+  // res.render('../views/dashboard.pug', {
+  //   userArr: userArr
+  // });
+  console.log(req.session.user);
+  let user = req.session.user;
+  let userArr = [user.id, user.email, user.firstName, user.lastName, user.type];
+  res.render('../views/profile.pug', {
+    title: 'Profile',
+    userArr: userArr
+  });
+};
+
 // Responds with logout
 exports.logout = function(req, res) {
   if (req.session.user) {
@@ -43,7 +62,6 @@ exports.dashboard = function(req, res) {
     let msgArr = [];
     db.dashboardGet()
       .then(rows => {
-        console.log(rows.length);
         for (let i = 0; i < rows.length; i++) {
           msgArr[i] = rows[i].Message;
         }
@@ -114,11 +132,23 @@ exports.loginPost = function(req, res) {
     });
   } else {
     // Else proceed with login verification
-    let user = new User(email, password, type);
     db.login(email, password)
-      .then(() => {
-        req.flash('Success', 'You are now logged in.');
+      .then(result => {
+        console.log(result[0]);
+        console.log(result[1]);
+        console.log(result[2]);
+        console.log(result[3]);
+        console.log(result[4]);
+        let user = new User(
+          result[0],
+          result[1],
+          result[2],
+          result[3],
+          result[4],
+          result[5]
+        );
         req.session.user = user;
+        req.flash('success', 'You are logged in.');
         res.redirect('/dashboard');
       })
       .catch(error => {
@@ -175,7 +205,7 @@ exports.registerPost = function(req, res) {
     });
   } else {
     // Create user object
-    let user = new User(email, firstName, lastName, password, type);
+    let user = new User('TBA', email, firstName, lastName, password, type);
     db.register(user)
       .then(result => {
         req.flash('success', 'You are registered, please log in.');
@@ -228,3 +258,18 @@ exports.updateUserGet = function(req, res) {
 exports.updateUserPost = function(req, res) {
   res.send('NOT IMPLEMENTED: user update POST');
 };
+
+// db.connection.query("DELETE FROM user WHERE LastName = '111'", function(
+//   err,
+//   result,
+//   fields
+// ) {
+//   if (err) throw err;
+//   console.log('Number of records deleted: ' + result.affectedRows);
+// });
+// let user1 = new User('999', '1@1.ca', 'fn', 'ln', '111', 'teacher');
+// console.log(user1.password);
+
+// db.connection.query('TRUNCATE TABLE messages', function(err, result, fields) {
+//   console.log(result);
+// });
