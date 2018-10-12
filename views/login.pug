@@ -2,9 +2,10 @@ extends layout
 
 block content
     br
-    h3 Login Form
+    h3 Login Page
     br
-    form#login-form(method='post', placeholder='/parentlogin')
+    .container
+    form#login-form(method='post', action='/login')
         .form-group
             label(for='email') Email:
             input#email.form-control(type='email', name='email', placeholder='email')
@@ -12,6 +13,14 @@ block content
             label(for='password') Password:
             input#password.form-control(type='password', name='password', placeholder='password')
         br
+        input(type='radio', name='userType', value='teacher', checked='checked')
+        |I am a teacher
+        br
+        label(for='userType') 
+        input(type='radio', name='userType', value='parent')
+        |I am a parent
+        br
+        label(for='userType') 
         button.btn.btn-primary.form-control(type='submit') Login
-        a(href='/parent/parentregister') Don't have an account?
-        a(href='/loginAs') Not a parent?
+        br
+        a(href='/register') Don't have an account?

@@ -14,6 +14,21 @@ module.exports = function(app) {
 
   app.get('/register', userController.register);
 
+  app.get('/dashboard', userController.dashboard);
+
+  app.post('/dashboard', userController.dashboardPost);
+
+  // not be able to register Error: ER_PARSE_ERROR: You have an error in your SQL syntax;
+  app.post('/register', userController.registerPost);
+
+  app.post('/login', userController.loginPost); // when login with wrong email or password, login page stucks
+
+  app.get('/logout', userController.logout);
+
+  app.use('*', function(req, res) {
+    res.locals.user = req.user || null;
+  });
+
   app.get('/:type/loginTeacher', userController.loginTeacherGet);
 
   app.get('/loginParent', userController.loginParentGet);
@@ -26,9 +41,9 @@ module.exports = function(app) {
 
   app.post('/loginParent', userController.loginPost);
 
-  app.post('/registerTeacher', userController.registerPost);
+  // app.post('/registerTeacher', userController.registerPost);
 
-  app.post('/registerParent', userController.registerPost);
+  // app.post('/registerParent', userController.registerPost);
 
   // GET request to delete a user
   app.get('/:id/delete', userController.deleteUserGet);

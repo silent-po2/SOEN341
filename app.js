@@ -15,6 +15,8 @@ let md5 = require('md5');
 let session = require('express-session');
 let winston = require('./config/winston');
 let morgan = require('morgan');
+// let passport = require('passport');
+// let LocalStrategy = require('passport-local').Strategy;
 
 const expressValidator = require('express-validator');
 const port = process.env.PORT || 3000;
@@ -29,31 +31,40 @@ app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
 // set css and bootstrap folder
-app.use(express.static(path.join(__dirname, 'node_modules')));
+app.use(express.static(path.join(__dirname, '/')));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// // Passport
+// app.use(passport.initialize());
+// app.use(passport.session());
+
 // Express Session Middleware
 app.use(
   session({
-    secret: 'keyboard cat',
+    secret: 'secret_agent',
     resave: true,
     saveUninitialized: true
+    // cookie: {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === 'production',
+    //   maxAge: 1000 * 60 * 60 * 24 * 7
+    // }
   })
 );
 
-// todo: what is this
+// todo: what is this -- warning for validation
 app.use(require('connect-flash')());
 
-// todo: what is this
+// todo: what is this -- part of the flash message (warning for validation)
 app.use(function(req, res, next) {
   res.locals.messages = require('express-messages')(req, res);
   next();
 });
 
 // Express Validator Middleware
-// todo: what is this
+// todo: what is this -- form valitator middleware
 app.use(
   expressValidator({
     errorFormatter: function(param, msg, value) {

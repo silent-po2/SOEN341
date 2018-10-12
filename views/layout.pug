@@ -1,3 +1,4 @@
+//- inspired by bootstrap biginner template
 doctype html
 html(lang='en')
   head
@@ -5,10 +6,10 @@ html(lang='en')
     meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
     meta(name='description', content='')
     meta(name='author', content='')
-    link(rel='icon', href='../../../../favicon.ico')
     title KiWi - Parents and Teachers
     // Bootstrap core CSS
-    link(href='/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
+    script(src='/node_modules/bootstrap/dist/js/bootstrap.min.js')
+    link(href='/node_modules/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
     // Custom styles for this template
   body
     nav.navbar.navbar-expand-md.navbar-dark.bg-dark
@@ -17,25 +18,29 @@ html(lang='en')
         span.navbar-toggler-icon
       #navbarsExampleDefault.collapse.navbar-collapse
         ul.navbar-nav.mr-auto
-          li.nav-item.active
-            a.nav-link(href='/')
-              | Home 
-              span.sr-only (current)
-          li.nav-item
-            a.nav-link(href='dashboard') Dashboard
-          li.nav-item
-            a.nav-link.disabled(href='#') Disabled
+          if user
+            li.nav-item(class=(title == 'Dashboard'? 'active' : ''))
+              a.nav-link(href='/dashboard') Dashboard
+          if !user
+            li.nav-item(class=(title == 'Register'? 'active' : ''))
+              a.nav-link(href='/register') Register
+            li.nav-item(class=(title == 'Login'? 'active' : ''))
+              a.nav-link(href='/login') Login
           li.nav-item.dropdown
             a#dropdown01.nav-link.dropdown-toggle(href='https://example.com', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Dropdown
             .dropdown-menu(aria-labelledby='dropdown01')
               a.dropdown-item(href='#') Action1
               a.dropdown-item(href='#') Action2
               a.dropdown-item(href='#') Action3
+        ul.navbar-nav.navbar-right
+          if user
+            li.nav-item
+              a.nav-link(href='/logout') Logout
         //- form.form-inline.my-2.my-lg-0
         //-   input.form-control.mr-sm-2(type='text', placeholder='Search', aria-label='Search')
         //-   button.btn.btn-outline-success.my-2.my-sm-0(type='submit') Search
-    main.container(role='main')
-      .starter-template
+    //main.container(role='main')
+    //  .starter-template
     .container
       != messages('message', locals)
       if errors
@@ -46,9 +51,9 @@ html(lang='en')
       Bootstrap core JavaScript
       ==================================================
     // Placed at the end of the document so the pages load faster
-    script(src='/jquery/dist/jquery.js')
-    script(src='/bootstrap/dist/js/bootstrap.js')
+    script(src='/node_modules/jquery/dist/jquery.js')
+    script(src='/node_modules/bootstrap/dist/js/bootstrap.js')
     script.
-      window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\\/script>')
-    script(src='../../assets/js/vendor/popper.min.js')
-    script(src='../../dist/js/bootstrap.min.js')
+      //window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\\/script>')
+    //script(src='../../assets/js/vendor/popper.min.js')
+    //script(src='../../dist/js/bootstrap.min.js')
