@@ -4,7 +4,7 @@
   "description": "A parent-teacher social media platform.",
   "main": "app.js",
   "scripts": {
-    "test": "mocha",
+    "test": "mocha --exit",
     "start": "node ./",
     "debug": "nodemon --inspect ./"
   },
@@ -48,6 +48,7 @@
     "app-root-path": "^2.1.0",
     "babel-eslint": "^9.0.0",
     "chai": "^4.2.0",
+    "chai-http": "^4.2.0",
     "eslint": "^5.6.1",
     "eslint-config-google": "^0.10.0",
     "eslint-config-prettier": "^3.1.0",
