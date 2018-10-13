@@ -1,2 +1,7 @@
 language: node_js
 os: windows
+jobs:
+  include:
+    - stage: test
+      name: 'Unit Tests'
+      script: test
