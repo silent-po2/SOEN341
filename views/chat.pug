@@ -19,59 +19,44 @@ block content
             //-         button(type='button')
             //-           i.fa.fa-search(aria-hidden='true')
             .inbox_chat
-              .chat_list
-                .chat_people
-                  .chat_img
-                    img(src='https://ptetutorials.com/images/user-profile.png', alt='sunil')
-                  .chat_ib
-                    h5
-                      | Sunil Rajput 
-                      //span.chat_date Dec 25
-                    p
-                      | Test, which is a new approach to have all solutions
-                      | astrology under one roof.
+              each user, i in userList
+                form(action='/chatBox', method='post')
+                  button.btn-link(type='submit', name='rid', value='149') Go
+
+                //- a.link-box(href='*')
+                //-   div
+                //-     .chat_list
+                //-       .chat_people
+                //-         .chat_img
+                //-           img(src='/pics/profile.png', alt='sunil')
+                //-         .chat_ib
+                //-           h5
+                //-             p= user[1] + ' '+user[2]
+                //-             //span.chat_date Dec 25
+                //-           p
+                //-             | Teacher (TODO)
+          include chatBox
+          //- .mesgs
+          //-   .msg_history
+          //-     each chat, i in chats
+          //-       .incoming_msg
+          //-         .incoming_msg_img
+          //-           img(src='https://ptetutorials.com/images/user-profile.png', alt='sunil')
+          //-         .received_msg
+          //-           .received_withd_msg
+          //-             p
+          //-               | Test which is a new approach to have all
+          //-               | solutions
+          //-             span.time_date  11:01 AM    |    June 9
+          //-       .outgoing_msg
+          //-         .sent_msg
+          //-           p= chats[i][0] + ' '+ chats[i][0]
+          //-           p= chats[i][3]
+          //-           span.time_date  chats[i][2]
               
-          .mesgs
-            .msg_history
-              .incoming_msg
-                .incoming_msg_img
-                  img(src='https://ptetutorials.com/images/user-profile.png', alt='sunil')
-                .received_msg
-                  .received_withd_msg
-                    p
-                      | Test which is a new approach to have all
-                      | solutions
-                    span.time_date  11:01 AM    |    June 9
-              .outgoing_msg
-                .sent_msg
-                  p
-                    | Test which is a new approach to have all
-                    | solutions
-                  span.time_date  11:01 AM    |    June 9
-              .incoming_msg
-                .incoming_msg_img
-                  img(src='https://ptetutorials.com/images/user-profile.png', alt='sunil')
-                .received_msg
-                  .received_withd_msg
-                    p Test, which is a new approach to have
-                    span.time_date  11:01 AM    |    Yesterday
-              .outgoing_msg
-                .sent_msg
-                  p Apollo University, Delhi, India Test
-                  span.time_date  11:01 AM    |    Today
-              .incoming_msg
-                .incoming_msg_img
-                  img(src='https://ptetutorials.com/images/user-profile.png', alt='sunil')
-                .received_msg
-                  .received_withd_msg
-                    p
-                      | We work directly with our designers and suppliers,
-                      | and sell direct to you, which means quality, exclusive
-                      | products, at a price anyone can afford.
-                    span.time_date  11:01 AM    |    Today
-            .type_msg
-              .input_msg_write
-                input.write_msg(type='text', placeholder='Type a message')
-                button.msg_send_btn(type='button')
-                  i.fa.fa-paper-plane-o(aria-hidden='true')
+          //-   .type_msg
+          //-     .input_msg_write
+          //-       input.write_msg(type='text', placeholder='Type a message')
+          //-       button.msg_send_btn(type='button')
+          //-         i.fa.fa-paper-plane-o(aria-hidden='true')
         

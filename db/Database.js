@@ -156,14 +156,62 @@ class Database {
         else resolve(rows[0].Id);
       });
     });
+  }
 
-    // return new Promise((resolve, reject) => {
-    //   this.query(query).then(rows => {
-    //     if (rows.length === 0)
-    //       reject(new Error('User' + user.email + 'not found'));
-    //     resolve(rows[0].Id);
-    //   });
-    // });
+  // loads all users' info
+  loadUsers() {
+    let query = 'select Id, FirstName, LastName from user';
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (res.length === 0) reject(new Error('User not found'));
+        else {
+          let result = [];
+          for (let i = 0; i < res.length; i++) {
+            result.push([res[i].Id, res[i].FirstName, res[i].LastName]);
+          }
+          resolve(result);
+        }
+      });
+    });
+  }
+  // inserts the chat into tempchats table
+  sendChat(rid, sid, time, chat) {
+    let query = `insert into tempchats (Rid, Sid, Time, Chat) values 
+    ('${rid}', 
+    '${sid}', 
+    '${time}', 
+    '${chat}');`;
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) reject(err);
+        else resolve(res);
+      });
+    });
+  }
+
+  // select the chat for the receiver
+  receiveChat(rid, sid) {
+    let query = "select * from tempchats where Rid='168' and Sid='149'";
+    // "select * from tempchats where Rid='" + rid + "' and Sid='" + sid + "');";
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (res.length === 0) reject(new Error('Chats not found'));
+        else {
+          let result = [];
+          for (let i = 0; i < res.length; i++) {
+            result.push([res[i].Rid, res[i].Sid, res[i].Time, res[i].chat]);
+          }
+          console.log(result);
+          resolve(result);
+        }
+      });
+    });
   }
 }
 

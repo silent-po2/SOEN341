@@ -72,3 +72,13 @@ primary key (StudentID, CourseId)
 create table messages (
 Message varchar(256),
 );
+
+create table tempchats (
+Id int not null auto_increment,
+Rid varchar(30),
+Sid varchar(30),
+Time TIMESTAMP,
+chat varchar(65536),
+primary key (Id)
+);
+
