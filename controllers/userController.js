@@ -22,21 +22,23 @@ exports.login = function(req, res) {
 
 // Responds with profile
 exports.profile = function(req, res) {
-  // let userArr;
-  // let userInfo = req.session.user;
-  // for (let i = 0; i < userInfo.length; i++) {
-  //   userArr.add;
-  // }
-  // res.render('../views/dashboard.pug', {
-  //   userArr: userArr
-  // });
-  console.log(req.session.user);
-  let user = req.session.user;
-  let userArr = [user.id, user.email, user.firstName, user.lastName, user.type];
-  res.render('../views/profile.pug', {
-    title: 'Profile',
-    userArr: userArr
-  });
+  if (req.session.user) {
+    let user = req.session.user;
+    let userArr = [
+      user.id,
+      user.email,
+      user.firstName,
+      user.lastName,
+      user.type
+    ];
+    res.render('../views/profile.pug', {
+      title: 'Profile',
+      userArr: userArr,
+      user: user
+    });
+  } else {
+    res.redirect('/login');
+  }
 };
 
 // Responds with logout
@@ -85,7 +87,6 @@ exports.dashboardPost = function(req, res) {
   let post = req.body.post;
   winston.debug('Posting: ' + post);
   if (post == '') {
-    console.log(1234567890);
     req.flash('danger', 'Fail to post a message, please try again.');
     res.redirect('/dashboard');
   } else {
@@ -149,7 +150,7 @@ exports.loginPost = function(req, res) {
         );
         req.session.user = user;
         req.flash('success', 'You are logged in.');
-        res.redirect('/dashboard');
+        res.redirect('/profile');
       })
       .catch(error => {
         console.log(error);
