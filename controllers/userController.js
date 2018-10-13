@@ -6,6 +6,8 @@ let User = require('../models/user');
 let db = require('../db/Database');
 let winston = require('../config/winston');
 
+let moment = require('moment');
+
 // Responds with user home page
 exports.userHome = function(req, res) {
   res.render('../views/home.pug', {
@@ -39,6 +41,13 @@ exports.profile = function(req, res) {
   } else {
     res.redirect('/login');
   }
+};
+
+// Responds with chat
+exports.chat = function(req, res) {
+  res.render('../views/chat.pug', {
+    title: 'Chat'
+  });
 };
 
 // Responds with logout
@@ -300,3 +309,4 @@ exports.updateUserPost = function(req, res) {
 // db.connection.query('TRUNCATE TABLE messages', function(err, result, fields) {
 //   console.log(result);
 // });
+// console.log(moment().format('dddd'));

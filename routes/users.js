@@ -27,6 +27,8 @@ module.exports = function(app) {
 
   app.get('/logout', userController.logout);
 
+  app.get('/chat', userController.chat);
+
   app.use('*', function(req, res) {
     res.locals.user = req.user || null;
   });
