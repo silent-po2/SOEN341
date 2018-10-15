@@ -8,6 +8,3 @@ jobs:
     - stage: test
       name: 'Unit Tests'
       script: test
-cache:
-  directories:
-    - 'node_modules'
