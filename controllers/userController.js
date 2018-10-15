@@ -86,13 +86,13 @@ exports.dashboardPost = function(req, res) {
 
 // Responds with login as teacher
 exports.loginTeacherGet = function(req, res) {
-  req.session.userType = 'teacher';
+  req.session.userType = 'T';
   res.render('../views/teacherLogin.pug');
 };
 
 // Responds with login as parent
 exports.loginParentGet = function(req, res) {
-  req.session.userType = 'parent';
+  req.session.userType = 'P';
   res.render('../views/parentLogin.pug');
 };
 
@@ -116,8 +116,8 @@ exports.loginPost = function(req, res) {
     // Else proceed with login verification
     let user = new User(email, password, type);
     db.login(email, password)
-      .then(result => {
-        req.flash('success', 'You are now logged in.');
+      .then(() => {
+        req.flash('Success', 'You are now logged in.');
         req.session.user = user;
         res.redirect('/dashboard');
       })
@@ -129,33 +129,18 @@ exports.loginPost = function(req, res) {
         );
         res.render('../views/login.pug');
       });
-
-    // db.login(email, password)
-    //   .then(id => {
-    //     // Save user ID in session
-    //     req.session.userId = id;
-    //     // db.close(); // not be able to login again potential problem
-    //   })
-    //   .then(() => {
-    //     console.log('db closed \n user id:' + req.session.userId);
-    //     req.flash('success', 'Logged in');
-    //     return res.redirect('/dashboard');
-    //   })
-    //   .catch(err => {
-    //     req.flash(err);
-    //   });
   }
 };
 
 // Responds with register as parent
 exports.registerParentGet = function(req, res) {
-  req.session.userType = 'parent';
+  req.session.userType = 'P';
   res.render('../views/parentRegister.pug');
 };
 
 // Responds with register as teacher
 exports.registerTeacherGet = function(req, res) {
-  req.session.userType = 'teacher';
+  req.session.userType = 'T';
   res.render('../views/teacherRegister.pug');
 };
 
@@ -197,21 +182,10 @@ exports.registerPost = function(req, res) {
         res.redirect('/login');
       })
       .catch(error => {
+        winston.debug(error.message);
         req.flash('danger', 'Email already exists, please try again.');
         res.render('../views/register.pug');
       });
-
-    // res.redirect('../views/login.pug');
-    // .then(() => {
-    //   winston.debug('User added to db');
-    //   req.flash('Success', 'You are registered, please log in.');
-    //   db.close();
-    // })
-    // .then(res.render('../views/login.pug'))
-    // .catch(err => {
-    //   winston.error(err);
-    //   req.flash(err);
-    // });
   }
 };
 
@@ -254,20 +228,3 @@ exports.updateUserGet = function(req, res) {
 exports.updateUserPost = function(req, res) {
   res.send('NOT IMPLEMENTED: user update POST');
 };
-
-// db.connection.query("DELETE FROM user WHERE LastName = '111'", function(
-//   err,
-//   result,
-//   fields
-// ) {
-//   if (err) throw err;
-//   console.log('Number of records deleted: ' + result.affectedRows);
-// });
-
-// db.connection.query('SELECT * FROM messages', function(err, result, fields) {
-//   console.log(result);
-// });
-
-// db.connection.query('TRUNCATE TABLE messages', function(err, result, fields) {
-//   console.log(result);
-// });
