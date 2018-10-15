@@ -8,6 +8,7 @@ let winston = require('../config/winston');
 class Database {
   // Constructor only creates connection but does not open it
   constructor() {
+    winston.debug('Db instantiated');
     this.connection = mysql.createConnection({
       host: '35.221.26.86',
       database: 'kiwidb',
@@ -16,35 +17,11 @@ class Database {
     });
   }
 
-  // Implicitely connects to the the db and processses and sql query
-  // query(sql, args) {
-  //   this.connection.query(sql, args, (err, rows) => {
-  //     if (err) throw err;
-  //     close();
-  //     winston.debug('Evaluated query: ' + sql);
-  //     return rows;
-  //   });
-  // }
-  // winston.debug('db connection open');
-  // return new Promise((resolve, reject) => {
-  //   this.connection.query(sql, args, (err, rows) => {
-  //     if (err) return reject(err);
-  //     winston.debug('Evaluated query: ' + sql);
-  //     resolve(rows);
-  //   });
-  // });
-
   // Closes the connection to the db
   close() {
     this.connection.end(err => {
       if (err) throw err;
       winston.debug('db closed');
-      // return new Promise((resolve, reject) => {
-      //   this.connection.end(err => {
-      //     if (err) return reject(err);
-      //     winston.debug('db closed');
-      //     resolve();
-      //   });
     });
   }
 
@@ -57,19 +34,22 @@ class Database {
       password +
       "');";
     return new Promise((resolve, reject) => {
+      if (!this.connection) {
+        this.connection.connect();
+      }
       this.connection.query(query, (err, res) => {
         winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
-        if (res.length === 0) reject(new Error('User not found'));
-        else resolve(res[0]);
+
+        if (err) {
+          reject(err);
+        } else if (res.length === 0) {
+          reject(new Error('User not found'));
+        } else {
+          resolve(res[0]);
+        }
       });
     });
-    // return new Promise((resolve, reject) => {
-    //   this.query(query).then(rows => {
-    //     if (rows.length === 0) reject(new Error('User not found'));
-    //     resolve(rows[0].Id);
-    //   });
-    // });
   }
 
   // This function inserts a new post to the database
@@ -79,11 +59,15 @@ class Database {
       this.connection.query(query, (err, res) => {
         winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
-        if (err) reject(err);
-        else resolve(res);
+        if (err) {
+          reject(err);
+        } else {
+          resolve(res);
+        }
       });
     });
   }
+
   // This function selects all data from message table
   dashboardGet() {
     let query = 'SELECT * FROM messages';
@@ -91,67 +75,49 @@ class Database {
       this.connection.query(query, (err, res) => {
         winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
-        if (err) reject(err);
-        else {
-          resolve(res);
-        }
+        if (err) {
+          reject(err);
+        } else resolve(res);
       });
     });
   }
 
   // This function inserts a new user into the database and subsequently into the teacher or parent tables
   register(user) {
-    let query = `insert into user (Email, FirstName, LastName, Password) values 
-    ('${user.email}', 
-    '${user.firstName}', 
-    '${user.lastName}', 
-    MD5('${user.password}'));`;
+    // Setup query
+    let query =
+      "insert into user (Email, FirstName, LastName, Password, Type) values ('" +
+      user.email +
+      "', '" +
+      user.firstName +
+      "', '" +
+      user.lastName +
+      "', MD5('" +
+      user.password +
+      "'), '" +
+      user.type +
+      "');";
+
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
         winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
-        if (err) reject(err);
-        else resolve(res);
+        if (err) {
+          reject(err);
+        } else resolve(res);
       });
     });
-    // return this.query(query);
-    // return new Promise((resolve, reject) => {
-    //   this.query(query)
-    //     .then(() => {
-    //       this.getId(user);
-    //     })
-    //     .then(id => {
-    //       // Once a user is registed, insert it as either parent or teacher in the db
-    //       if (user.type === 'teacher') {
-    //         let query = `insert into teacher ${id}`;
-    //         this.query(query);
-    //       } else if (user.type === 'parent') {
-    //         let query = `insert into parent ${id}`;
-    //         this.query(query);
-    //       } else {
-    //         reject('User type is not defined');
-    //       }
-    //     });
-    // });
   }
 
   // Returns the user id given a user object
   getId(user) {
     let query = "select * from user where Email='" + user.email + "';";
     this.query(query, (err, rows) => {
-      if (err) throw err;
+      if (err) {
+        reject(err);
+      } else resolve(rows[0].Id);
     });
-
-    // return new Promise((resolve, reject) => {
-    //   this.query(query).then(rows => {
-    //     if (rows.length === 0)
-    //       reject(new Error('User' + user.email + 'not found'));
-    //     resolve(rows[0].Id);
-    //   });
-    // });
   }
 }
 
-// Make sure we only use one instance of the database
-let db = new Database();
-module.exports = db;
+module.exports = new Database();
