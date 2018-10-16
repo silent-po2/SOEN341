@@ -1,4 +1,4 @@
-//- inspired by bootstrap biginner template
+//- inspired by bootstrap starter template
 doctype html
 html(lang='en')
   head
@@ -10,6 +10,7 @@ html(lang='en')
     // Bootstrap core CSS
     script(src='/node_modules/bootstrap/dist/js/bootstrap.min.js')
     link(href='/node_modules/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
+    link(href='/css/chatstyle.css', rel='stylesheet')
     // Custom styles for this template
   body
     nav.navbar.navbar-expand-md.navbar-dark.bg-dark
@@ -19,6 +20,8 @@ html(lang='en')
       #navbarsExampleDefault.collapse.navbar-collapse
         ul.navbar-nav.mr-auto
           if user
+            li.nav-item(class=(title == 'Profile'? 'active' : ''))
+              a.nav-link(href='/Profile') Profile
             li.nav-item(class=(title == 'Dashboard'? 'active' : ''))
               a.nav-link(href='/dashboard') Dashboard
           if !user
