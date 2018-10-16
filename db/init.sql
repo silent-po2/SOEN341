@@ -9,20 +9,10 @@ Email varchar(30),
 FirstName varchar(30),
 LastName varchar(30),
 Password varchar(32),
+Type enum('T', 'P') NOT NULL,
 primary key (Id)
 );
 
-create table parent (
-ParentId int,
-foreign key (ParentId) references user(Id)
-on delete cascade
-);
-
-create table teacher (
-TeacherId int,
-foreign key (TeacherId) references user(Id)
-on delete cascade
-);
 
 create table child (
 StudentId int auto_increment primary key,
@@ -69,16 +59,26 @@ foreign key (CourseId) references course(CourseId),
 primary key (StudentID, CourseId)
 );
 
-create table messages (
-Message varchar(256),
+create table thread (
+	PostId int unsigned primary key NOT NULL auto_increment,
+    Post varchar(256),
+    `From` int NOT NULL,
+    `About` int NOT NULL,
+    RepliedTo int unsigned default NULL,
+	DT DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    foreign key (`From`) references user(Id),
+    foreign key (`About`) references child(StudentId),
+    foreign key (RepliedTo) references thread(PostId) ON DELETE CASCADE
 );
 
-create table tempchats (
-Id int not null auto_increment,
-Rid varchar(30),
-Sid varchar(30),
-Time TIMESTAMP,
-chat TEXT,
-primary key (Id)
+create table chat (
+	MsgId int primary key NOT NULL auto_increment,
+    Msg varchar(256),
+    `From` int NOT NULL,
+    `To` int NOT NULL,
+	DT DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    foreign key (`From`) references user(Id),
+	foreign key (`To`) references user(Id)
 );
+
 

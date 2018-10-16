@@ -190,13 +190,13 @@ exports.dashboardPost = function(req, res) {
 
 // Responds with login as teacher
 exports.loginTeacherGet = function(req, res) {
-  req.session.userType = 'teacher';
+  req.session.userType = 'T';
   res.render('../views/teacherLogin.pug');
 };
 
 // Responds with login as parent
 exports.loginParentGet = function(req, res) {
-  req.session.userType = 'parent';
+  req.session.userType = 'P';
   res.render('../views/parentLogin.pug');
 };
 
@@ -245,33 +245,18 @@ exports.loginPost = function(req, res) {
         );
         res.render('../views/login.pug');
       });
-
-    // db.login(email, password)
-    //   .then(id => {
-    //     // Save user ID in session
-    //     req.session.userId = id;
-    //     // db.close(); // not be able to login again potential problem
-    //   })
-    //   .then(() => {
-    //     console.log('db closed \n user id:' + req.session.userId);
-    //     req.flash('success', 'Logged in');
-    //     return res.redirect('/dashboard');
-    //   })
-    //   .catch(err => {
-    //     req.flash(err);
-    //   });
   }
 };
 
 // Responds with register as parent
 exports.registerParentGet = function(req, res) {
-  req.session.userType = 'parent';
+  req.session.userType = 'P';
   res.render('../views/parentRegister.pug');
 };
 
 // Responds with register as teacher
 exports.registerTeacherGet = function(req, res) {
-  req.session.userType = 'teacher';
+  req.session.userType = 'T';
   res.render('../views/teacherRegister.pug');
 };
 
@@ -313,21 +298,10 @@ exports.registerPost = function(req, res) {
         res.redirect('/login');
       })
       .catch(error => {
+        winston.debug(error.message);
         req.flash('danger', 'Email already exists, please try again.');
         res.render('../views/register.pug');
       });
-
-    // res.redirect('../views/login.pug');
-    // .then(() => {
-    //   winston.debug('User added to db');
-    //   req.flash('Success', 'You are registered, please log in.');
-    //   db.close();
-    // })
-    // .then(res.render('../views/login.pug'))
-    // .catch(err => {
-    //   winston.error(err);
-    //   req.flash(err);
-    // });
   }
 };
 
@@ -371,9 +345,3 @@ exports.updateUserPost = function(req, res) {
   res.send('NOT IMPLEMENTED: user update POST');
 };
 
-// test page
-exports.test = function(req, res) {
-  res.render('../views/test.pug', {
-    user: req.session.user
-  });
-};
