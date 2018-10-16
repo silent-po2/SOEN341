@@ -27,11 +27,11 @@ module.exports = function(app) {
 
   app.get('/logout', userController.logout);
 
-  app.get('/chat', userController.chat);
+  app.get('/chat/:id', userController.chat);
 
-  app.post('/chat', userController.chatBox);
+  app.post('/chat/:id', userController.chatPost);
 
-  app.get('/chat', userController.loadChats);
+  app.get('/test', userController.test);
 
   app.use('*', function(req, res) {
     res.locals.user = req.user || null;

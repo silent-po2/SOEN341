@@ -78,7 +78,7 @@ Id int not null auto_increment,
 Rid varchar(30),
 Sid varchar(30),
 Time TIMESTAMP,
-chat varchar(65536),
+chat TEXT,
 primary key (Id)
 );
 

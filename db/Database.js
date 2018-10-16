@@ -178,7 +178,7 @@ class Database {
   }
   // inserts the chat into tempchats table
   sendChat(rid, sid, time, chat) {
-    let query = `insert into tempchats (Rid, Sid, Time, Chat) values 
+    let query = `insert into tempchats (Rid, Sid, Time, chat) values 
     ('${rid}', 
     '${sid}', 
     '${time}', 
@@ -195,14 +195,25 @@ class Database {
 
   // select the chat for the receiver
   receiveChat(rid, sid) {
-    let query = "select * from tempchats where Rid='168' and Sid='149'";
+    let query =
+      "select * from tempchats where (Rid='" +
+      rid +
+      "' and Sid='" +
+      sid +
+      "') or (Rid='" +
+      sid +
+      "' and Sid='" +
+      rid +
+      "') ";
     // "select * from tempchats where Rid='" + rid + "' and Sid='" + sid + "');";
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
         winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
-        if (res.length === 0) reject(new Error('Chats not found'));
-        else {
+        if (res.length === 0) {
+          let result = [];
+          resolve(result);
+        } else {
           let result = [];
           for (let i = 0; i < res.length; i++) {
             result.push([res[i].Rid, res[i].Sid, res[i].Time, res[i].chat]);

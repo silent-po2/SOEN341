@@ -33,62 +33,97 @@ exports.profile = function(req, res) {
       user.lastName,
       user.type
     ];
-    res.render('../views/profile.pug', {
-      title: 'Profile',
-      userArr: userArr,
-      user: user
-    });
+    db.loadUsers()
+      .then(result => {
+        res.render('../views/profile.pug', {
+          title: 'Profile',
+          userArr: userArr,
+          user: req.session.user,
+          userList: result
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
   } else {
     res.redirect('/login');
   }
 };
 
+// // Responds with chat
+// exports.chat = function(req, res) {
+//   db.loadUsers()
+//     .then(result => {
+//       res.render('../views/chat.pug', {
+//         title: 'Chat',
+//         userList: result
+//       });
+//     })
+//     .catch(error => {
+//       console.log(error);
+//     });
+// };
+
 // Responds with chat
 exports.chat = function(req, res) {
-  db.loadUsers()
-    .then(result => {
-      res.render('../views/chat.pug', {
-        title: 'Chat',
-        userList: result
+  if (req.session.user) {
+    let user = req.session.user;
+    let rid = req.params.id;
+    let sid = user.id;
+    db.receiveChat(sid, rid)
+      .then(result => {
+        res.render('chat', {
+          chatList: result,
+          receiver: rid
+        });
+      })
+      .catch(error => {
+        console.log(error);
       });
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-exports.loadChats = function(req, res) {
-  res.render('../views/chatBox.pug', {
-    user: req.session.user
-  });
-};
-
-// Responds with chatBox
-exports.chatBox = function(req, res) {
-  db.receiveChat('149', '168')
-    .then(result => {
-      res.render('../views/chat.pug', {
-        chatList: result
-      });
-    })
-    .catch(error => {
-      console.log(error);
-    });
+  } else {
+    res.redirect('/login');
+  }
 };
 
 exports.chatPost = function(req, res) {
-  // let rid = req.body.rid;
-  // let sender = req.session.user;
-  // let sid = sender.id;
-
-  db.receiveChat(rid, sid)
-    .then(result => {
-      res.render('/chat', { chats: result });
-    })
-    .catch(error => {
-      console.log(error);
-      res.render('/chat');
-    });
+  if (req.session.user) {
+    let chat = req.body.chat;
+    req.checkBody('chat', 'Message is empty').notEmpty();
+    let errors = req.validationErrors();
+    if (errors) {
+      let user = req.session.user;
+      let rid = req.params.id;
+      let sid = user.id;
+      db.receiveChat(sid, rid).then(result => {
+        res.render('chat', {
+          errors: errors,
+          chatList: result,
+          receiver: rid
+        });
+      });
+    } else {
+      winston.debug('Sending: ' + chat);
+      let user = req.session.user;
+      let rid = req.params.id;
+      let sid = user.id;
+      let time = moment.utc(new Date()).format('YYYY-MM-DD HH:mm:ss');
+      db.sendChat(rid, sid, time, chat).catch(error => {
+        console.log(error);
+      });
+      db.receiveChat(sid, rid)
+        .then(result => {
+          res.render('chat', {
+            chatList: result,
+            receiver: rid
+          });
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  } else {
+    res.redirect('/login');
+  }
 };
 
 // Responds with logout
@@ -342,78 +377,3 @@ exports.test = function(req, res) {
     user: req.session.user
   });
 };
-// db.loadUsers()
-//   .then(result => {
-//     console.log(result);
-//   })
-//   .catch(error => {
-//     console.log(error);
-//   });
-
-// db.connection.query("DELETE FROM user WHERE LastName = '111'", function(
-//   err,
-//   result,
-//   fields
-// ) {
-//   if (err) throw err;
-//   console.log('Number of records deleted: ' + result.affectedRows);
-// });
-// let user1 = new User('999', '1@1.ca', 'fn', 'ln', '111', 'teacher');
-// console.log(user1.password);
-
-// db.connection.query('select * from tempchats', function(err, result, fields) {
-//   console.log(result);
-// });
-
-// db.connection.query(
-//   "select * from tempchats where Rid='168' and Sid='149'",
-//   function(err, res, fields) {
-//     let result = [];
-//     for (let i = 0; i < res.length; i++) {
-//       result.push([res[i].Rid, res[i].Sid, res[i].Time, res[i].chat]);
-//     }
-//     console.log(result);
-//   }
-// );
-
-// db.connection.query(
-//   "INSERT INTO tempchats (Rid, Sid, Time, chat) VALUES ('149', '168', '" +
-//     moment.utc(new Date()).format('YYYY-MM-DD HH:mm:ss') +
-//     "', 'Gii to Chen again')",
-//   function(err, result, fields) {
-//     console.log(result);
-//   }
-// );
-// console.log(moment.utc(new Date()).format('YYYY-MM-DD HH:mm:ss'));
-
-// let sql =
-//   'create table tempchats (Id int not null auto_increment, Rid varchar(30), Sid varchar(30), Time TIMESTAMP, chat TEXT(65536), primary key (Id))';
-// db.connection.query(sql, function(err, result) {
-//   if (err) throw err;
-//   console.log('Table created');
-// });
-
-// db.connection.query(
-//   "INSERT INTO tempchats (Rid, Sid, Time, chat) VALUES ('168', '149', '" +
-//     moment() +
-//     "', 'Chen to Gii')",
-//   function(err, result, fields) {
-//     console.log(err);
-//   }
-// );
-
-// db.connection.query('select Id, FirstName, LastName from user', function(
-//   err,
-//   result,
-//   fields
-// ) {
-//   console.log(result);
-// });
-
-// let query = 'select Id, FirstName, LastName from user';
-// db.connection.query(query, (err, res) => {
-//   let row = [res[0].Id, res[0].FirstName, res[0].LastName];
-//   let result = [];
-//   result.push(row);
-//   console.log(result);
-// });
