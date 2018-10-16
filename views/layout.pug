@@ -1,4 +1,4 @@
-//- inspired by bootstrap biginner template
+//- inspired by bootstrap starter template
 doctype html
 html(lang='en')
   head
@@ -19,6 +19,8 @@ html(lang='en')
       #navbarsExampleDefault.collapse.navbar-collapse
         ul.navbar-nav.mr-auto
           if user
+            li.nav-item(class=(title == 'Profile'? 'active' : ''))
+              a.nav-link(href='/Profile') Profile
             li.nav-item(class=(title == 'Dashboard'? 'active' : ''))
               a.nav-link(href='/dashboard') Dashboard
           if !user

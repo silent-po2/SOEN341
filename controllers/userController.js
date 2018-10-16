@@ -6,6 +6,8 @@ let User = require('../models/user');
 let db = require('../db/Database');
 let winston = require('../config/winston');
 
+let moment = require('moment');
+
 // Responds with user home page
 exports.userHome = function(req, res) {
   res.render('../views/home.pug', {
@@ -18,6 +20,110 @@ exports.login = function(req, res) {
   res.render('../views/login.pug', {
     title: 'Login'
   });
+};
+
+// Responds with profile
+exports.profile = function(req, res) {
+  if (req.session.user) {
+    let user = req.session.user;
+    let userArr = [
+      user.id,
+      user.email,
+      user.firstName,
+      user.lastName,
+      user.type
+    ];
+    db.loadUsers()
+      .then(result => {
+        res.render('../views/profile.pug', {
+          title: 'Profile',
+          userArr: userArr,
+          user: req.session.user,
+          userList: result
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  } else {
+    res.redirect('/login');
+  }
+};
+
+// // Responds with chat
+// exports.chat = function(req, res) {
+//   db.loadUsers()
+//     .then(result => {
+//       res.render('../views/chat.pug', {
+//         title: 'Chat',
+//         userList: result
+//       });
+//     })
+//     .catch(error => {
+//       console.log(error);
+//     });
+// };
+
+// Responds with chat
+exports.chat = function(req, res) {
+  if (req.session.user) {
+    let user = req.session.user;
+    let rid = req.params.id;
+    let sid = user.id;
+    db.receiveChat(sid, rid)
+      .then(result => {
+        res.render('chat', {
+          chatList: result,
+          receiver: rid
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  } else {
+    res.redirect('/login');
+  }
+};
+
+exports.chatPost = function(req, res) {
+  if (req.session.user) {
+    let chat = req.body.chat;
+    req.checkBody('chat', 'Message is empty').notEmpty();
+    let errors = req.validationErrors();
+    if (errors) {
+      let user = req.session.user;
+      let rid = req.params.id;
+      let sid = user.id;
+      db.receiveChat(sid, rid).then(result => {
+        res.render('chat', {
+          errors: errors,
+          chatList: result,
+          receiver: rid
+        });
+      });
+    } else {
+      winston.debug('Sending: ' + chat);
+      let user = req.session.user;
+      let rid = req.params.id;
+      let sid = user.id;
+      let time = moment.utc(new Date()).format('YYYY-MM-DD HH:mm:ss');
+      db.sendChat(rid, sid, time, chat).catch(error => {
+        console.log(error);
+      });
+      db.receiveChat(sid, rid)
+        .then(result => {
+          res.render('chat', {
+            chatList: result,
+            receiver: rid
+          });
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  } else {
+    res.redirect('/login');
+  }
 };
 
 // Responds with logout
@@ -43,7 +149,6 @@ exports.dashboard = function(req, res) {
     let msgArr = [];
     db.dashboardGet()
       .then(rows => {
-        console.log(rows.length);
         for (let i = 0; i < rows.length; i++) {
           msgArr[i] = rows[i].Message;
         }
@@ -67,7 +172,6 @@ exports.dashboardPost = function(req, res) {
   let post = req.body.post;
   winston.debug('Posting: ' + post);
   if (post == '') {
-    console.log(1234567890);
     req.flash('danger', 'Fail to post a message, please try again.');
     res.redirect('/dashboard');
   } else {
@@ -114,12 +218,24 @@ exports.loginPost = function(req, res) {
     });
   } else {
     // Else proceed with login verification
-    let user = new User(email, password, type);
     db.login(email, password)
-      .then(() => {
-        req.flash('Success', 'You are now logged in.');
+      .then(result => {
+        console.log(result[0]);
+        console.log(result[1]);
+        console.log(result[2]);
+        console.log(result[3]);
+        console.log(result[4]);
+        let user = new User(
+          result[0],
+          result[1],
+          result[2],
+          result[3],
+          result[4],
+          result[5]
+        );
         req.session.user = user;
-        res.redirect('/dashboard');
+        req.flash('success', 'You are logged in.');
+        res.redirect('/profile');
       })
       .catch(error => {
         console.log(error);
@@ -175,7 +291,7 @@ exports.registerPost = function(req, res) {
     });
   } else {
     // Create user object
-    let user = new User(email, firstName, lastName, password, type);
+    let user = new User('TBA', email, firstName, lastName, password, type);
     db.register(user)
       .then(result => {
         req.flash('success', 'You are registered, please log in.');
@@ -228,3 +344,4 @@ exports.updateUserGet = function(req, res) {
 exports.updateUserPost = function(req, res) {
   res.send('NOT IMPLEMENTED: user update POST');
 };
+

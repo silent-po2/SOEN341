@@ -1,0 +1,97 @@
+//- inspired by suneelrajpoot44 Bootsnipp https://bootsnipp.com/snippets/E1nNa
+extends layout
+    
+block content
+    br
+    .container
+        .row
+            .col-12
+                .card
+                    .card-body
+                        .card-title.mb-4
+                            .d-flex.justify-content-start
+                                .image-container
+                                    img#imgProfile.img-thumbnail(src='/pics/profile.png', style='width: 150px; height: 150px')
+                                    .middle
+                                        //- input#btnChangePicture.btn.btn-secondary(type='button', value='Change')
+                                        //- input#profilePicture(type='file', style='display: none;', name='file')
+                                .userData.ml-3
+                                    h2.d-block(style='font-size: 2rem; font-weight: bold')
+                                        br
+                                        br
+                                        p= userArr[2] + ' ' + userArr[3]
+                                        
+                                    h6.d-block
+                                        //- a(href='javascript:void(0)') 1,500
+                                        //- |  Video Uploads
+                                    h6.d-block
+                                        //- a(href='javascript:void(0)') 300
+                                        //- |  Blog Posts
+                                .ml-auto
+                                    input#btnDiscard.btn.btn-primary.d-none(type='button', value='Discard Changes')
+                        .row
+                            .col-12
+                                ul#myTab.nav.nav-tabs.mb-4(role='tablist')
+                                    li.nav-item
+                                        a#basicInfo-tab.nav-link.active(data-toggle='tab', href='#basicInfo', role='tab', aria-controls='basicInfo', aria-selected='true') Profile
+                                    li.nav-item
+                                        a#basicInfo-tab.nav-link(data-toggle='tab', href='#contacts', role='tab', aria-controls='contacts', aria-selected='true') Contacts
+                                    li.nav-item
+                                        if userArr[4] == 'teacher'
+                                            a#connectedServices-tab.nav-link(data-toggle='tab', href='#class_children', role='tab', aria-controls='class_children', aria-selected='false') Class
+                                        else
+                                            a#connectedServices-tab.nav-link(data-toggle='tab', href='#class_children', role='tab', aria-controls='class_children', aria-selected='false') Children
+                                #myTabContent.tab-content.ml-1
+                                    #basicInfo.tab-pane.fade.show.active(role='tabpanel', aria-labelledby='basicInfo-tab')
+                                        .row
+                                            .col-sm-3.col-md-2.col-5
+                                                label(style='font-weight:bold;') Full Name
+                                            .col-md-8.col-6
+                                                p= userArr[2] + ' ' + userArr[3]
+                                        hr
+                                        .row
+                                            .col-sm-3.col-md-2.col-5
+                                                label(style='font-weight:bold;') UserID
+                                            .col-md-8.col-6
+                                                p= userArr[0]
+                                        hr
+                                        .row
+                                            .col-sm-3.col-md-2.col-5
+                                                label(style='font-weight:bold;') Email
+                                            .col-md-8.col-6
+                                                p= userArr[1]
+                                        hr
+                                        .row
+                                            .col-sm-3.col-md-2.col-5
+                                                label(style='font-weight:bold;') User type
+                                            .col-md-8.col-6
+                                                p= userArr[4]
+                                    #contacts.tab-pane.fade.show(role='tabpanel', aria-labelledby='contacts-tab')
+                                        each user, i in userList
+                                            .row
+                                                .col-sm-3.col-md-2.col-5
+                                                    img.img.img-rounded.img-fluid(src='/pics/profile.png', style='width:60%')
+                                                .col-md-8.col-6
+                                                    h3= user[1] + ' ' + user[2]
+                                                    button.btn.btn-primary.btn-sm(type='button',onclick="window.open('/chat/"+user[0]+"', 'newwindow', 'width=600,height=650'); return false;") Send a message
+
+                                            hr
+                                        //- .row
+                                        //-     .col-sm-3.col-md-2.col-5
+                                        //-         label(style='font-weight:bold;') Something
+                                        //-     .col-md-8.col-6
+                                        //-         | Something
+                                        //- hr
+                                        //- .row
+                                        //-     .col-sm-3.col-md-2.col-5
+                                        //-         label(style='font-weight:bold;') Something
+                                        //-     .col-md-8.col-6
+                                        //-         | Something
+                                        
+                                    #class_children.tab-pane.fade(role='tabpanel', aria-labelledby='class_children-tab')
+                                        //- | Facebook, Google, Twitter Account that are connected to this account
+
+//- br
+//- h2 #{title}
+//- each item, i in userArr
+//-     p= item
