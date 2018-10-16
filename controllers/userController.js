@@ -33,11 +33,18 @@ exports.profile = function(req, res) {
       user.lastName,
       user.type
     ];
-    res.render('../views/profile.pug', {
-      title: 'Profile',
-      userArr: userArr,
-      user: user
-    });
+    db.loadUsers()
+      .then(result => {
+        res.render('../views/profile.pug', {
+          title: 'Profile',
+          userArr: userArr,
+          user: req.session.user,
+          userList: result
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
   } else {
     res.redirect('/login');
   }
@@ -45,9 +52,66 @@ exports.profile = function(req, res) {
 
 // Responds with chat
 exports.chat = function(req, res) {
-  res.render('../views/chat.pug', {
-    title: 'Chat'
-  });
+  if (req.session.user) {
+    let user = req.session.user;
+    let rid = req.params.id;
+    let sid = user.id;
+    db.receiveChat(sid, rid)
+      .then(result => {
+        console.log(result);
+        console.log(rid);
+        res.render('chat', {
+          chatList: result,
+          receiver: rid
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  } else {
+    res.redirect('/login');
+  }
+};
+
+exports.chatPost = function(req, res) {
+  if (req.session.user) {
+    let chat = req.body.chat;
+    req.checkBody('chat', 'Message is empty').notEmpty();
+    let errors = req.validationErrors();
+    if (errors) {
+      let user = req.session.user;
+      let rid = req.params.id;
+      let sid = user.id;
+      db.receiveChat(sid, rid).then(result => {
+        res.render('chat', {
+          errors: errors,
+          chatList: result,
+          receiver: rid
+        });
+      });
+    } else {
+      winston.debug('Sending: ' + chat);
+      let user = req.session.user;
+      let rid = req.params.id;
+      let sid = user.id;
+      let time = moment.utc(new Date()).format('YYYY-MM-DD HH:mm:ss');
+      db.sendChat(rid, sid, time, chat).catch(error => {
+        console.log(error);
+      });
+      db.receiveChat(sid, rid)
+        .then(result => {
+          res.render('chat', {
+            chatList: result,
+            receiver: rid
+          });
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  } else {
+    res.redirect('/login');
+  }
 };
 
 // Responds with logout
@@ -142,13 +206,14 @@ exports.loginPost = function(req, res) {
     });
   } else {
     // Else proceed with login verification
-    db.login(email, password)
+    db.login(email, password, type)
       .then(result => {
         console.log(result[0]);
         console.log(result[1]);
         console.log(result[2]);
         console.log(result[3]);
         console.log(result[4]);
+        console.log(result[5]);
         let user = new User(
           result[0],
           result[1],
@@ -165,7 +230,7 @@ exports.loginPost = function(req, res) {
         console.log(error);
         req.flash(
           'danger',
-          'Email not found or password incorrect, please try again.'
+          'Email not found, password or user type incorrect, please try again.'
         );
         res.render('../views/login.pug');
       });
@@ -269,18 +334,6 @@ exports.updateUserPost = function(req, res) {
   res.send('NOT IMPLEMENTED: user update POST');
 };
 
-// db.connection.query("DELETE FROM user WHERE LastName = '111'", function(
-//   err,
-//   result,
-//   fields
-// ) {
-//   if (err) throw err;
-//   console.log('Number of records deleted: ' + result.affectedRows);
-// });
-// let user1 = new User('999', '1@1.ca', 'fn', 'ln', '111', 'teacher');
-// console.log(user1.password);
-
-// db.connection.query('TRUNCATE TABLE messages', function(err, result, fields) {
-//   console.log(result);
-// });
-// console.log(moment().format('dddd'));
+db.connection.query('select * from user', function(err, result, fields) {
+  console.log(result);
+});

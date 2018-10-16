@@ -27,7 +27,9 @@ module.exports = function(app) {
 
   app.get('/logout', userController.logout);
 
-  app.get('/chat', userController.chat);
+  app.get('/chat/:id', userController.chat);
+
+  app.post('/chat/:id', userController.chatPost);
 
   app.use('*', function(req, res) {
     res.locals.user = req.user || null;
@@ -63,7 +65,4 @@ module.exports = function(app) {
 
   // GET request for one user.
   app.get('/:id', userController.listUser);
-
-  // GET request for list of all users.
-  app.get('/todo', userController.listAllUsers);
 };

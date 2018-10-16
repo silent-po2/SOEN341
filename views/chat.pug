@@ -1,77 +1,59 @@
-//- inspired by suneelrajpoot44 Bootsnipp https://bootsnipp.com/snippets/featured/message-chat-box
-extends layout
-    
-block content
-    br
-    h2 #{title}
-    br
+//- inspired by Snippet by suneelrajpoot44 https://bootsnipp.com/snippets/featured/message-chat-box
+
+html
+  head
+    link#bootstrap-css(href='/node_modules/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
+    script(src='/node_modules/bootstrap/dist/js/bootstrap.min.js')
+    script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js')
+    // ---- Include the above in your HEAD tag --------
+    link(href='/css/chatstyle.css', type='text/css', rel='stylesheet')
+  body
+    if errors
+        each error, i in errors
+          div(class="alert alert-danger") #{error.msg}
     .container
+      h3 
       .messaging
         .inbox_msg
-          .inbox_people
-            .headind_srch
-              .recent_heading
-                h4 Contacts
-            //-   .srch_bar
-            //-     .stylish-input-group
-            //-       input.search-bar(type='text', placeholder='Search')
-            //-       span.input-group-addon
-            //-         button(type='button')
-            //-           i.fa.fa-search(aria-hidden='true')
-            .inbox_chat
-              .chat_list
-                .chat_people
-                  .chat_img
-                    img(src='https://ptetutorials.com/images/user-profile.png', alt='sunil')
-                  .chat_ib
-                    h5
-                      | Sunil Rajput 
-                      //span.chat_date Dec 25
-                    p
-                      | Test, which is a new approach to have all solutions
-                      | astrology under one roof.
-              
           .mesgs
             .msg_history
-              .incoming_msg
-                .incoming_msg_img
-                  img(src='https://ptetutorials.com/images/user-profile.png', alt='sunil')
-                .received_msg
-                  .received_withd_msg
-                    p
-                      | Test which is a new approach to have all
-                      | solutions
-                    span.time_date  11:01 AM    |    June 9
-              .outgoing_msg
-                .sent_msg
-                  p
-                    | Test which is a new approach to have all
-                    | solutions
-                  span.time_date  11:01 AM    |    June 9
-              .incoming_msg
-                .incoming_msg_img
-                  img(src='https://ptetutorials.com/images/user-profile.png', alt='sunil')
-                .received_msg
-                  .received_withd_msg
-                    p Test, which is a new approach to have
-                    span.time_date  11:01 AM    |    Yesterday
-              .outgoing_msg
-                .sent_msg
-                  p Apollo University, Delhi, India Test
-                  span.time_date  11:01 AM    |    Today
-              .incoming_msg
-                .incoming_msg_img
-                  img(src='https://ptetutorials.com/images/user-profile.png', alt='sunil')
-                .received_msg
-                  .received_withd_msg
-                    p
-                      | We work directly with our designers and suppliers,
-                      | and sell direct to you, which means quality, exclusive
-                      | products, at a price anyone can afford.
-                    span.time_date  11:01 AM    |    Today
+              each chat, i in chatList
+                if chat[2]==receiver
+                  .incoming_msg
+                    .incoming_msg_img
+                      img(src='/pics/profile.png', alt='sunil')
+                    .received_msg
+                      .received_withd_msg
+                        p= chat[0]
+                        span.time_date 
+                          p6= prettyDate(chat[3])
+                if chat[1]==receiver
+                  .outgoing_msg
+                    .sent_msg
+                      p= chat[0]
+                      span.time_date
+                        p6= prettyDate(chat[3])
             .type_msg
               .input_msg_write
-                input.write_msg(type='text', placeholder='Type a message')
-                button.msg_send_btn(type='button')
-                  i.fa.fa-paper-plane-o(aria-hidden='true')
-        
+                form(method='POST', action='/chat/'+receiver)
+                    #form-group
+                    label(for='chat')
+                    textarea.form-control(type='text', name='chat', placeholder='Type a message')
+                    br
+                    input.btn.btn-primary.btn-sm(type='submit',value='Send')
+
+
+                        
+       
+-function prettyDate(dateString){
+    -var date = new Date(dateString);
+    -var d = date.getDate();
+    -var monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+    -var m = monthNames[date.getMonth()];
+    -var y = date.getFullYear();
+    -var h = date.getHours();
+    -var min = date.getMinutes();
+    -var s = date.getSeconds();
+    -return d+' '+m+' '+y+' '+h+':'+min+':'+s;
+-}
+

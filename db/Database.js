@@ -26,13 +26,15 @@ class Database {
   }
 
   // Returns a promise with the user id if user is found, rejects otherwise
-  login(email, password) {
+  login(email, password, type) {
     let query =
       "select * from user where Email='" +
       email +
       "' and Password=MD5('" +
       password +
-      "');";
+      "') and Type='" +
+      type +
+      "';";
     return new Promise((resolve, reject) => {
       if (!this.connection) {
         this.connection.connect();
@@ -48,7 +50,7 @@ class Database {
             res[0].FirstName,
             res[0].LastName,
             res[0].Password,
-            'teacher'
+            res[0].Type
           ];
           resolve(result);
         }
@@ -122,6 +124,76 @@ class Database {
         winston.debug('Evaluated query: ' + query);
         if (err) reject(err);
         else resolve(rows[0].Id);
+      });
+    });
+  }
+
+  // loads all users' info
+  loadUsers() {
+    let query = 'select Id, FirstName, LastName from user';
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (res.length === 0) reject(new Error('User not found'));
+        else {
+          let result = [];
+          for (let i = 0; i < res.length; i++) {
+            result.push([res[i].Id, res[i].FirstName, res[i].LastName]);
+          }
+          resolve(result);
+        }
+      });
+    });
+  }
+  // inserts the chat into tempchats table
+  sendChat(rid, sid, time, chat) {
+    let query =
+      "insert into chat (Msg, `From`, `To`) values ('" +
+      chat +
+      "','" +
+      sid +
+      "','" +
+      rid +
+      "');";
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) reject(err);
+        else resolve(res);
+      });
+    });
+  }
+
+  // select the chat for the receiver
+  receiveChat(rid, sid) {
+    let query =
+      "select * from chat where (`To`='" +
+      rid +
+      "' and `From`='" +
+      sid +
+      "') or (`To`='" +
+      sid +
+      "' and `From`='" +
+      rid +
+      "') ";
+    // "select * from tempchats where Rid='" + rid + "' and Sid='" + sid + "');";
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (res.length === 0) {
+          let result = [];
+          resolve(result);
+        } else {
+          let result = [];
+          for (let i = 0; i < res.length; i++) {
+            result.push([res[i].Msg, res[i].To, res[i].From, res[i].DT]);
+          }
+          console.log(result);
+          resolve(result);
+        }
       });
     });
   }
