@@ -1,10 +1,46 @@
+
+/* @@@@@@@@@@@@@@@@@  REGISTERATION PAGE @@@@@@@@@@@@@@@@@@@@@@@@@  */
 .container {
+  font-family: "Comic Sans MS";
+  color: #070707;
   max-width: 800px;
   margin: auto;
 }
-img {
-  max-width: 100%;
+/* body {
+  background-image: url(/pics/reg1.jpeg);
+} */
+.container a{
+  font-family: "Comic Sans MS";
+  color: #cc0d0d;
+  font-size: 15px;
+  margin: auto;
 }
+.form-group label{
+  font-family: "Comic Sans MS";
+  color: #cc0d0d;
+  font-size: 20px;
+  margin: auto;
+}
+.form-group input{
+  font-family: "Comic Sans MS";
+  color: #0d0e0d;
+  font-size: 15px;
+  margin: auto;
+}
+.btn {
+  color: #cc0d0d;
+  font-size: 15px;
+  margin: auto;
+}
+.btn a{
+  color: #9d0baa;
+  font-size: 15px;
+  margin: auto;
+}
+/* img {
+  max-width: 100%;
+} */
+
 .inbox_people {
   background: #f8f8f8 none repeat scroll 0 0;
   float: left;
@@ -29,7 +65,7 @@ img {
   display: inline-block;
   text-align: right;
   width: 60%;
-  padding: ;
+  padding: 0;
 }
 .headind_srch {
   padding: 10px 29px 10px 20px;
@@ -186,3 +222,65 @@ img {
   height: 450px;
   overflow-y: auto;
 }
+
+/* @@@@@@@@@@@@@@@@@  HOME PAGE @@@@@@@@@@@@@@@@@@@@@@@@@  */
+
+.carousel-indicators .active{
+  background-color: #f31111;
+}
+.carousel-caption h3{
+  display: inline-block;
+  font-family: "Comic Sans MS";
+  padding: 10px;
+  background: rgb(11, 160, 31);
+  color: black !important;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  background-size: cover;
+  background-position: center;
+}
+
+.carousel-item img{
+  width:100px;
+  height:750px;
+  background-color: #05728f;
+}
+.full-screen {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+  /* Description text */
+.carousel-caption p {
+  font-family:    Garamond;
+  font-size:      2em;
+  color:          blue !important;
+  }
+  /* Button text */
+.carousel-caption .btn {
+  font-family:    Garamond;
+  font-size:      1em;
+  color:          yellow;
+  }
+
+  /* @@@@@@@@@@@@@@@@@  NAVIGATION BAR @@@@@@@@@@@@@@@@@@@@@@@@@  */
+
+  .navbar-nav {
+
+    list-style: none;
+    float: right;
+    margin-top: 10px
+  }
+  .navbar-nav li{
+
+    display:inline-block;
+    margin-left: 20px;
+  }
+  .navbar-nav a{
+
+    color: rgb(235, 121, 15);
+    text-decoration: rgb(230, 139, 21);
+    font-size: 100%;
+    font-weight: bold;
+  }
