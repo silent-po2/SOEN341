@@ -283,7 +283,7 @@ exports.registerPost = function(req, res) {
       .catch(error => {
         winston.debug(error.message);
         req.flash('danger', 'Email already exists, please try again.');
-        res.render('../views/register.pug');
+        res.status(401).render('../views/register.pug');
       });
   }
 };
