@@ -42,7 +42,7 @@ class Database {
       this.connection.query(query, (err, res) => {
         winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
-        if (res.length === 0) reject(new Error('User not found'));
+        if (res.length === 0 || err) reject(new Error('User not found'));
         else {
           let result = [
             res[0].Id,
@@ -191,7 +191,6 @@ class Database {
           for (let i = 0; i < res.length; i++) {
             result.push([res[i].Msg, res[i].To, res[i].From, res[i].DT]);
           }
-          console.log(result);
           resolve(result);
         }
       });
