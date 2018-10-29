@@ -161,7 +161,7 @@ exports.dashboardPost = function(req, res) {
   winston.debug('Posting: ' + post);
   if (post == '') {
     req.flash('danger', 'Fail to post a message, please try again.');
-    res.redirect('/dashboard');
+    res.status(401).redirect('/dashboard');
   } else {
     db.post(post)
       .then(result => {
@@ -171,7 +171,7 @@ exports.dashboardPost = function(req, res) {
       .catch(error => {
         winston.error(error);
         req.flash('danger', 'Fail to post a message, please try again.');
-        res.redirect('/dashboard');
+        res.status(401).redirect('/dashboard');
       });
   }
 };
