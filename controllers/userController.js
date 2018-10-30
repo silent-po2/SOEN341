@@ -11,8 +11,8 @@ module.exports = {
   /**
    * Function that responds to a '/' GET request
    *
-   * @param {Object} req - Request paramter
-   * @param {Object} res - Response paramter
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
    */
   userHome: function(req, res) {
     res.render('../views/home.pug', {
@@ -23,8 +23,8 @@ module.exports = {
   /**
    * Function that responds to a '/login' GET request
    *
-   * @param {Object} req - Request paramter
-   * @param {Object} res - Response paramter
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
    */
   login: function(req, res) {
     res.render('../views/login.pug', {
@@ -35,8 +35,8 @@ module.exports = {
   /**
    * Function that responds to a '/login' POST request
    *
-   * @param {Object} req - Request paramter
-   * @param {Object} res - Response paramter
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
    */
   loginPost: function(req, res) {
     let email = req.body.email.toLowerCase();
@@ -83,8 +83,8 @@ module.exports = {
   /**
    * Function that responds to a '/logout' GET request
    *
-   * @param {Object} req - Request paramter
-   * @param {Object} res - Response paramter
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
    */
   logout: function(req, res) {
     if (req.session.user) {
@@ -98,8 +98,8 @@ module.exports = {
   /**
    * Function that responds to a '/profile' GET request
    *
-   * @param {Object} req - Request paramter
-   * @param {Object} res - Response paramter
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
    */
   profile: function(req, res) {
     if (req.session.user) {
@@ -131,8 +131,8 @@ module.exports = {
   /**
    * Function that responds to a '/chat/:id' GET request
    *
-   * @param {Object} req - Request paramter
-   * @param {Object} res - Response paramter
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
    */
   chat: function(req, res) {
     if (req.session.user) {
@@ -159,8 +159,8 @@ module.exports = {
   /**
    * Function that responds to a '/chat/:id' POST request
    *
-   * @param {Object} req - Request paramter
-   * @param {Object} res - Response paramter
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
    */
   chatPost: function(req, res) {
     if (req.session.user) {
@@ -206,8 +206,8 @@ module.exports = {
   /**
    * Function that responds to a '/register' GET request
    *
-   * @param {Object} req - Request paramter
-   * @param {Object} res - Response paramter
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
    */
   register: function(req, res) {
     res.render('../views/register.pug', {
@@ -218,8 +218,8 @@ module.exports = {
   /**
    * Function that responds to a '/register' POST request
    *
-   * @param {Object} req - Request paramter
-   * @param {Object} res - Response paramter
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
    */
   registerPost: function(req, res) {
     let email = req.body.email.toLowerCase();
@@ -267,8 +267,8 @@ module.exports = {
   /**
    * Function that responds to a '/dashboard' GET request
    *
-   * @param {Object} req - Request paramter
-   * @param {Object} res - Response paramter
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
    */
   dashboard: function(req, res) {
     if (req.session.user) {
@@ -296,8 +296,8 @@ module.exports = {
   /**
    * Function that responds to a '/dashboard' POST request
    *
-   * @param {Object} req - Request paramter
-   * @param {Object} res - Response paramter
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
    */
   dashboardPost: function(req, res) {
     let post = req.body.post;
