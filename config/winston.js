@@ -1,4 +1,9 @@
-// inspired by https://www.digitalocean.com/community/tutorials/how-to-use-winston-to-log-node-js-applications
+/**
+ * Logger specific functions used for debugging purposes.
+ * inspired by:
+ * https://www.digitalocean.com/community/tutorials/how-to-use-winston-to-log-node-js-applications
+ */
+
 let appRoot = require('app-root-path');
 let winston = require('winston');
 
@@ -32,11 +37,20 @@ let logger = winston.createLogger({
 
 // create a stream object with a 'write' function that will be used by `morgan`
 logger.stream = {
-  write: function(message, encoding) {
-    // use the 'info' log level so the output will be picked up by both transports (file and console)
-    if (process.env.NODE_ENV !== 'test') {
-      logger.info(message);
-    }
+  write: write
+};
+
+/**
+ * Function that decides when the logger should output. Under test
+ * conditions, the logger should not be outputting.
+ *
+ * @param {*} message
+ * @param {*} encoding
+ */
+let write = function(message, encoding) {
+  // use the 'info' log level so the output will be picked up by both transports (file and console)
+  if (process.env.NODE_ENV !== 'test') {
+    logger.info(message);
   }
 };
 
