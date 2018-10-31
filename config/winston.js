@@ -19,10 +19,12 @@ let options = {
     colorize: false
   },
   console: {
-    level: 'debug',
+    name: 'console.info',
+    level: process.env.NODE_ENV === 'test' ? [] : process.env.LOGGER_LEVEL,
     handleExceptions: true,
     json: false,
-    colorize: true
+    colorize: true,
+    showLevel: true
   }
 };
 
@@ -35,7 +37,7 @@ let logger = winston.createLogger({
   exitOnError: false // do not exit on handled exceptions
 });
 
-// create a stream object with a 'write' function that will be used by `morgan`
+// // create a stream object with a 'write' function that will be used by `morgan`
 logger.stream = {
   write: write
 };
