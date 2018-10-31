@@ -9,12 +9,17 @@ let chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 let expect = chai.expect;
 let db = require('../db/Database');
+process.env.NODE_ENV = 'test';
 
 describe('Dashboard', function() {
   afterEach(() => {
     db.deleteUser().catch(err => {
       // if error is returned, there was no user to delete.
     });
+  });
+
+  after(() => {
+    require('../app').stop();
   });
 
   describe('Register user, login and open dashboard', function() {
@@ -62,7 +67,7 @@ describe('Dashboard', function() {
         });
     });
 
-    describe.only('Register user, login and open dashboard', function() {
+    describe('Register user, login and open dashboard', function() {
       it('should be not be able to post an empty message to the dashboard', function(done) {
         chai
           .request(app)

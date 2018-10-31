@@ -20,7 +20,7 @@ let morgan = require('morgan');
 
 const expressValidator = require('express-validator');
 const port = process.env.PORT || 3000;
-process.env.NODE_ENV = 'test';
+process.env.LOGGER_LEVEL = 'debug';
 
 // Application that contains get/post/put/delete methods
 let app = express();
@@ -92,6 +92,12 @@ app.use(morgan('combined', { stream: winston.stream }));
 require('./routes/users.js')(app);
 
 // Launch application
-app.listen(port);
+let server = app.listen(port);
 winston.info(`Listening to port ${port}`);
-module.exports = app; // For testing
+
+// Exporting app variables for testing
+module.exports = app;
+function stop() {
+  server.close();
+}
+module.exports.stop = stop;

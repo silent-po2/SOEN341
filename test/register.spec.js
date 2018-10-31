@@ -10,6 +10,7 @@ chai.use(chaiHttp);
 let request = chai.request(app);
 let expect = chai.expect;
 let db = require('../db/Database');
+process.env.NODE_ENV = 'test';
 
 describe('Register', function() {
   // Refresh the request before each test.
@@ -18,6 +19,10 @@ describe('Register', function() {
     db.deleteUser().catch(err => {
       // if error is returned, there was no user to delete.
     });
+  });
+
+  after(() => {
+    require('../app').stop();
   });
 
   describe('With valid parameters', function() {
