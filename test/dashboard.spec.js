@@ -10,7 +10,7 @@ chai.use(chaiHttp);
 let expect = chai.expect;
 let db = require('../db/Database');
 
-describe.only('Dashboard', function() {
+describe('Dashboard', function() {
   afterEach(() => {
     db.deleteUser().catch(err => {
       // if error is returned, there was no user to delete.
