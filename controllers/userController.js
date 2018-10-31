@@ -43,7 +43,7 @@ exports.profile = function(req, res) {
         });
       })
       .catch(error => {
-        console.log(error);
+        winston.error(error);
       });
   } else {
     res.redirect('/login');
@@ -58,15 +58,15 @@ exports.chat = function(req, res) {
     let sid = user.id;
     db.receiveChat(sid, rid)
       .then(result => {
-        console.log(result);
-        console.log(rid);
+        winston.debug(result);
+        winston.debug(rid);
         res.render('chat', {
           chatList: result,
           receiver: rid
         });
       })
       .catch(error => {
-        console.log(error);
+        winston.error(error);
       });
   } else {
     res.redirect('/login');
@@ -96,7 +96,7 @@ exports.chatPost = function(req, res) {
       let sid = user.id;
       let time = moment.utc(new Date()).format('YYYY-MM-DD HH:mm:ss');
       db.sendChat(rid, sid, time, chat).catch(error => {
-        console.log(error);
+        winston.error(error);
       });
       db.receiveChat(sid, rid)
         .then(result => {
@@ -106,7 +106,7 @@ exports.chatPost = function(req, res) {
           });
         })
         .catch(error => {
-          console.log(error);
+          winston.error(error);
         });
     }
   } else {
@@ -146,7 +146,7 @@ exports.dashboard = function(req, res) {
         });
       })
       .catch(error => {
-        console.log(error);
+        winston.error(error);
         req.flash('danger', 'Fail to load messages, please try again.');
         res.redirect('/dashboard');
       });
@@ -161,7 +161,7 @@ exports.dashboardPost = function(req, res) {
   winston.debug('Posting: ' + post);
   if (post == '') {
     req.flash('danger', 'Fail to post a message, please try again.');
-    res.redirect('/dashboard');
+    res.status(401).redirect('/dashboard');
   } else {
     db.post(post)
       .then(result => {
@@ -169,9 +169,9 @@ exports.dashboardPost = function(req, res) {
         res.redirect('/dashboard');
       })
       .catch(error => {
-        console.log(error);
+        winston.error(error);
         req.flash('danger', 'Fail to post a message, please try again.');
-        res.redirect('/dashboard');
+        res.status(401).redirect('/dashboard');
       });
   }
 };
@@ -201,19 +201,13 @@ exports.loginPost = function(req, res) {
 
   // If inputs are not valid, render the page again
   if (errors) {
-    res.render('../views/login.pug', {
+    res.status(401).res.render('../views/login.pug', {
       errors: errors
     });
   } else {
     // Else proceed with login verification
     db.login(email, password, type)
       .then(result => {
-        console.log(result[0]);
-        console.log(result[1]);
-        console.log(result[2]);
-        console.log(result[3]);
-        console.log(result[4]);
-        console.log(result[5]);
         let user = new User(
           result[0],
           result[1],
@@ -227,12 +221,12 @@ exports.loginPost = function(req, res) {
         res.redirect('/profile');
       })
       .catch(error => {
-        console.log(error);
+        winston.error(error);
         req.flash(
           'danger',
           'Email not found, password or user type incorrect, please try again.'
         );
-        res.render('../views/login.pug');
+        res.status(401).render('../views/login.pug');
       });
   }
 };
@@ -289,7 +283,7 @@ exports.registerPost = function(req, res) {
       .catch(error => {
         winston.debug(error.message);
         req.flash('danger', 'Email already exists, please try again.');
-        res.render('../views/register.pug');
+        res.status(401).render('../views/register.pug');
       });
   }
 };
@@ -333,7 +327,3 @@ exports.updateUserGet = function(req, res) {
 exports.updateUserPost = function(req, res) {
   res.send('NOT IMPLEMENTED: user update POST');
 };
-
-db.connection.query('select * from user', function(err, result, fields) {
-  console.log(result);
-});

@@ -42,7 +42,7 @@ class Database {
       this.connection.query(query, (err, res) => {
         winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
-        if (res.length === 0) reject(new Error('User not found'));
+        if (res.length === 0 || err) reject(new Error('User not found'));
         else {
           let result = [
             res[0].Id,
@@ -191,9 +191,25 @@ class Database {
           for (let i = 0; i < res.length; i++) {
             result.push([res[i].Msg, res[i].To, res[i].From, res[i].DT]);
           }
-          console.log(result);
           resolve(result);
         }
+      });
+    });
+  }
+
+  // This is used for the register test case to delete the test users created,
+  // only if the user has email test@test.com
+  deleteUser() {
+    let query = "delete from user where Email='test@test.com';";
+    return new Promise((resolve, reject) => {
+      if (!this.connection) {
+        this.connection.connect();
+      }
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) reject(err);
+        resolve(res);
       });
     });
   }
