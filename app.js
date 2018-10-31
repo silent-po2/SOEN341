@@ -3,20 +3,39 @@
  */
 
 // Load dependencies
-let http = require('http');
-let fs = require('fs');
 let express = require('express');
 let bodyParser = require('body-parser');
 let path = require('path');
-let urlencodedParser = bodyParser.urlencoded({ extended: false });
-let Database = require('./db/Database');
-let mysql = require('mysql');
-let md5 = require('md5');
 let session = require('express-session');
 let winston = require('./config/winston');
 let morgan = require('morgan');
 // let passport = require('passport');
 // let LocalStrategy = require('passport-local').Strategy;
+// let urlencodedParser = bodyParser.urlencoded({ extended: false });
+
+/**
+ * Function that can be used to format the objects that populate the
+ * error array that is returned in req.validationErrors().
+ *
+ * @param {*} param
+ * @param {*} msg
+ * @param {*} value
+ * @return {Object} A list of form parameters
+ */
+let validator = function(param, msg, value) {
+  let namespace = param.split('.');
+  let root = namespace.shift();
+  let formParam = root;
+
+  while (namespace.length) {
+    formParam += '[' + namespace.shift() + ']';
+  }
+  return {
+    param: formParam,
+    msg: msg,
+    value: value
+  };
+};
 
 const expressValidator = require('express-validator');
 const port = process.env.PORT || 3000;
@@ -25,13 +44,13 @@ process.env.LOGGER_LEVEL = 'debug';
 // Application that contains get/post/put/delete methods
 let app = express();
 
-// load boostrap
+// Load boostrap
 app.set('view engine', 'pug');
 
-// load view engine
+// Load view engine
 app.set('views', path.join(__dirname, 'views'));
 
-// set css and bootstrap folder
+// Set css and bootstrap folder
 app.use(express.static(path.join(__dirname, '/')));
 
 app.use(bodyParser.json());
@@ -55,33 +74,19 @@ app.use(
   })
 );
 
-// todo: what is this -- warning for validation
+// Setup flash to use during validation errors
 app.use(require('connect-flash')());
 
-// todo: what is this -- part of the flash message (warning for validation)
+// Setup part of the flash message (warning for validation)
 app.use(function(req, res, next) {
   res.locals.messages = require('express-messages')(req, res);
   next();
 });
 
-// Express Validator Middleware
-// todo: what is this -- form valitator middleware
+// Setup form validator middleware
 app.use(
   expressValidator({
-    errorFormatter: function(param, msg, value) {
-      let namespace = param.split('.');
-      let root = namespace.shift();
-      let formParam = root;
-
-      while (namespace.length) {
-        formParam += '[' + namespace.shift() + ']';
-      }
-      return {
-        param: formParam,
-        msg: msg,
-        value: value
-      };
-    }
+    errorFormatter: validator
   })
 );
 
@@ -95,9 +100,6 @@ require('./routes/users.js')(app);
 let server = app.listen(port);
 winston.info(`Listening to port ${port}`);
 
-// Exporting app variables for testing
+// Export only for testing
 module.exports = app;
-function stop() {
-  server.close();
-}
-module.exports.stop = stop;
+

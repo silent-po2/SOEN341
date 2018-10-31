@@ -2,8 +2,19 @@
   "extends": ["google", "plugin:prettier/recommended"],
   "rules": {
     "linebreak-style": 0,
-    "require-jsdoc": 0,
-    "singleQuote": true 
+    "singleQuote": true,
+    "require-jsdoc": [
+      "error",
+      {
+        "require": {
+          "FunctionDeclaration": true,
+          "MethodDefinition": true,
+          "ClassDeclaration": true,
+          "ArrowFunctionExpression": true,
+          "FunctionExpression": true
+        }
+      }
+    ]
   },
   "parserOptions": {
     "ecmaVersion": 6,

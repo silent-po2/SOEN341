@@ -29,13 +29,13 @@ foreign key (StudentId) references child(StudentId),
 primary key (ParentId, StudentId)
 );
 
-create table isTeacher (
-TeacherId int,
-StudentId int,
-foreign key (TeacherId) references user(Id),
-foreign key (StudentId) references child(StudentId),
-primary key (TeacherId, StudentId)
-);
+-- create table isTeacher (
+-- TeacherId int,
+-- StudentId int,
+-- foreign key (TeacherId) references user(Id),
+-- foreign key (StudentId) references child(StudentId),
+-- primary key (TeacherId, StudentId)
+-- );
 
 create table course ( 
 CourseId varchar(10) primary key,
