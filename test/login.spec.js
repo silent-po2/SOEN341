@@ -9,10 +9,15 @@ let chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 let request = chai.request(app);
 let expect = chai.expect;
+process.env.NODE_ENV = 'test';
 
 describe('Login', function() {
   // Refresh the request before each test.
   beforeEach(() => (request = chai.request(app)));
+
+  after(() => {
+    require('../app').stop();
+  });
 
   describe('With valid username/password/userType', function() {
     it('should succesfully login and redirect to profile', function(done) {

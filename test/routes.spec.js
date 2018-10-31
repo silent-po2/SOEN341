@@ -3,9 +3,15 @@ let chai = require('chai');
 let chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 let request = chai.request(app);
+let expect = chai.expect;
+process.env.NODE_ENV = 'test';
 
 describe('Testing routes', function() {
   beforeEach(() => (request = chai.request(app)));
+  after(() => {
+    require('../app').stop();
+  });
+
   describe('GET /', function() {
     it('should return a 200 response', function(done) {
       request.get('/').end((err, res) => {

@@ -8,8 +8,13 @@ let chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 let request = chai.request(app);
 let expect = chai.expect;
+process.env.NODE_ENV = 'test';
 
 describe('Logout', function() {
+  after(() => {
+    require('../app').stop();
+  });
+
   describe('When pressing logout', function() {
     it('should succesfully logout and redirect to /login', function(done) {
       request.get('/logout').end(function(err, res) {
