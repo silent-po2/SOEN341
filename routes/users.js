@@ -5,6 +5,7 @@
 
 let userController = require('../controllers/userController');
 // todo: add teacher/parent type on the link instead of passing session var?
+
 module.exports = function(app) {
   // Get user home page, default startup page
   app.get('/', userController.userHome);
@@ -18,14 +19,27 @@ module.exports = function(app) {
 
   app.get('/dashboard', userController.dashboard);
 
-  app.post('/dashboard', userController.dashboardPost);
+  // app.post('/dashboard', userController.like);
+
+  app.post(
+    '/dashboard',
+    userController.upload.single('myImage'),
+    userController.dashboardPost
+  );
+
+  app.get('/contacts', userController.contacts);
+  app.post('/contacts', userController.contactsPost);
 
   // not be able to register Error: ER_PARSE_ERROR: You have an error in your SQL syntax;
   app.post('/register', userController.registerPost);
 
-  app.post('/login', userController.loginPost); // when login with wrong email or password, login page stucks
+  app.post('/login', userController.loginPost);
 
   app.get('/logout', userController.logout);
+
+  app.get('/groupchat/:title', userController.groupchat);
+
+  app.post('/groupchat/:title', userController.groupchatPost);
 
   app.get('/chat/:id', userController.chat);
 
