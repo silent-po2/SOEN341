@@ -15,6 +15,7 @@ let md5 = require('md5');
 let session = require('express-session');
 let winston = require('./config/winston');
 let morgan = require('morgan');
+
 // let passport = require('passport');
 // let LocalStrategy = require('passport-local').Strategy;
 
