@@ -17,8 +17,9 @@ block content
           img.d-block.w-100(src='/pics/homepage1.jpg', alt='First slide')
           .mask.rgba-black-light
         .carousel-caption
-          h3.h3-responsive KiWi 
-          p KiWi 
+          h3.h3-responsive.text-muted KiWi 
+          p
+            font(color='black') KiWi 
       .carousel-item
         // Mask color
         .view
@@ -26,15 +27,17 @@ block content
           .mask.rgba-black-strong
         .carousel-caption
           h3.h3-responsive KiWi Teacher
-          p KiWi Teacher
+          p
+            font KiWi Teacher
       .carousel-item
         // Mask color
         .view
           img.d-block.w-100(src='/pics/homepage3.jpg', alt='Third slide')
           .mask.rgba-black-slight
         .carousel-caption
-          h3.h3-responsive KiWi Parent
-          p KiWi Parent
+          h3.h3-responsive.text-muted KiWi Parent
+          p 
+            font(color='black') KiWi Parent
     // /.Slides
     // Controls
     a.carousel-control-prev(href='#carousel-example-2', role='button', data-slide='prev')
