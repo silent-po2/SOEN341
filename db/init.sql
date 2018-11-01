@@ -81,20 +81,4 @@ create table chat (
 	foreign key (`To`) references user(Id)
 );
 
-create table groups (
-	GroupId int primary key NOT NULL auto_increment,
-    UserId int NOT NULL,
-	title varchar(255),
-    foreign key (UserId) references user(Id)
-);
 
-create table GroupChat (
-	GroupMsgId int primary key NOT NULL auto_increment,
-    GroupMsg varchar(256),
-    `From` int NOT NULL,
-    GroupId int NOT NULL,
-	DT DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    title varchar(255),
-	foreign key (`From`) references user(Id),
-    foreign key (GroupId) references groups(GroupId)
-);
