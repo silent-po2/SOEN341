@@ -59,8 +59,15 @@ class Database {
   }
 
   // This function inserts a new post to the database
-  post(post) {
-    let query = `insert into messages (Message) values ('${post}');`;
+  post(post, imageName, sender) {
+    let query =
+      "insert into messages(Message, ImageName, Sender) values ('" +
+      post +
+      "', '" +
+      imageName +
+      "', '" +
+      sender +
+      "');";
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
         winston.debug('db connection open');
@@ -197,22 +204,107 @@ class Database {
     });
   }
 
-  // This is used for the register test case to delete the test users created,
-  // only if the user has email test@test.com
-  deleteUser() {
-    let query = "delete from user where Email='test@test.com';";
+  // loads all user's groups
+  loadGroups(myId) {
+    let query = "select title from groups where UserId='" + myId + "';";
     return new Promise((resolve, reject) => {
-      if (!this.connection) {
-        this.connection.connect();
-      }
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        let result = [];
+        for (let i = 0; i < res.length; i++) {
+          result.push(res[i].title);
+        }
+        resolve(result);
+      });
+    });
+  }
+
+  formGroup(title, userId) {
+    // Setup query
+    let query =
+      "insert into groups (userId, title) values ('" +
+      userId +
+      "', '" +
+      title +
+      "');";
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) {
+          reject(err);
+        } else resolve(res);
+      });
+    });
+  }
+
+  // inserts the group chat into group table
+  sendGroupChat(groupId, title, sid, time, chat) {
+    let query =
+      "insert into GroupChat (GroupMsg, `From`, GroupId, title) values ('" +
+      chat +
+      "','" +
+      sid +
+      "','" +
+      groupId +
+      "','" +
+      title +
+      "');";
+    return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
         winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
         if (err) reject(err);
-        resolve(res);
+        else resolve(res);
+      });
+    });
+  }
+
+  // select the group chat for the group
+  receivegroupChat(title) {
+    let query = "select * from GroupChat where title='" + title + "';";
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (res.length === 0) {
+          let result = [];
+          resolve(result);
+        } else {
+          let result = [];
+          for (let i = 0; i < res.length; i++) {
+            result.push([
+              res[i].GroupMsg,
+              res[i].title,
+              res[i].From,
+              res[i].DT
+            ]);
+          }
+          resolve(result);
+        }
+      });
+    });
+  }
+
+  like(msgId) {
+    let query =
+      "UPDATE messages SET Like = Like + 1 where MsgId='" + msgId + "';";
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        let likes;
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        let query = "select Like from messages where MsgId='" + msgId + "';";
+        this.connection.query(query, (err, res) => {
+          if (err) throw err;
+          else {
+            likes = res;
+            resolve(likes);
+          }
+        });
       });
     });
   }
 }
-
 module.exports = new Database();
