@@ -5,6 +5,42 @@
 let User = require('../models/user');
 let db = require('../db/Database');
 let winston = require('../config/winston');
+let multer = require('multer');
+let path = require('path');
+let storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, './public/uploads/');
+  },
+  filename: function(req, file, cb) {
+    cb(
+      null,
+      file.fieldname + '-' + Date.now() + path.extname(file.originalname)
+    );
+  }
+});
+
+function checkFileType(file, cb) {
+  // Allowed ext
+  const filetypes = /jpeg|jpg|png|gif/;
+  // Check ext
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  // Check mime
+  const mimetype = filetypes.test(file.mimetype);
+
+  if (mimetype && extname) {
+    return cb(null, true);
+  } else {
+    cb('Error: Images Only!');
+  }
+}
+
+exports.upload = multer({
+  storage: storage,
+  limits: { fileSize: 1000000 },
+  fileFilter: function(req, file, cb) {
+    checkFileType(file, cb);
+  }
+});
 
 let moment = require('moment');
 
@@ -45,6 +81,137 @@ exports.profile = function(req, res) {
       .catch(error => {
         console.log(error);
       });
+  } else {
+    res.redirect('/login');
+  }
+};
+// Responds with contactsPost
+exports.contactsPost = function(req, res) {
+  let myId = req.body.myId;
+  let userArray = req.body.userId;
+  let gname = req.body.groupName;
+  winston.debug('title: ' + gname + 'users:' + myId + userArray);
+  if (gname === '') {
+    req.flash('danger', 'Please enter a name.');
+    res.redirect('/contacts');
+  } else if (!userArray) {
+    req.flash('danger', 'Please select at least one contact.');
+    res.redirect('/contacts');
+  } else {
+    db.formGroup(gname, myId)
+      .then(result => {})
+      .catch(error => {
+        console.log(error);
+        req.flash('danger', 'Fail to form a group, please try again.');
+        res.redirect('/contacts');
+      });
+    for (let i = 0; i < userArray.length; i++) {
+      db.formGroup(gname, userArray[i])
+        .then(result => {})
+        .catch(error => {
+          console.log(error);
+          req.flash('danger', 'Fail to form a group, please try again.');
+          res.redirect('/contacts');
+        });
+    }
+    req.flash('success', 'Group formed.');
+    res.redirect('/contacts');
+  }
+};
+
+// Responds with profile
+exports.contacts = function(req, res) {
+  if (req.session.user) {
+    let user = req.session.user;
+    let userArr = [
+      user.id,
+      user.email,
+      user.firstName,
+      user.lastName,
+      user.type
+    ];
+    db.loadUsers()
+      .then(result => {
+        let userList = result;
+        db.loadGroups(user.id).then(result => {
+          res.render('../views/contacts.pug', {
+            title: 'My Contact',
+            userArr: userArr,
+            user: req.session.user,
+            userList: userList,
+            groupList: result
+          });
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  } else {
+    res.redirect('/login');
+  }
+};
+
+// Responds with group chat
+exports.groupchat = function(req, res) {
+  if (req.session.user) {
+    let user = req.session.user;
+    let title = req.params.title;
+    let sid = user.id;
+    db.receivegroupChat(title)
+      .then(result => {
+        res.render('groupchat', {
+          groupchatList: result,
+          title: title,
+          sender: sid
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  } else {
+    res.redirect('/login');
+  }
+};
+// Responds with group chat post
+exports.groupchatPost = function(req, res) {
+  if (req.session.user) {
+    let chat = req.body.groupchat;
+    req.checkBody('groupchat', 'Message is empty').notEmpty();
+    let errors = req.validationErrors();
+    if (errors) {
+      let user = req.session.user;
+      let title = req.params.title;
+      let sid = user.id;
+      db.receivegroupChat(title).then(result => {
+        res.render('groupchat', {
+          errors: errors,
+          groupchatList: result,
+          title: title,
+          sender: sid
+        });
+      });
+    } else {
+      winston.debug('Sending: ' + chat);
+      let user = req.session.user;
+      let groupId = 1;
+      let title = req.params.title;
+      let sid = user.id;
+      let time = moment.utc(new Date()).format('YYYY-MM-DD HH:mm:ss');
+      db.sendGroupChat(groupId, title, sid, time, chat).catch(error => {
+        console.log(error);
+      });
+      db.receivegroupChat(title)
+        .then(result => {
+          res.render('groupchat', {
+            groupchatList: result,
+            title: title,
+            sender: sid
+          });
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
   } else {
     res.redirect('/login');
   }
@@ -134,14 +301,23 @@ exports.register = function(req, res) {
 // Responds with dashboard
 exports.dashboard = function(req, res) {
   if (req.session.user) {
-    let msgArr = [];
+    let postArr = [];
+    let user = req.session.user;
+    let userArr = [
+      user.id,
+      user.email,
+      user.firstName,
+      user.lastName,
+      user.type
+    ];
     db.dashboardGet()
       .then(rows => {
         for (let i = 0; i < rows.length; i++) {
-          msgArr[i] = rows[i].Message;
+          postArr[i] = rows[i];
         }
         res.render('../views/dashboard.pug', {
-          msgArr: msgArr,
+          postArr: postArr,
+          userArr: userArr,
           user: req.session.user
         });
       })
@@ -157,13 +333,23 @@ exports.dashboard = function(req, res) {
 
 // Posts using dashboard
 exports.dashboardPost = function(req, res) {
+  let user = req.session.user;
+  let sender = user.firstName + ' ' + user.lastName;
   let post = req.body.post;
-  winston.debug('Posting: ' + post);
+  let image = req.file;
+  let imageName;
+  let msgId = req.body.msgId;
+  winston.debug('msgId: ' + msgId);
   if (post == '') {
     req.flash('danger', 'Fail to post a message, please try again.');
     res.redirect('/dashboard');
   } else {
-    db.post(post)
+    if (image == undefined) {
+      imageName = null;
+    } else {
+      imageName = req.file.filename;
+    }
+    db.post(post, imageName, sender)
       .then(result => {
         // req.flash('success', 'Message posted');
         res.redirect('/dashboard');
@@ -294,6 +480,17 @@ exports.registerPost = function(req, res) {
   }
 };
 
+// response with like on dashboard
+exports.like = function(req, res) {
+  let msgId = req.body.msgId;
+  console.log(msgId);
+  db.like(msgId);
+  res.render('dashboard'),
+    {
+      likes: likes
+    };
+};
+
 // Responds with a list of all users
 exports.listAllUsers = function(req, res) {
   res.send('NOT IMPLEMENTD: userList');
@@ -333,7 +530,3 @@ exports.updateUserGet = function(req, res) {
 exports.updateUserPost = function(req, res) {
   res.send('NOT IMPLEMENTED: user update POST');
 };
-
-db.connection.query('select * from user', function(err, result, fields) {
-  console.log(result);
-});
