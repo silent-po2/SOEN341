@@ -8,10 +8,25 @@ let winston = require('../config/winston');
 let moment = require('moment');
 let multer = require('multer');
 let path = require('path');
+
 let storage = multer.diskStorage({
+  /**
+   * TODO
+   *
+   * @param {*} req
+   * @param {*} file
+   * @param {*} cb
+   */
   destination: function(req, file, cb) {
     cb(null, './public/uploads/');
   },
+  /**
+   * TODO
+   *
+   * @param {*} req
+   * @param {*} file
+   * @param {*} cb
+   */
   filename: function(req, file, cb) {
     cb(
       null,
@@ -19,6 +34,14 @@ let storage = multer.diskStorage({
     );
   }
 });
+
+/**
+ * TODO
+ *
+ * @param {*} file
+ * @param {*} cb
+ * @return {cb}
+ */
 function checkFileType(file, cb) {
   // Allowed ext
   const filetypes = /jpeg|jpg|png|gif/;
@@ -43,6 +66,13 @@ module.exports = {
   upload: multer({
     storage: storage,
     limits: { fileSize: 1000000 },
+    /**
+     * TODO
+     *
+     * @param {*} req
+     * @param {*} file
+     * @param {*} cb
+     */
     fileFilter: function(req, file, cb) {
       checkFileType(file, cb);
     }
@@ -291,7 +321,7 @@ module.exports = {
       });
     } else {
       // Create user object
-      let user = new User('TBA', email, firstName, lastName, password, type);
+      let user = { email, firstName, lastName, password, type };
       db.register(user)
         .then(result => {
           req.flash('success', 'You are registered, please log in.');
@@ -478,6 +508,12 @@ module.exports = {
     }
   },
 
+  /**
+   * TODO
+   *
+   * @param {*} req
+   * @param {*} res
+   */
   groupchatPost: function(req, res) {
     if (req.session.user) {
       let chat = req.body.groupchat;
@@ -522,13 +558,16 @@ module.exports = {
     }
   },
 
+  /**
+   * TODO
+   *
+   * @param {*} req
+   * @param {*} res
+   */
   like: function(req, res) {
     let msgId = req.body.msgId;
-    console.log(msgId);
+    winston.debug(msgId);
     db.like(msgId);
-    res.render('dashboard'),
-      {
-        likes: likes
-      };
+    res.render('dashboard'), { likes: likes };
   }
 };

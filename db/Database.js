@@ -5,8 +5,17 @@
 const mysql = require('mysql');
 let winston = require('../config/winston');
 
+/**
+ *
+ *
+ * @class Database
+ */
 class Database {
   // Constructor only creates connection but does not open it
+  /**
+   *Creates an instance of Database.
+   * @memberof Database
+   */
   constructor() {
     winston.debug('Db instantiated');
     this.connection = mysql.createConnection({
@@ -18,6 +27,11 @@ class Database {
   }
 
   // Closes the connection to the db
+  /**
+   *
+   *
+   * @memberof Database
+   */
   close() {
     this.connection.end(err => {
       if (err) throw err;
@@ -26,6 +40,15 @@ class Database {
   }
 
   // Returns a promise with the user id if user is found, rejects otherwise
+  /**
+   *
+   *
+   * @param {*} email
+   * @param {*} password
+   * @param {*} type
+   * @return
+   * @memberof Database
+   */
   login(email, password, type) {
     let query =
       "select * from user where Email='" +
@@ -59,6 +82,15 @@ class Database {
   }
 
   // This function inserts a new post to the database
+  /**
+   *
+   *
+   * @param {*} post
+   * @param {*} imageName
+   * @param {*} sender
+   * @return
+   * @memberof Database
+   */
   post(post, imageName, sender) {
     let query =
       "insert into messages(Message, ImageName, Sender) values ('" +
@@ -82,6 +114,12 @@ class Database {
   }
 
   // This function selects all data from message table
+  /**
+   *
+   *
+   * @return
+   * @memberof Database
+   */
   dashboardGet() {
     let query = 'SELECT * FROM messages';
     return new Promise((resolve, reject) => {
@@ -96,6 +134,13 @@ class Database {
   }
 
   // This function inserts a new user into the database and subsequently into the teacher or parent tables
+  /**
+   *
+   *
+   * @param {*} user
+   * @return
+   * @memberof Database
+   */
   register(user) {
     // Setup query
     let query =
@@ -123,6 +168,13 @@ class Database {
   }
 
   // Returns the user id given a user object
+  /**
+   *
+   *
+   * @param {*} email
+   * @return
+   * @memberof Database
+   */
   getId(email) {
     let query = "select Id from user where Email='" + email + "';";
     return new Promise((resolve, reject) => {
@@ -136,6 +188,12 @@ class Database {
   }
 
   // loads all users' info
+  /**
+   *
+   *
+   * @return
+   * @memberof Database
+   */
   loadUsers() {
     let query = 'select Id, FirstName, LastName from user';
     return new Promise((resolve, reject) => {
@@ -154,6 +212,16 @@ class Database {
     });
   }
   // inserts the chat into tempchats table
+  /**
+   *
+   *
+   * @param {*} rid
+   * @param {*} sid
+   * @param {*} time
+   * @param {*} chat
+   * @return
+   * @memberof Database
+   */
   sendChat(rid, sid, time, chat) {
     let query =
       "insert into chat (Msg, `From`, `To`) values ('" +
@@ -174,6 +242,14 @@ class Database {
   }
 
   // select the chat for the receiver
+  /**
+   *
+   *
+   * @param {*} rid
+   * @param {*} sid
+   * @return
+   * @memberof Database
+   */
   receiveChat(rid, sid) {
     let query =
       "select * from chat where (`To`='" +
@@ -206,6 +282,12 @@ class Database {
 
   // This is used for the register test case to delete the test users created,
   // only if the user has email test@test.com
+  /**
+   *
+   *
+   * @return
+   * @memberof Database
+   */
   deleteUser() {
     let query = "delete from user where Email='test@test.com';";
     return new Promise((resolve, reject) => {
@@ -222,6 +304,13 @@ class Database {
   }
 
   // loads all user's groups
+  /**
+   *
+   *
+   * @param {*} myId
+   * @return
+   * @memberof Database
+   */
   loadGroups(myId) {
     let query = "select title from groups where UserId='" + myId + "';";
     return new Promise((resolve, reject) => {
@@ -237,6 +326,14 @@ class Database {
     });
   }
 
+  /**
+   *
+   *
+   * @param {*} title
+   * @param {*} userId
+   * @return
+   * @memberof Database
+   */
   formGroup(title, userId) {
     // Setup query
     let query =
@@ -257,6 +354,17 @@ class Database {
   }
 
   // inserts the group chat into group table
+  /**
+   *
+   *
+   * @param {*} groupId
+   * @param {*} title
+   * @param {*} sid
+   * @param {*} time
+   * @param {*} chat
+   * @return
+   * @memberof Database
+   */
   sendGroupChat(groupId, title, sid, time, chat) {
     let query =
       "insert into GroupChat (GroupMsg, `From`, GroupId, title) values ('" +
@@ -279,6 +387,13 @@ class Database {
   }
 
   // select the group chat for the group
+  /**
+   *
+   *
+   * @param {*} title
+   * @return
+   * @memberof Database
+   */
   receivegroupChat(title) {
     let query = "select * from GroupChat where title='" + title + "';";
     return new Promise((resolve, reject) => {
@@ -304,6 +419,13 @@ class Database {
     });
   }
 
+  /**
+   *
+   *
+   * @param {*} msgId
+   * @return
+   * @memberof Database
+   */
   like(msgId) {
     let query =
       "UPDATE messages SET Like = Like + 1 where MsgId='" + msgId + "';";
