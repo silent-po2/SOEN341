@@ -13,30 +13,6 @@ let morgan = require('morgan');
 // let LocalStrategy = require('passport-local').Strategy;
 // let urlencodedParser = bodyParser.urlencoded({ extended: false });
 
-/**
- * Function that can be used to format the objects that populate the
- * error array that is returned in req.validationErrors().
- *
- * @param {*} param
- * @param {*} msg
- * @param {*} value
- * @return {Object} A list of form parameters
- */
-let validator = function(param, msg, value) {
-  let namespace = param.split('.');
-  let root = namespace.shift();
-  let formParam = root;
-
-  while (namespace.length) {
-    formParam += '[' + namespace.shift() + ']';
-  }
-  return {
-    param: formParam,
-    msg: msg,
-    value: value
-  };
-};
-
 const expressValidator = require('express-validator');
 const port = process.env.PORT || 3000;
 process.env.LOGGER_LEVEL = 'debug';
@@ -83,10 +59,33 @@ app.use(function(req, res, next) {
   next();
 });
 
+/**
+ * Error formatter function for express validator
+ *
+ * @param {Object} param
+ * @param {String} msg
+ * @param {Object} value
+ * @return {Object} A list of parameters
+ */
+let errorFormatter = function(param, msg, value) {
+  let namespace = param.split('.');
+  let root = namespace.shift();
+  let formParam = root;
+
+  while (namespace.length) {
+    formParam += '[' + namespace.shift() + ']';
+  }
+  return {
+    param: formParam,
+    msg: msg,
+    value: value
+  };
+};
+
 // Setup form validator middleware
 app.use(
   expressValidator({
-    errorFormatter: validator
+    errorFormatter
   })
 );
 
@@ -100,6 +99,15 @@ require('./routes/users.js')(app);
 let server = app.listen(port);
 winston.info(`Listening to port ${port}`);
 
-// Export only for testing
+// Exporting app variables for testing
 module.exports = app;
 
+/**
+ * Function that closes the application
+ *
+ */
+function stop() {
+  server.close();
+}
+
+module.exports.stop = stop;

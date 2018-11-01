@@ -23,8 +23,15 @@ module.exports = function(app) {
 
   app.get('/dashboard', userController.dashboard);
 
-  app.post('/dashboard', userController.dashboardPost);
+  app.post(
+    '/dashboard',
+    userController.upload.single('myImage'),
+    userController.dashboardPost
+  );
 
+  app.get('/contacts', userController.contacts);
+
+  app.post('/contacts', userController.contactsPost);
   // ! not be able to register Error: ER_PARSE_ERROR: You have an error in your SQL syntax;
   app.post('/register', userController.registerPost);
 
@@ -32,6 +39,10 @@ module.exports = function(app) {
   app.post('/login', userController.loginPost);
 
   app.get('/logout', userController.logout);
+
+  app.get('/groupchat/:title', userController.groupchat);
+
+  app.post('/groupchat/:title', userController.groupchatPost);
 
   app.get('/chat/:id', userController.chat);
 

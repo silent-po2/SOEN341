@@ -1,61 +1,109 @@
 //- inspired by maniruzzamanakash https://bootsnipp.com/snippets/M5obX
 
 extends layout
-
+  
 block content
   br
   h2 Dashboard
-  form(method='POST', action='/dashboard')
-    #form-group
-     label(for='post')
-     textarea.form-control(type='text', name='post', placeholder='What do you want to say?')
-    br
-    input.btn.btn-primary(type='submit',value='Submit')
-  br
-  each Message, i in msgArr
-    .card
-      .card-body
-        .row
-          .col-md-2
-            img.img.img-rounded.img-fluid(src='/pics/profile.png')
-            //p.text-secondary.text-center 15 Minutes Ago
-          .col-md-10
-            //- p
-            //-   a.float-left(href='https://maniruzzaman-akash.blogspot.com/p/contact.html')
-            //-     strong Maniruzzaman Akash
-            //-   span.float-right
-            //-     i.text-warning.fa.fa-star
-            //-   span.float-right
-            //-     i.text-warning.fa.fa-star
-            //-   span.float-right
-            //-     i.text-warning.fa.fa-star
-            //-   span.float-right
-            //-     i.text-warning.fa.fa-star
-            //- .clearfix
-            p= Message
-              a.float-right.btn.btn-outline-primary.ml-2
-                i.fa.fa-reply
-                |  Reply
-              a.float-right.btn.text-white.btn-danger
-                i.fa.fa-heart
-                |  Like
-      //- .card.card-inner
-      //-   .card-body
-      //-     .row
-      //-       .col-md-2
-      //-         img.img.img-rounded.img-fluid(src='https://image.ibb.co/jw55Ex/def_face.jpg')
-      //-         p.text-secondary.text-center 15 Minutes Ago
-      //-       .col-md-10
-      //-         p
-      //-           a(href='https://maniruzzaman-akash.blogspot.com/p/contact.html')
-      //-             strong Maniruzzaman Akash
-      //-         p
-      //-           | Lorem Ipsum is simply dummy text of the pr make  but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-      //-         p
-      //-           a.float-right.btn.btn-outline-primary.ml-2
-      //-             i.fa.fa-reply
-      //-             |  Reply
-      //-           a.float-right.btn.text-white.btn-danger
-      //-             i.fa.fa-heart
-      //-             |  Like
+  .row
+    //- .column.left
+    //- 
+     
+    .column.middle     
+      form(action='/dashboard', method='POST', name='dash', enctype='multipart/form-data')
+        #form-group
+        label(for='post')
+        textarea.form-control(type='text', name='post', placeholder='What do you want to say?')
+        .file-field.input-field
+          input(name='myImage', type='file')
+        input.btn.btn-primary(type='submit', name= 'posting' value='Send')
+      hr
+      each post, i in postArr
+        .card
+          .card-body
+            .row
+              .col-md-2
+                img.img.img-rounded.img-fluid(src='/pics/profile.png')
+                p= getSender(post)
+                a.float-left
+                //p.text-secondary.text-center 
+              .col-md-10
+                
+                if(getImage(post)!="null")
+                  img.responsive-img(src='/public/uploads/'+ getImage(post))
+                p= getMessage(post)
+                
+                //- a.float-right.btn.text-white.btn-danger
+                //-   |  Dislike (#{getDislike(post)})
+                script(type='text/javascript').
+                  function like(i){
+                    alert(i[0].id)
+                  }
+                script(type='text/javascript').
+                  function assignId(){
+                    var btArr = document.getElementsByTagName("button")
+                    for (var i = 0; i < btArr.length; i++){
+                      document.getElementsByTagName('button')[i].setAttribute('id',  (i))
+                    } 
+                  }
+                button.float-right(type='button', onclick='myFunction()') Like
+                p.float-right#demo 0
+                script.
+                  var add = (function () {
+                  var counter = 0;
+                  return function () {return counter += 1;}
+                  })();
+                  function myFunction(){
+                  document.getElementById("demo").innerHTML = add();
+                  }
+                //- form(action='/dashboard', name='likes', method='POST')
+                //-   script(type='text/javascript').
+                //-     function currentId(event){
+                //-     return (event.target.id);
+                //-     }
+                //-   input(name='msgId', type='hidden', value='currentIds(event)') 
+                //-   input.btn.float-right.btn-primary(type='submit', name='like' value='Like('+ getLike(post) +')')
+      
+      body(onload='assignId()')
+          
+  style.
+      * {
+      box-sizing: border-box;
+      }
+      /* Create three unequal columns that floats next to each other */
+      .column {
+      float: left;
+      padding: 10px;
+      }
+      .left {
+      width: 25%;
+      }
+      .middle {
+      width: 75%;
+      }
+      /* Clear floats after the columns */
+      .row:after {
+      content: "";
+      display: table;
+      clear: both;
+      }
 
+  -function getMessage(post){
+      -return post.Message;
+  -}
+  -function getImage(post){
+      -return post.ImageName;
+  -}
+  -function getLike(post){
+      -return post.Like;
+  -}
+  -function getDislike(post){
+      -return post.Dislike;
+  -}
+  -function getSender(post){
+      -return post.Sender;
+  -}
+  //- -function currentIds(event){
+  //-     -return currentId(event);
+  //- -}
+  

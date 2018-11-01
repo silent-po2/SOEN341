@@ -37,22 +37,18 @@ let logger = winston.createLogger({
   exitOnError: false // do not exit on handled exceptions
 });
 
-// // create a stream object with a 'write' function that will be used by `morgan`
 logger.stream = {
-  write: write
-};
-
-/**
- * Function that decides when the logger should output. Under test
- * conditions, the logger should not be outputting.
- *
- * @param {*} message
- * @param {*} encoding
- */
-let write = function(message, encoding) {
-  // use the 'info' log level so the output will be picked up by both transports (file and console)
-  if (process.env.NODE_ENV !== 'test') {
-    logger.info(message);
+  /**
+   * TODO
+   *
+   * @param {*} message
+   * @param {*} encoding
+   */
+  write: function(message, encoding) {
+    // use the 'info' log level so the output will be picked up by both transports (file and console)
+    if (process.env.NODE_ENV !== 'test') {
+      logger.info(message);
+    }
   }
 };
 

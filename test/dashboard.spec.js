@@ -9,6 +9,7 @@ let chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 let expect = chai.expect;
 let db = require('../db/Database');
+let agent = chai.request.agent(app);
 process.env.NODE_ENV = 'test';
 
 describe('Dashboard', function() {
@@ -24,37 +25,35 @@ describe('Dashboard', function() {
 
   describe('Register user, login and open dashboard', function() {
     it('should be able to post to the dashboard', function(done) {
-      chai
-        .request(app)
+      let user = {
+        email: 'test@test.com',
+        firstname: 'aaa',
+        lastname: 'aaa',
+        password: '111',
+        password2: '111',
+        userType: 'T'
+      };
+      agent
         .post('/register')
         .type('form')
-        .send({
-          email: 'test@test.com',
-          firstname: 'aaa',
-          lastname: 'aaa',
-          password: '111',
-          password2: '111',
-          userType: 'T'
-        })
+        .send(user)
         .end(function(err, res) {
           expect(err).to.be.null;
           expect(res).to.have.status(200);
           expect(res).to.redirect;
-          chai
-            .request(app)
+          agent
             .post('/login')
             .type('form')
             .send({
-              email: 'test@test.com',
-              password: '111',
-              userType: 'T'
+              email: user.email,
+              password: user.password,
+              userType: user.userType
             })
             .end(function(err, res) {
               expect(err).to.be.null;
               expect(res).to.have.status(200);
               expect(res).to.redirect;
-              chai
-                .request(app)
+              agent
                 .post('/dashboard')
                 .send({ post: 'test' })
                 .end(function(err, res) {
@@ -69,8 +68,7 @@ describe('Dashboard', function() {
 
     describe('Register user, login and open dashboard', function() {
       it('should be not be able to post an empty message to the dashboard', function(done) {
-        chai
-          .request(app)
+        agent
           .post('/register')
           .type('form')
           .send({
@@ -85,8 +83,7 @@ describe('Dashboard', function() {
             expect(err).to.be.null;
             expect(res).to.have.status(200);
             expect(res).to.redirect;
-            chai
-              .request(app)
+            agent
               .post('/login')
               .type('form')
               .send({
@@ -98,8 +95,7 @@ describe('Dashboard', function() {
                 expect(err).to.be.null;
                 expect(res).to.have.status(200);
                 expect(res).to.redirect;
-                chai
-                  .request(app)
+                agent
                   .post('/dashboard')
                   .send({ post: '' })
                   .end(function(err, res) {

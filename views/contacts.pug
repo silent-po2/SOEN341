@@ -1,0 +1,78 @@
+//- inspired by suneelrajpoot44 Bootsnipp https://bootsnipp.com/snippets/E1nNa
+extends layout
+    
+block content
+    br
+    h3 My Contacts
+    br
+    .container
+        ul#myTab.nav.nav-tabs.mb-4(role='tablist')
+            li.nav-item
+                a#basicInfo-tab.nav-link.active(data-toggle='tab', href='#privateMessages', role='tab', aria-controls='privateMessages', aria-selected='true') Private
+            li.nav-item
+                a#basicInfo-tab.nav-link(data-toggle='tab', href='#groups', role='tab', aria-controls='groups', aria-selected='true') Group
+            li.nav-item
+                a#basicInfo-tab.nav-link(data-toggle='tab', href='#makeGroup', role='tab', aria-controls='makeGroup', aria-selected='true') Make A Group
+        #myTabContent.tab-content.ml-1
+            #privateMessages.tab-pane.fade.show.active(role='tabpanel', aria-labelledby='privateMessages-tab')
+                each user, i in userList
+                    if userArr[0]!=user[0]
+                        .row
+                            .col-sm-3.col-md-2.col-5
+                                img.img.img-rounded.img-fluid(src='/pics/profile.png', style='width:60%')
+                            .col-md-8.col-6
+                                h3= user[1] + ' ' + user[2]
+                                button.btn.btn-primary.btn-sm(type='button',onclick="window.open('/chat/"+user[0]+"', 'newwindow', 'width=600,height=650'); return false;") Send a message
+                        hr
+            
+            #groups.tab-pane.fade.show(role='tabpanel', aria-labelledby='groups-tab')
+                form(action='/contacts', method='post')
+                    each title, i in groupList
+                        .row
+                            .col-md-8.col-6
+                                button.btn.btn-primary.btn-sm(type='button',onclick="window.open('/groupchat/"+title+"', 'newwindow', 'width=600,height=650'); return false;") Send a message to the #{title}
+                        hr
+            #makeGroup.tab-pane.fade.show(role='tabpanel', aria-labelledby='makeGroup-tab')   
+                form#groupForm.groupForm(action='/contacts', method='post')
+                    .form-group
+                        label.col-sm-2(for='text') Name: 
+                        input#name.form-control.col-sm-8(type='text', name='groupName', placeholder='Enter a name')
+                    hr
+                    .row
+                        input(type='checkbox', name='myId', value=userList[0][0], checked='')
+                        text= userList[0][1] + ' ' + userList[0][2] 
+                    hr
+                    each user, i in userList
+                        if userArr[0]!=user[0]
+                            .row
+                                input(type='checkbox', name='userId[]', value=user[0])
+                                text= user[1] + ' ' + user[2]
+                            hr
+                    input.btn.btn-primary(type='submit', value='Form a group')
+                                            //- .row
+                                            //-     .col-sm-3.col-md-2.col-5
+                                            //-         label(style='font-weight:bold;') Something
+                                            //-     .col-md-8.col-6
+                                            //-         | Something
+                                            //- hr
+                                            //- .row
+                                            //-     .col-sm-3.col-md-2.col-5
+                                            //-         label(style='font-weight:bold;') Something
+                                            //-     .col-md-8.col-6
+                                            //-         | Something
+                                            
+                
+
+//- br
+//- h2 #{title}
+//- each item, i in userArr
+//-     p= item
+    //-   h4 Group Chat
+    //-   form(action='/action_page.php', method='get')
+    //-     each user, i in userList
+    //-       .row
+    //-           .col-md-8.col-6
+    //-               input(type='checkbox', name='vehicle', value='Bike')
+    //-               text= user[1] + ' ' + user[2]
+    //-       hr
+    //-     input.btn.btn-primary(type='submit', value='Group Chat')
