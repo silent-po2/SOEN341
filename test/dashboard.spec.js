@@ -38,7 +38,6 @@ describe('Dashboard', function() {
         .type('form')
         .send(user)
         .end(function(err, res) {
-          console.log('registered ' + err);
           expect(err).to.be.null;
           expect(res).to.have.status(200);
           expect(res).to.redirect;
@@ -51,7 +50,6 @@ describe('Dashboard', function() {
               userType: user.userType
             })
             .end(function(err, res) {
-              console.log('logged in ' + err);
               expect(err).to.be.null;
               expect(res).to.have.status(200);
               expect(res).to.redirect;
@@ -59,7 +57,6 @@ describe('Dashboard', function() {
                 .post('/dashboard')
                 .send({ post: 'test' })
                 .end(function(err, res) {
-                  console.log('posting ' + err);
                   expect(err).to.be.null;
                   expect(res).to.have.status(200);
                   expect(res).to.redirect;
