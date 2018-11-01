@@ -9,7 +9,6 @@ let path = require('path');
 let session = require('express-session');
 let winston = require('./config/winston');
 let morgan = require('morgan');
-
 // let passport = require('passport');
 // let LocalStrategy = require('passport-local').Strategy;
 // let urlencodedParser = bodyParser.urlencoded({ extended: false });
@@ -87,7 +86,20 @@ app.use(function(req, res, next) {
 // Setup form validator middleware
 app.use(
   expressValidator({
-    errorFormatter: validator
+    errorFormatter: function(param, msg, value) {
+      let namespace = param.split('.');
+      let root = namespace.shift();
+      let formParam = root;
+
+      while (namespace.length) {
+        formParam += '[' + namespace.shift() + ']';
+      }
+      return {
+        param: formParam,
+        msg: msg,
+        value: value
+      };
+    }
   })
 );
 
@@ -103,4 +115,3 @@ winston.info(`Listening to port ${port}`);
 
 // Export only for testing
 module.exports = app;
-
