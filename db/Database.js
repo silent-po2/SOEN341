@@ -204,6 +204,23 @@ class Database {
     });
   }
 
+  // This is used for the register test case to delete the test users created,
+  // only if the user has email test@test.com
+  deleteUser() {
+    let query = "delete from user where Email='test@test.com';";
+    return new Promise((resolve, reject) => {
+      if (!this.connection) {
+        this.connection.connect();
+      }
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) reject(err);
+        resolve(res);
+      });
+    });
+  }
+
   // loads all user's groups
   loadGroups(myId) {
     let query = "select title from groups where UserId='" + myId + "';";
