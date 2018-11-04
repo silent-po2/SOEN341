@@ -15,6 +15,7 @@ module.exports = {
    * @param {Object} res - Response parameter
    */
   userHome: function(req, res) {
+    winston.info('GET home');
     res.render('../views/home.pug', {
       user: req.session.user
     });
@@ -27,6 +28,7 @@ module.exports = {
    * @param {Object} res - Response parameter
    */
   login: function(req, res) {
+    winston.info('GET login');
     res.render('../views/login.pug', {
       title: 'Login'
     });
@@ -39,45 +41,41 @@ module.exports = {
    * @param {Object} res - Response parameter
    */
   loginPost: function(req, res) {
+    winston.info('POST login');
+
     let email = req.body.email.toLowerCase();
     let password = req.body.password;
     let type = req.body.userType;
-    req.checkBody('email', 'Email is required').notEmpty();
-    req.checkBody('email', 'Email is not valid').isEmail();
-    req.checkBody('password', 'Password is required').notEmpty();
-    winston.debug('Login user: ' + email + ' type: ' + type);
-    let errors = req.validationErrors();
 
-    // If inputs are not valid, render the page again
-    if (errors) {
-      res.status(401).res.render('../views/login.pug', {
-        errors: errors
+    winston.debug('Login user: ' + email + ' type: ' + type);
+
+    // Promise that resolves if login params are correct.
+    let checkLoginParams = new Promise((resolve, reject) => {
+      req.checkBody('email', 'Email is required').notEmpty();
+      req.checkBody('email', 'Email is not valid').isEmail();
+      req.checkBody('password', 'Password is required').notEmpty();
+      let err = req.validationErrors();
+      if (err) reject(new Error('Email or password not defined.'));
+      resolve(null);
+    });
+
+    checkLoginParams
+      .then(() => {
+        return db.login(email, password, type);
+      })
+      .then(user => {
+        req.session.user = user;
+        req.flash('success', 'You are logged in.');
+        return res.redirect('/profile');
+      })
+      .catch(error => {
+        winston.error(error.stack);
+        req.flash(
+          'danger',
+          'Email not found, password or user type incorrect, please try again.'
+        );
+        return res.status(401).render('../views/login.pug');
       });
-    } else {
-      // Else proceed with login verification
-      db.login(email, password, type)
-        .then(result => {
-          let user = new User(
-            result[0],
-            result[1],
-            result[2],
-            result[3],
-            result[4],
-            result[5]
-          );
-          req.session.user = user;
-          req.flash('success', 'You are logged in.');
-          res.redirect('/profile');
-        })
-        .catch(error => {
-          winston.error(error);
-          req.flash(
-            'danger',
-            'Email not found, password or user type incorrect, please try again.'
-          );
-          res.status(401).render('../views/login.pug');
-        });
-    }
   },
 
   /**
@@ -87,6 +85,7 @@ module.exports = {
    * @param {Object} res - Response parameter
    */
   logout: function(req, res) {
+    winston.info('GET logout');
     if (req.session.user) {
       req.session.destroy();
       res.redirect('/login');
@@ -102,15 +101,10 @@ module.exports = {
    * @param {Object} res - Response parameter
    */
   profile: function(req, res) {
+    winston.info('GET profile');
     if (req.session.user) {
-      let user = req.session.user;
-      let userArr = [
-        user.id,
-        user.email,
-        user.firstName,
-        user.lastName,
-        user.type
-      ];
+      let user = new User().create(req.session.user);
+      let userArr = user.toArray();
       db.loadUsers()
         .then(result => {
           res.render('../views/profile.pug', {
@@ -121,7 +115,7 @@ module.exports = {
           });
         })
         .catch(error => {
-          winston.error(error);
+          winston.error(error.stack);
         });
     } else {
       res.redirect('/login');
@@ -135,6 +129,7 @@ module.exports = {
    * @param {Object} res - Response parameter
    */
   register: function(req, res) {
+    winston.info('GET register');
     res.render('../views/register.pug', {
       title: 'Register'
     });
@@ -147,6 +142,7 @@ module.exports = {
    * @param {Object} res - Response parameter
    */
   registerPost: function(req, res) {
+    winston.info('POST register');
     let email = req.body.email.toLowerCase();
     let firstName = req.body.firstname;
     let lastName = req.body.lastname;
@@ -154,40 +150,45 @@ module.exports = {
     let password2 = req.body.password2;
     let type = req.body.userType;
     winston.debug('Registering user: ' + email + ' type: ' + type);
-    // validate the inputs
-    req.checkBody('firstname', 'Firstname is required').notEmpty();
-    req.checkBody('lastname', 'Lastname is required').notEmpty();
-    req.checkBody('email', 'Email is required').notEmpty();
-    req.checkBody('email', 'Email is not valid').isEmail();
-    req.checkBody('password', 'Password is required').notEmpty();
-    req.checkBody('password2', 'Passwords do not match').equals(password);
 
-    let errors = req.validationErrors();
+    let checkRegisterParams = new Promise((resolve, reject) => {
+      // validate the inputs
+      req.checkBody('firstname', 'Firstname is required').notEmpty();
+      req.checkBody('lastname', 'Lastname is required').notEmpty();
+      req.checkBody('email', 'Email is required').notEmpty();
+      req.checkBody('email', 'Email is not valid').isEmail();
+      req.checkBody('password', 'Password is required').notEmpty();
+      req.checkBody('password2', 'Passwords do not match').equals(password);
+      let err = req.validationErrors();
+      if (err)
+        reject(
+          new Error('Some parameters are not defined or passwords not equal.')
+        );
+      resolve();
+    });
 
-    if (errors) {
-      res.render('../views/register.pug', {
-        errors: errors,
-        email: email,
-        firstName: firstName,
-        lastName: lastName,
-        password: password,
-        password2: password2,
-        type: type
-      });
-    } else {
-      // Create user object
-      let user = { email, firstName, lastName, password, type };
-      db.register(user)
-        .then(result => {
-          req.flash('success', 'You are registered, please log in.');
-          res.redirect('/login');
-        })
-        .catch(error => {
-          winston.debug(error.message);
-          req.flash('danger', 'Email already exists, please try again.');
-          res.status(401).render('../views/register.pug');
+    checkRegisterParams
+      .then(() => {
+        return db.register({ email, firstName, lastName, password, type });
+      })
+      .then(result => {
+        req.flash('success', 'You are registered, please log in.');
+        res.redirect('/login');
+      })
+      .catch(error => {
+        winston.debug(error.message);
+        req.flash('danger', error.message);
+        // TODO are we using these values to realaod the page with the already inputed values?
+        res.status(401).render('../views/register.pug', {
+          errors: error,
+          email: email,
+          firstName: firstName,
+          lastName: lastName,
+          password: password,
+          password2: password2,
+          type: type
         });
-    }
+      });
   },
   /**
    * Function that responds to a '/contacts' POST request
@@ -196,6 +197,7 @@ module.exports = {
    * @param {Object} res - Response parameter
    */
   contactsPost: function(req, res) {
+    winston.info('POST contacts');
     let myId = req.body.myId;
     let userArray = req.body.userId;
     let gname = req.body.groupName;
@@ -210,7 +212,7 @@ module.exports = {
       db.formGroup(gname, myId)
         .then(result => {})
         .catch(error => {
-          winston.error(error);
+          winston.error(error.stack);
           req.flash('danger', 'Fail to form a group, please try again.');
           res.redirect('/contacts');
         });
@@ -218,7 +220,7 @@ module.exports = {
         db.formGroup(gname, userArray[i])
           .then(result => {})
           .catch(error => {
-            winston.error(error);
+            winston.error(error.stack);
             req.flash('danger', 'Fail to form a group, please try again.');
             res.redirect('/contacts');
           });
@@ -234,15 +236,10 @@ module.exports = {
    * @param {Object} res - Response parameter
    */
   contacts: function(req, res) {
+    winston.info('GET contacts');
     if (req.session.user) {
-      let user = req.session.user;
-      let userArr = [
-        user.id,
-        user.email,
-        user.firstName,
-        user.lastName,
-        user.type
-      ];
+      let user = new User().create(req.session.user);
+      let userArr = user.toArray();
       db.loadUsers()
         .then(result => {
           let userList = result;
@@ -257,7 +254,7 @@ module.exports = {
           });
         })
         .catch(error => {
-          winston.error(error);
+          winston.error(error.stack);
         });
     } else {
       res.redirect('/login');

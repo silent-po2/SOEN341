@@ -23,8 +23,52 @@ function User(id, email, firstName, lastName, type) {
   this.type = type;
 }
 
+/**
+ * Converts a user object data to an array object.
+ *
+ * @return {Array} - An array with user data.
+ */
+User.prototype.toArray = function() {
+  let array = [this.id, this.email, this.firstName, this.lastName, this.type];
+  return array;
+};
+
+/**
+ * Converts a JSON object to a new User object.
+ * This is useful when recovering session data.
+ *
+ * @param {Object} user A JSON object.
+ * @return {User} - A User object.
+ */
+User.prototype.create = function(user) {
+  return new User(
+    user.id,
+    user.email,
+    user.firstName,
+    user.lastName,
+    user.type
+  );
+};
+
+/**
+ * Return a string representation of the user object
+ *
+ * @return {string} - A string of user data.
+ */
 User.prototype.toString = function() {
-	return "The user's ID is: " + this.id + " " + ", email is: " + this.email + " and user's name is: " + this.firstName + " " + this.lastName + " and they are a " + this.type; 
-}
+  return (
+    "The user's ID is: " +
+    this.id +
+    ' ' +
+    ', email is: ' +
+    this.email +
+    " and user's name is: " +
+    this.firstName +
+    ' ' +
+    this.lastName +
+    ' and they are a ' +
+    this.type
+  );
+};
 
 module.exports = User;

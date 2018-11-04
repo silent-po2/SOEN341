@@ -10,7 +10,6 @@ chai.use(chaiHttp);
 let expect = chai.expect;
 let db = require('../db/Database');
 let agent = chai.request.agent(app);
-process.env.NODE_ENV = 'test';
 
 describe('Dashboard', function() {
   afterEach(() => {

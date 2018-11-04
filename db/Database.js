@@ -4,6 +4,7 @@
  */
 const mysql = require('mysql');
 let winston = require('../config/winston');
+let User = require('../models/user');
 
 /**
  *
@@ -41,12 +42,12 @@ class Database {
 
   // Returns a promise with the user id if user is found, rejects otherwise
   /**
-   *
+   * TODO
    *
    * @param {*} email
    * @param {*} password
    * @param {*} type
-   * @return
+   * @return {Promise}
    * @memberof Database
    */
   login(email, password, type) {
@@ -65,17 +66,20 @@ class Database {
       this.connection.query(query, (err, res) => {
         winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
-        if (res.length === 0 || err) reject(new Error('User not found'));
-        else {
-          let result = [
+        if (res.length === 0) {
+          reject(new Error('User not found'));
+        } else if (err) {
+          reject(err);
+        } else {
+          let user = new User(
             res[0].Id,
             res[0].Email,
             res[0].FirstName,
             res[0].LastName,
-            res[0].Password,
             res[0].Type
-          ];
-          resolve(result);
+          );
+          winston.debug(user.toString());
+          resolve(user);
         }
       });
     });
@@ -83,12 +87,12 @@ class Database {
 
   // This function inserts a new post to the database
   /**
-   *
+   * TODO
    *
    * @param {*} post
    * @param {*} imageName
    * @param {*} sender
-   * @return
+   * @return {Promise}
    * @memberof Database
    */
   post(post, imageName, sender) {
@@ -115,9 +119,9 @@ class Database {
 
   // This function selects all data from message table
   /**
+   * TODO
    *
-   *
-   * @return
+   * @return {Promise}
    * @memberof Database
    */
   dashboardGet() {
@@ -138,7 +142,7 @@ class Database {
    *
    *
    * @param {*} user
-   * @return
+   * @return {Promise}
    * @memberof Database
    */
   register(user) {
@@ -172,7 +176,7 @@ class Database {
    *
    *
    * @param {*} email
-   * @return
+   * @return {Promise}
    * @memberof Database
    */
   getId(email) {
@@ -191,7 +195,7 @@ class Database {
   /**
    *
    *
-   * @return
+   * @return {Promise}
    * @memberof Database
    */
   loadUsers() {
@@ -219,7 +223,7 @@ class Database {
    * @param {*} sid
    * @param {*} time
    * @param {*} chat
-   * @return
+   * @return {Promise}
    * @memberof Database
    */
   sendChat(rid, sid, time, chat) {
@@ -247,7 +251,7 @@ class Database {
    *
    * @param {*} rid
    * @param {*} sid
-   * @return
+   * @return {Promise}
    * @memberof Database
    */
   receiveChat(rid, sid) {
@@ -285,7 +289,7 @@ class Database {
   /**
    *
    *
-   * @return
+   * @return {Promise}
    * @memberof Database
    */
   deleteUser() {
@@ -308,7 +312,7 @@ class Database {
    *
    *
    * @param {*} myId
-   * @return
+   * @return {Promise}
    * @memberof Database
    */
   loadGroups(myId) {
@@ -331,7 +335,7 @@ class Database {
    *
    * @param {*} title
    * @param {*} userId
-   * @return
+   * @return {Promise}
    * @memberof Database
    */
   formGroup(title, userId) {
@@ -362,7 +366,7 @@ class Database {
    * @param {*} sid
    * @param {*} time
    * @param {*} chat
-   * @return
+   * @return {Promise}
    * @memberof Database
    */
   sendGroupChat(groupId, title, sid, time, chat) {
@@ -391,7 +395,7 @@ class Database {
    *
    *
    * @param {*} title
-   * @return
+   * @return {Promise}
    * @memberof Database
    */
   receivegroupChat(title) {
@@ -423,7 +427,7 @@ class Database {
    *
    *
    * @param {*} msgId
-   * @return
+   * @return {Promise}
    * @memberof Database
    */
   like(msgId) {

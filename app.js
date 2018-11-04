@@ -9,13 +9,18 @@ let path = require('path');
 let session = require('express-session');
 let winston = require('./config/winston');
 let morgan = require('morgan');
+// global.Promise = require('bluebird');
 // let passport = require('passport');
 // let LocalStrategy = require('passport-local').Strategy;
 // let urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 const expressValidator = require('express-validator');
 const port = process.env.PORT || 3000;
-process.env.LOGGER_LEVEL = 'debug';
+
+// Catches unhandled promises rejections for debugging.
+// process.on('unhandledRejection', error => {
+//   winston.warn('unhandledRejection', error.message);
+// });
 
 // Application that contains get/post/put/delete methods
 let app = express();

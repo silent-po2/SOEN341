@@ -4,36 +4,28 @@
  * https://www.digitalocean.com/community/tutorials/how-to-use-winston-to-log-node-js-applications
  */
 
-let appRoot = require('app-root-path');
 let winston = require('winston');
 
 // define the custom settings for each transport (file, console)
 let options = {
-  file: {
-    level: 'info',
-    filename: `${appRoot}/logs/app.log`,
+  console: {
+    format: winston.format.combine(
+      winston.format.colorize(),
+      winston.format.simple()
+    ),
+    name: 'console.info',
+    level: 'debug', // change this to info to receive only basic information
     handleExceptions: true,
     json: true,
-    maxsize: 5242880, // 5MB
-    maxFiles: 5,
-    colorize: false
-  },
-  console: {
-    name: 'console.info',
-    level: process.env.NODE_ENV === 'test' ? [] : process.env.LOGGER_LEVEL,
-    handleExceptions: true,
-    json: false,
     colorize: true,
-    showLevel: true
+    showLevel: true,
+    silent: false
   }
 };
 
 // instantiate a new Winston Logger with the settings defined above
 let logger = winston.createLogger({
-  transports: [
-    new winston.transports.File(options.file),
-    new winston.transports.Console(options.console)
-  ],
+  transports: [new winston.transports.Console(options.console)],
   exitOnError: false // do not exit on handled exceptions
 });
 
@@ -46,9 +38,7 @@ logger.stream = {
    */
   write: function(message, encoding) {
     // use the 'info' log level so the output will be picked up by both transports (file and console)
-    if (process.env.NODE_ENV !== 'test') {
-      logger.info(message);
-    }
+    logger.silly(message);
   }
 };
 
