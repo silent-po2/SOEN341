@@ -23,4 +23,8 @@ function User(id, email, firstName, lastName, type) {
   this.type = type;
 }
 
+User.prototype.toString = function() {
+	return "The user's ID is: " + this.id + " " + ", email is: " + this.email + " and user's name is: " + this.firstName + " " + this.lastName + " and they are a " + this.type; 
+}
+
 module.exports = User;
