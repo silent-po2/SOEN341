@@ -6,6 +6,8 @@
 // todo: add teacher/parent type on the link instead of passing session var
 
 let userController = require('../controllers/userController');
+let dashboardController = require('../controllers/dashboardController');
+let chatController = require('../controllers/chatController');
 
 /**
  * This function contains all routes called by a user.
@@ -21,12 +23,12 @@ module.exports = function(app) {
 
   app.get('/profile', userController.profile);
 
-  app.get('/dashboard', userController.dashboard);
+  app.get('/dashboard', dashboardController.dashboard);
 
   app.post(
     '/dashboard',
-    userController.upload.single('myImage'),
-    userController.dashboardPost
+    dashboardController.upload.single('myImage'),
+    dashboardController.dashboardPost
   );
 
   app.get('/contacts', userController.contacts);
@@ -40,13 +42,13 @@ module.exports = function(app) {
 
   app.get('/logout', userController.logout);
 
-  app.get('/groupchat/:title', userController.groupchat);
+  app.get('/groupchat/:title', chatController.groupchat);
 
-  app.post('/groupchat/:title', userController.groupchatPost);
+  app.post('/groupchat/:title', chatController.groupchatPost);
 
-  app.get('/chat/:id', userController.chat);
+  app.get('/chat/:id', chatController.chat);
 
-  app.post('/chat/:id', userController.chatPost);
+  app.post('/chat/:id', chatController.chatPost);
 
   app.use('*', function(req, res) {
     res.locals.user = req.user || null;
