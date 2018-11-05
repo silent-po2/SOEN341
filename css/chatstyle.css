@@ -1,10 +1,11 @@
-.container {
+/* .container {
   max-width: 800px;
   margin: auto;
-}
-img {
+} */
+/* img {
   max-width: 100%;
-}
+} */
+
 .inbox_people {
   background: #f8f8f8 none repeat scroll 0 0;
   float: left;
@@ -29,7 +30,7 @@ img {
   display: inline-block;
   text-align: right;
   width: 60%;
-  padding: ;
+  padding: 0;
 }
 .headind_srch {
   padding: 10px 29px 10px 20px;
@@ -185,4 +186,138 @@ img {
 .msg_history {
   height: 450px;
   overflow-y: auto;
+}
+/* @@@@@@@@@@@@@@@@@  NAVIGATION BAR @@@@@@@@@@@@@@@@@@@@@@@@@  */
+
+.navbar-nav {
+  margin: 0%;
+  list-style: none;
+  float: left;
+  margin-top: 10px
+}
+.navbar-nav li{
+  margin: 0fr;
+  font-family: Helvetica ;
+  display:inline-block;
+  margin-left: 20px;
+  font-size: 125%;  
+  font-weight: bold;
+}
+.navbar-nav a{
+  margin: 0%;
+  color: rgb(134, 83, 216);
+  text-decoration: rgb(230, 23, 9);
+  
+}
+/* @@@@@@@@@@@@@@@@@  HOME PAGE @@@@@@@@@@@@@@@@@@@@@@@@@  */
+
+.carousel-indicators .active{
+  background-color: #f31111;
+}
+.carousel-caption h3{
+  display: table-cell;
+  font-family: Garamond;
+  padding: 5px;
+  background: rgb(0, 0, 0);
+  color: peru !important;
+  border-top-left-radius: 10px;
+  /* border-top-right-radius: 10px;  */
+  /* background-size: cover;
+  background-position: center; */
+}
+/* Description text */
+.carousel-caption p {
+  display: table-cell;
+  padding: 5px;
+  background: rgb(0, 0, 0);
+  font-family:    Garamond;
+  font-size:      100;
+  /* border-top-left-radius: 10px;*/
+  border-top-right-radius: 10px; 
+  color:          rgba(10, 197, 66, 0.76) !important;
+  }
+.carousel-item img{
+  width:600px;
+  height:480px;
+  background-color: #05728f;
+}
+.full-screen {
+  background-size: cover;
+  background-position: cover;
+  background-repeat: no-repeat;
+}
+
+  /* Description text */
+.carousel-caption p {
+  display: table-cell;
+  padding: 5px;
+  background: rgb(0, 0, 0);
+  font-family:    Garamond;
+  font-size:      100;
+  /* border-top-left-radius: 10px;*/
+  border-top-right-radius: 10px; 
+  color:          rgba(10, 197, 66, 0.76) !important;
+  }
+  /* Button text */
+.carousel-caption .btn {
+  font-family:    Garamond;
+  font-size:      1em;
+  color:          rgb(32, 241, 60);
+  } 
+
+  /* @@@@@@@@@@@@@@@@@  REGISTERATION PAGE @@@@@@@@@@@@@@@@@@@@@@@@@  */
+
+.container .h4 {
+  position: absolute;
+    left: 10px;
+    top: 150px;
+}
+h3 {
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+  font-size: 40px;
+  /* text-decoration-line: underline overline; */
+  color: #0baa13;
+  max-width: 800px;
+  margin: inherit;
+
+}  
+/* .container {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #0baa13;
+  max-width: 800px;
+  margin: auto;
+} */
+/* body {
+  background-image: url(/pics/reg1.jpeg);
+} */
+.container a{
+  font-family: "Helvetica";
+  color: rgb(211, 106, 8);
+  font-size: 15px;
+  margin: auto;
+}
+.container .form-group label{
+  font-family: "Helvetica";
+  color:  rgb(211, 106, 8);
+  font-size: 20px;
+  margin: auto;
+}
+.form-group input{
+  font-family: "Helvetica";
+  color: #0d0e0d;
+  font-size: 15px;
+  margin: auto;
+}
+.container {
+  font-family: "Helvetica";
+  color: #020202;
+  font-size: 15px;
+  max-width: 500px;
+  margin: auto;
+}
+.btn {
+  color: #0a0909;
+  font-size: 20px;
+  margin: auto;
 }
