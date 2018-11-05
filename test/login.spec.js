@@ -9,7 +9,6 @@ let chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 let request = chai.request(app);
 let expect = chai.expect;
-process.env.NODE_ENV = 'test';
 
 describe('Login', function() {
   // Refresh the request before each test.

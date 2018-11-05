@@ -10,7 +10,6 @@ chai.use(chaiHttp);
 let request = chai.request(app);
 let expect = chai.expect;
 let db = require('../db/Database');
-process.env.NODE_ENV = 'test';
 
 describe('Register', function() {
   // Refresh the request before each test.

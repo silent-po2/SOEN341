@@ -106,7 +106,7 @@ module.exports = {
           });
         })
         .catch(error => {
-          winston.error(error);
+          winston.error(error.stack);
           req.flash('danger', 'Fail to load messages, please try again.');
           res.redirect('/dashboard');
         });
@@ -144,7 +144,7 @@ module.exports = {
           res.redirect('/dashboard');
         })
         .catch(error => {
-          winston.error(error);
+          winston.error(error.stack);
           req.flash('danger', 'Fail to post a message, please try again.');
           res.status(401).redirect('/dashboard');
         });

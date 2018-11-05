@@ -28,7 +28,7 @@ module.exports = {
           });
         })
         .catch(error => {
-          winston.error(error);
+          winston.error(error.stack);
         });
     } else {
       res.redirect('/login');
@@ -64,7 +64,7 @@ module.exports = {
         let sid = user.id;
         let time = moment.utc(new Date()).format('YYYY-MM-DD HH:mm:ss');
         db.sendChat(rid, sid, time, chat).catch(error => {
-          winston.error(error);
+          winston.error(error.stack);
         });
         db.receiveChat(sid, rid)
           .then(result => {
@@ -74,7 +74,7 @@ module.exports = {
             });
           })
           .catch(error => {
-            winston.error(error);
+            winston.error(error.stack);
           });
       }
     } else {
@@ -102,7 +102,7 @@ module.exports = {
           });
         })
         .catch(error => {
-          winston.error(error);
+          winston.error(error.stack);
         });
     } else {
       res.redirect('/login');
@@ -140,7 +140,7 @@ module.exports = {
         let sid = user.id;
         let time = moment.utc(new Date()).format('YYYY-MM-DD HH:mm:ss');
         db.sendGroupChat(groupId, title, sid, time, chat).catch(error => {
-          winston.error(error);
+          winston.error(error.stack);
         });
         db.receivegroupChat(title)
           .then(result => {
@@ -151,7 +151,7 @@ module.exports = {
             });
           })
           .catch(error => {
-            winston.error(error);
+            winston.error(error.stack);
           });
       }
     } else {
