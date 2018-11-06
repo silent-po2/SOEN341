@@ -6,6 +6,7 @@ let db = require('../db/Database');
 let winston = require('../config/winston');
 let multer = require('multer');
 let path = require('path');
+let User = require('../models/user');
 
 let storage = multer.diskStorage({
   /**
@@ -86,15 +87,9 @@ module.exports = {
   dashboard: function(req, res) {
     if (req.session.user) {
       let postArr = [];
-      let user = req.session.user;
-      let userArr = [
-        user.id,
-        user.email,
-        user.firstName,
-        user.lastName,
-        user.type
-      ];
-      db.dashboardGet()
+      let user = new User().create(req.session.user);
+      let userArr = user.toArray();
+      db.getAllThreads()
         .then(rows => {
           for (let i = 0; i < rows.length; i++) {
             postArr[i] = rows[i].Message;
@@ -138,7 +133,7 @@ module.exports = {
       } else {
         imageName = req.file.filename;
       }
-      db.post(post, imageName, sender)
+      db.addDashboardMsg(post, imageName, sender)
         .then(result => {
           // req.flash('success', 'Message posted');
           res.redirect('/dashboard');
