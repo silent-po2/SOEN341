@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  br
+  h3 Edit Profile
+  br
+  .container
+    form#register-form(method='post', action='/editprofile')
+      .form-group
+        label(for='text') Firstname: 
+        input#firstname.form-control(type='text', name='firstname', placeholder='firstname')
+      .form-group
+        label(for='text') Lastname: 
+        input#lastname.form-control(type='text', name='lastname', placeholder='lastname')
+      .form-group
+        label(for='email') Email: 
+        input#email.form-control(type='email', name='email', placeholder='email')
+      button.btn.btn-primary.form-control(type='submit') Edit
+      
+    

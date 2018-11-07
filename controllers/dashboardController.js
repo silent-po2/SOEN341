@@ -92,8 +92,9 @@ module.exports = {
       db.getAllThreads()
         .then(rows => {
           for (let i = 0; i < rows.length; i++) {
-            postArr[i] = rows[i].Message;
+            postArr[i] = rows[i];
           }
+          winston.debug(postArr);
           res.render('../views/dashboard.pug', {
             postArr: postArr,
             userArr: userArr,

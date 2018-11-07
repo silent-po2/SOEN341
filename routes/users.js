@@ -23,6 +23,10 @@ module.exports = function(app) {
 
   app.get('/profile', userController.profile);
 
+  app.get('/editprofile', userController.editProfile);
+
+  app.post('/editprofile', userController.editProfilePost);
+
   app.get('/dashboard', dashboardController.dashboard);
 
   app.post(

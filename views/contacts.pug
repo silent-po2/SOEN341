@@ -39,8 +39,8 @@ block content
                         input#name.form-control.col-sm-8(type='text', name='groupName', placeholder='Enter a name')
                     hr
                     .row
-                        input(type='checkbox', name='myId', value=userList[0][0], checked='')
-                        text= userList[0][1] + ' ' + userList[0][2] 
+                        input(type='checkbox', name='myId', value=userArr[0], checked='')
+                        text= userArr[2] + ' ' + userArr[3] 
                     hr
                     each user, i in userList
                         if userArr[0]!=user[0]

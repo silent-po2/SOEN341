@@ -69,6 +69,12 @@ block content
                                                     p Parent
                                                 if (userArr[4]=='T')
                                                     p Teacher
+                                        hr
+                                        .row
+                                            .col-sm-3.col-md-2.col-5
+                                                label(style='font-weight:bold;') Edit
+                                            .col-md-8.col-6
+                                                a(href='editprofile') Edit File            
                                     #contacts.tab-pane.fade.show(role='tabpanel', aria-labelledby='contacts-tab')
                                         each user, i in userList
                                             .row
