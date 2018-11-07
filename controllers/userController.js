@@ -177,11 +177,35 @@ module.exports = {
           res.redirect('/profile');
         })
         .catch(error => {
-          winston.debug(error.message);
+          winston.debug(error.stack);
           req.flash('danger', 'Email already exists, please try again.');
           res.status(401).render('../views/editprofile.pug');
         });
     }
+  },
+
+  /**
+   * Function that handles a POST call to reset a password.
+   *
+   * @param {*} req
+   * @param {*} res
+   */
+  resetPassword: function(req, res) {
+    let user = new User().create(req.session.user);
+    // TODO add newPassword2 check to make sure new password is enterered twice the right way
+    // TODO do a checkbody on it newPassword and newPassowrd2
+    db.changePassword(user, req.body.oldPassword, req.body.newPassword)
+      .then(result => {
+        req.flash('success', 'Password reset.');
+        // User should login with new password once it is changed
+        res.redirect('/logout');
+      })
+      .catch(error => {
+        winston.debug(error.stack);
+        req.flash('danger', 'Email already exists, please try again.');
+        // TODO Not sure if we need to change the page to a password reset page yet
+        res.status(401).render('../views/editprofile.pug');
+      });
   },
 
   /**
