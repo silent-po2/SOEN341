@@ -178,7 +178,7 @@ module.exports = {
       .catch(error => {
         winston.debug(error.message);
         req.flash('danger', error.message);
-        // TODO are we using these values to realaod the page with the already inputed values?
+        // TODO are we using these values to reload the page with the already inputed values?
         res.status(401).render('../views/register.pug', {
           errors: error,
           email: email,

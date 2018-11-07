@@ -1,20 +1,16 @@
-/*
-  Module containing database functions for queries.
-  Inspired by https://codeburst.io/node-js-mysql-and-promises-4c3be599909b
- */
 const mysql = require('mysql');
 let winston = require('../config/winston');
 let User = require('../models/user');
-
+let Thread = require('../models/thread');
 /**
- *
+ * Class that handles all calls to the database object
+ * which is instantiated only once.
  *
  * @class Database
  */
 class Database {
-  // Constructor only creates connection but does not open it
   /**
-   *Creates an instance of Database.
+   * Creates an instance of Database.
    * @memberof Database
    */
   constructor() {
@@ -27,9 +23,8 @@ class Database {
     });
   }
 
-  // Closes the connection to the db
   /**
-   *
+   * Closes the connection to the db
    *
    * @memberof Database
    */
@@ -40,9 +35,8 @@ class Database {
     });
   }
 
-  // Returns a promise with the user id if user is found, rejects otherwise
   /**
-   * TODO
+   * Returns a promise with the user id if user is found, rejects otherwise
    *
    * @param {*} email
    * @param {*} password
@@ -85,9 +79,8 @@ class Database {
     });
   }
 
-  // This function inserts a new post to the database
   /**
-   * TODO
+   * This function inserts a new post to the database
    *
    * @param {*} post
    * @param {*} imageName
@@ -95,7 +88,7 @@ class Database {
    * @return {Promise}
    * @memberof Database
    */
-  post(post, imageName, sender) {
+  addDashboardMsg(post, imageName, sender) {
     let query =
       "insert into messages(Message, ImageName, Sender) values ('" +
       post +
@@ -117,14 +110,13 @@ class Database {
     });
   }
 
-  // This function selects all data from message table
   /**
-   * TODO
+   * This function selects all data from message table.
    *
    * @return {Promise}
    * @memberof Database
    */
-  dashboardGet() {
+  getAllThreads() {
     let query = 'SELECT * FROM messages';
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
@@ -132,14 +124,16 @@ class Database {
         winston.debug('Evaluated query: ' + query);
         if (err) {
           reject(err);
-        } else resolve(res);
+        } else {
+          resolve(res);
+        }
       });
     });
   }
 
-  // This function inserts a new user into the database and subsequently into the teacher or parent tables
   /**
-   *
+   * This function inserts a new user into the database and subsequently into the
+   * teacher or parent tables
    *
    * @param {*} user
    * @return {Promise}
@@ -171,9 +165,8 @@ class Database {
     });
   }
 
-  // Returns the user id given a user object
   /**
-   *
+   * Returns the user id given a user object
    *
    * @param {*} email
    * @return {Promise}
@@ -191,9 +184,8 @@ class Database {
     });
   }
 
-  // loads all users' info
   /**
-   *
+   * Returns all users from user table.
    *
    * @return {Promise}
    * @memberof Database
@@ -215,9 +207,9 @@ class Database {
       });
     });
   }
-  // inserts the chat into tempchats table
+
   /**
-   *
+   * Inserts a message sent in the private chat into the chat table.
    *
    * @param {*} rid
    * @param {*} sid
@@ -245,9 +237,8 @@ class Database {
     });
   }
 
-  // select the chat for the receiver
   /**
-   *
+   * Returns all messages from a private chat.
    *
    * @param {*} rid
    * @param {*} sid
@@ -284,10 +275,9 @@ class Database {
     });
   }
 
-  // This is used for the register test case to delete the test users created,
-  // only if the user has email test@test.com
   /**
-   *
+   * This is used for the register test case to delete the test users created,
+   * only if the user has email test@test.com
    *
    * @return {Promise}
    * @memberof Database
@@ -307,9 +297,8 @@ class Database {
     });
   }
 
-  // loads all user's groups
   /**
-   *
+   * Returns all users' group chats.
    *
    * @param {*} myId
    * @return {Promise}
@@ -331,7 +320,7 @@ class Database {
   }
 
   /**
-   *
+   * Creates a group chat.
    *
    * @param {*} title
    * @param {*} userId
@@ -339,7 +328,6 @@ class Database {
    * @memberof Database
    */
   formGroup(title, userId) {
-    // Setup query
     let query =
       "insert into groups (userId, title) values ('" +
       userId +
@@ -357,9 +345,8 @@ class Database {
     });
   }
 
-  // inserts the group chat into group table
   /**
-   *
+   * Inserts a message passed to group chat in group chat table.
    *
    * @param {*} groupId
    * @param {*} title
