@@ -1,7 +1,7 @@
 const mysql = require('mysql');
 let winston = require('../config/winston');
 let User = require('../models/user');
-let Thread = require('../models/thread');
+
 /**
  * Class that handles all calls to the database object
  * which is instantiated only once.
@@ -433,6 +433,34 @@ class Database {
             resolve(likes);
           }
         });
+      });
+    });
+  }
+
+  /**
+   * Function that resets a user's password.
+   *
+   * @param {User} user
+   * @param {string} oldPassword
+   * @param {string} newPassword
+   * @return {Promise}
+   * @memberof Database
+   */
+  changePassword(user, oldPassword, newPassword) {
+    let query =
+      'UPDATE user SET Password = MD5(' +
+      newPassword +
+      ') where Email = ' +
+      user.email +
+      'AND Password = MD5(' +
+      oldPassword +
+      ');';
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) throw err;
+        resolve();
       });
     });
   }
