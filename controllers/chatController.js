@@ -91,13 +91,13 @@ module.exports = {
   groupchat: function(req, res) {
     if (req.session.user) {
       let user = req.session.user;
-      let title = req.params.title;
+      let groupId = req.params.id;
       let sid = user.id;
-      db.receivegroupChat(title)
+      db.receivegroupChat(groupId)
         .then(result => {
           res.render('groupchat', {
             groupchatList: result,
-            title: title,
+            id: groupId,
             sender: sid
           });
         })
@@ -122,9 +122,9 @@ module.exports = {
       let errors = req.validationErrors();
       if (errors) {
         let user = req.session.user;
-        let title = req.params.title;
+        let groupId = req.params.id;
         let sid = user.id;
-        db.receivegroupChat(title).then(result => {
+        db.receivegroupChat(groupId).then(result => {
           res.render('groupchat', {
             errors: errors,
             groupchatList: result,
@@ -133,20 +133,18 @@ module.exports = {
           });
         });
       } else {
-        winston.debug('Sending: ' + chat);
         let user = req.session.user;
-        let groupId = 1;
-        let title = req.params.title;
+        let groupId = req.params.id;
         let sid = user.id;
-        let time = moment.utc(new Date()).format('YYYY-MM-DD HH:mm:ss');
-        db.sendGroupChat(groupId, title, sid, time, chat).catch(error => {
+        winston.debug('Sending: ' + chat + 'to id: ' + req.params.id);
+        db.sendGroupChat(groupId, sid, chat).catch(error => {
           winston.error(error.stack);
         });
-        db.receivegroupChat(title)
+        db.receivegroupChat(groupId)
           .then(result => {
             res.render('groupchat', {
               groupchatList: result,
-              title: title,
+              id: groupId,
               sender: sid
             });
           })

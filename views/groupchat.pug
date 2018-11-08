@@ -20,22 +20,23 @@ html
               each groupchat, i in groupchatList
                 if groupchat[2]!=sender
                   .incoming_msg
-                    .incoming_msg_img
-                      img(src='/pics/profile.png', alt='sunil') 
                     .received_msg
                       .received_withd_msg
                         p= groupchat[0]
                         span.time_date 
+                          p6=  groupchat[4] + ' ' + groupchat[5] +' '
                           p6= prettyDate(groupchat[3])
+                          
                 if groupchat[2]==sender
                   .outgoing_msg
                     .sent_msg
                       p= groupchat[0]
                       span.time_date
                         p6= prettyDate(groupchat[3])
+                        p6= ' '+ groupchat[4] + ' ' + groupchat[5] 
             .type_msg
               .input_msg_write
-                form(method='POST', action='/groupchat/'+title)
+                form(method='POST', action='/groupchat/'+id)
                     #form-group
                     label(for='groupchat')
                     textarea.form-control(type='text', name='groupchat', placeholder='Type a message')

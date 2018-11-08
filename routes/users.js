@@ -46,13 +46,17 @@ module.exports = function(app) {
 
   app.get('/logout', userController.logout);
 
-  app.get('/groupchat/:title', chatController.groupchat);
+  app.get('/groupchat/:id', chatController.groupchat);
 
-  app.post('/groupchat/:title', chatController.groupchatPost);
+  app.get('/groups', userController.groups);
+
+  app.post('/groupchat/:id', chatController.groupchatPost);
 
   app.get('/chat/:id', chatController.chat);
 
   app.post('/chat/:id', chatController.chatPost);
+
+  app.post('/requests', userController.handleRequest);
 
   app.use('*', function(req, res) {
     res.locals.user = req.user || null;
