@@ -19,7 +19,8 @@ class Database {
       host: '35.221.26.86',
       database: 'kiwidb',
       user: 'root',
-      password: 'soen341'
+      password: 'soen341',
+      multipleStatements: true
     });
   }
 
@@ -305,34 +306,62 @@ class Database {
    * @memberof Database
    */
   loadGroups(myId) {
-    let query = "select title from groups where UserId='" + myId + "';";
+    let query =
+      "select GroupId, Title from groupMember where UserId='" + myId + "';";
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
         winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
         let result = [];
         for (let i = 0; i < res.length; i++) {
-          result.push(res[i].title);
+          result.push(res[i]);
         }
+        winston.debug('title : ' + JSON.stringify(result));
         resolve(result);
       });
     });
   }
-
   /**
    * Creates a group chat.
    *
+   * @param {*} title
+   * @param {*} admin
+   * @return {Promise}
+   * @memberof Database
+   */
+  formGroup(title, admin) {
+    let query =
+      "insert into groups (Title, Admin) values ('" +
+      title +
+      "', '" +
+      admin +
+      "'); SELECT LAST_INSERT_ID();";
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) {
+          reject(err);
+        } else resolve(res);
+      });
+    });
+  }
+  /**
+   * Add a member to a group.
+   * @param {*} groupId
    * @param {*} title
    * @param {*} userId
    * @return {Promise}
    * @memberof Database
    */
-  formGroup(title, userId) {
+  addGroupMember(groupId, title, userId) {
     let query =
-      "insert into groups (userId, title) values ('" +
-      userId +
+      "insert into groupMember (GroupId, Title, UserId) values ('" +
+      groupId +
       "', '" +
       title +
+      "', '" +
+      userId +
       "');";
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
@@ -349,23 +378,19 @@ class Database {
    * Inserts a message passed to group chat in group chat table.
    *
    * @param {*} groupId
-   * @param {*} title
    * @param {*} sid
-   * @param {*} time
    * @param {*} chat
    * @return {Promise}
    * @memberof Database
    */
-  sendGroupChat(groupId, title, sid, time, chat) {
+  sendGroupChat(groupId, sid, chat) {
     let query =
-      "insert into GroupChat (GroupMsg, `From`, GroupId, title) values ('" +
+      "insert into groupChat (GroupMsg, `From` , GroupId) values ('" +
       chat +
       "','" +
       sid +
       "','" +
       groupId +
-      "','" +
-      title +
       "');";
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
@@ -381,12 +406,15 @@ class Database {
   /**
    *
    *
-   * @param {*} title
+   * @param {*} id
    * @return {Promise}
    * @memberof Database
    */
-  receivegroupChat(title) {
-    let query = "select * from GroupChat where title='" + title + "';";
+  receivegroupChat(id) {
+    let query =
+      "select * from groupChat INNER JOIN user ON groupChat.`From` = user.Id where GroupId ='" +
+      id +
+      "';";
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
         winston.debug('db connection open');
@@ -401,7 +429,9 @@ class Database {
               res[i].GroupMsg,
               res[i].title,
               res[i].From,
-              res[i].DT
+              res[i].DT,
+              res[i].FirstName,
+              res[i].LastName
             ]);
           }
           resolve(result);
@@ -461,6 +491,47 @@ class Database {
         winston.debug('Evaluated query: ' + query);
         if (err) throw err;
         resolve();
+      });
+    });
+  }
+
+  /**
+   * Function that load group requests for admin
+   *@param {myId} myId
+   * @return {Promise}
+   * @memberof Database
+   */
+  loadRequest(myId) {
+    let query =
+      "SELECT * FROM groupRequest inner join user on groupRequest.userId = user.Id where groupRequest.Read = 'F' and Admin = '" +
+      myId +
+      "';";
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) throw err;
+        resolve(res);
+      });
+    });
+  }
+  /**
+   * Function that load group requests for admin
+   *@param {myId} requestId
+   * @return {Promise}
+   * @memberof Database
+   */
+  updateGourpRequest(requestId) {
+    let query =
+      "update groupRequest set groupRequest.Read  = 'T'  where RequestId = '" +
+      requestId +
+      "';";
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) throw err;
+        resolve(res);
       });
     });
   }

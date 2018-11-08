@@ -22,6 +22,17 @@ module.exports = {
   },
 
   /**
+   * Function that responds to a '/groups' GET request
+   *
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
+   */
+  groups: function(req, res) {
+    res.render('../views/groups.pug', {
+      user: req.session.user
+    });
+  },
+  /**
    * Function that responds to a '/login' GET request
    *
    * @param {Object} req - Request parameter
@@ -296,21 +307,29 @@ module.exports = {
       res.redirect('/contacts');
     } else {
       db.formGroup(gname, myId)
-        .then(result => {})
+        .then(result => {
+          let obj = Object.values(result);
+          let groupId = Object.values(Object.values(obj[1])[0]);
+          winston.debug('groupId: ' + groupId);
+          userArray.push(myId);
+          for (let i = 0; i < userArray.length; i++) {
+            db.addGroupMember(groupId, gname, userArray[i])
+              .then(result => {})
+              .catch(error => {
+                winston.error(error.stack);
+                req.flash(
+                  'danger',
+                  'Fail to add a member to group, please try again.'
+                );
+                res.redirect('/contacts');
+              });
+          }
+        })
         .catch(error => {
           winston.error(error.stack);
           req.flash('danger', 'Fail to form a group, please try again.');
           res.redirect('/contacts');
         });
-      for (let i = 0; i < userArray.length; i++) {
-        db.formGroup(gname, userArray[i])
-          .then(result => {})
-          .catch(error => {
-            winston.error(error.stack);
-            req.flash('danger', 'Fail to form a group, please try again.');
-            res.redirect('/contacts');
-          });
-      }
       req.flash('success', 'Group formed.');
       res.redirect('/contacts');
     }
@@ -326,22 +345,73 @@ module.exports = {
     if (req.session.user) {
       let user = new User().create(req.session.user);
       let userArr = user.toArray();
-      db.loadUsers()
-        .then(result => {
-          let userList = result;
-          db.loadGroups(user.id).then(result => {
-            res.render('../views/contacts.pug', {
-              title: 'My Contact',
-              userArr: userArr,
-              user: req.session.user,
-              userList: userList,
-              groupList: result
-            });
+      let myId = user.id;
+      db.loadUsers().then(result => {
+        let userList = result;
+        db.loadGroups(user.id)
+          .then(result => {
+            let groupList = result;
+            db.loadRequest(myId)
+              .then(result => {
+                let requestList = result;
+                res.render('../views/contacts.pug', {
+                  userArr: userArr,
+                  requestList: requestList,
+                  user: req.session.user,
+                  userList: userList,
+                  groupList: groupList
+                });
+              })
+              .catch(error => {
+                winston.error(error.stack);
+              })
+              .catch(error => {
+                winston.error(error.stack);
+              });
+          })
+          .catch(error => {
+            winston.error(error.stack);
           });
-        })
-        .catch(error => {
-          winston.error(error.stack);
-        });
+      });
+    } else {
+      res.redirect('/login');
+    }
+  },
+
+  /**
+   * Function that responds to a '/request' post request
+   *
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
+   */
+  handleRequest: function(req, res) {
+    if (req.session.user) {
+      let handler = req.body.handler;
+      if (handler == 'Accept') {
+        let userId = req.body.UserId;
+        let title = req.body.Title;
+        let groupId = req.body.GroupId;
+        let requestId = req.body.RequestId;
+        db.addGroupMember(groupId, title, userId)
+          .then(result => {
+            db.updateGourpRequest(requestId);
+            req.flash('success', 'Accepted.');
+            res.redirect('contacts');
+          })
+          .catch(error => {
+            winston.error(error.stack);
+          });
+      } else {
+        let requestId = req.body.RequestId;
+        db.updateGourpRequest(requestId)
+          .then(result => {
+            req.flash('danger', 'Rejected.');
+            res.redirect('contacts');
+          })
+          .catch(error => {
+            winston.error(error.stack);
+          });
+      }
     } else {
       res.redirect('/login');
     }

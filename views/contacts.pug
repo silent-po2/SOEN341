@@ -13,6 +13,8 @@ block content
                 a#basicInfo-tab.nav-link(data-toggle='tab', href='#groups', role='tab', aria-controls='groups', aria-selected='true') Group
             li.nav-item
                 a#basicInfo-tab.nav-link(data-toggle='tab', href='#makeGroup', role='tab', aria-controls='makeGroup', aria-selected='true') Make A Group
+            li.nav-item
+                a#basicInfo-tab.nav-link(data-toggle='tab', href='#admin', role='tab', aria-controls='admin', aria-selected='true') Admin
         #myTabContent.tab-content.ml-1
             #privateMessages.tab-pane.fade.show.active(role='tabpanel', aria-labelledby='privateMessages-tab')
                 each user, i in userList
@@ -27,10 +29,10 @@ block content
             
             #groups.tab-pane.fade.show(role='tabpanel', aria-labelledby='groups-tab')
                 form(action='/contacts', method='post')
-                    each title, i in groupList
+                    each id, i in groupList
                         .row
                             .col-md-8.col-6
-                                button.btn.btn-primary.btn-sm(type='button',onclick="window.open('/groupchat/"+title+"', 'newwindow', 'width=600,height=650'); return false;") Send a message to the #{title}
+                                button.btn.btn-primary.btn-sm(type='button',onclick="window.open('/groupchat/"+id.GroupId+"', 'newwindow', 'width=600,height=650'); return false;") Send a message to the #{id.Title}
                         hr
             #makeGroup.tab-pane.fade.show(role='tabpanel', aria-labelledby='makeGroup-tab')   
                 form#groupForm.groupForm(action='/contacts', method='post')
@@ -49,6 +51,23 @@ block content
                                 text= user[1] + ' ' + user[2]
                             hr
                     input.btn.btn-primary(type='submit', value='Form a group')
+            #admin.tab-pane.fade.show(role='tabpanel', aria-labelledby='Admin-tab')
+                each request, i in requestList
+                    .row
+                        .col-md-8.col-6
+                            p= 'A request from '+ request.FirstName + ' '+ request.LastName + ': '
+                            p= '\"I would like to add into '+ request.Title + '.\"'
+                            form(action='/requests', method='post')
+                                input(type='hidden', name='GroupId', value= request.GroupId)
+                                input(type='hidden', name='Title', value= request.Title)
+                                input(type='hidden', name='UserId', value= request.UserId)
+                                input(type='hidden', name='RequestId', value= request.RequestId)
+                                input(type='submit', name='handler', value='Accept')
+                                input(type='submit', name='handler', value='Reject')
+
+                            
+                    hr
+
                                             //- .row
                                             //-     .col-sm-3.col-md-2.col-5
                                             //-         label(style='font-weight:bold;') Something
