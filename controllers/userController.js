@@ -6,6 +6,7 @@
 let User = require('../models/user');
 let db = require('../db/Database');
 let winston = require('../config/winston');
+let arrayDiff = require('simple-array-diff');
 
 module.exports = {
   /**
@@ -415,5 +416,114 @@ module.exports = {
     } else {
       res.redirect('/login');
     }
+  },
+
+  /**
+   * Function that responds to a '/search' post request
+   *
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
+   */
+  search: function(req, res) {
+    if (req.session.user) {
+      let searchString = req.body.Search;
+      let user = new User().create(req.session.user);
+      req.checkBody('Search', 'Search is empty').notEmpty();
+      let errors = req.validationErrors();
+      if (errors) {
+        let userArr = [];
+        let groupArr = [];
+        res.render('search', {
+          errors: errors,
+          userArr: userArr,
+          groupArr: groupArr,
+          user: user
+        });
+      } else {
+        db.searchUser(searchString)
+          .then(result => {
+            let userArr = result;
+            db.searchGroup(searchString).then(result => {
+              let groupArr = result;
+              res.render('search', {
+                userArr: userArr,
+                groupArr: groupArr,
+                user: user
+              });
+            });
+          })
+          .catch(error => {
+            res.status(401).render('../views/search.pug');
+          });
+      }
+    } else {
+      res.redirect('/login');
+    }
+  },
+
+  /**
+   * Function that responds to a '/search' get request
+   *
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
+   */
+  // searchGet: function(req, res) {
+  //   winston.info('GET search');
+  //   res.render('../views/search.pug', {
+  //     serArr: userArr,
+  //     groupArr: groupArr,
+  //     user: user
+  //   });
+  // },
+
+  /**
+   * Function that responds to a '/profiles/:id' post request
+   *
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
+   */
+  othersProfile: function(req, res) {
+    let firstName = req.body.FirstName;
+    let lastName = req.body.LastName;
+    let email = req.body.Email;
+    let type = req.body.Type;
+    let userId = req.body.UserId;
+
+    res.render('profiles', {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      type: type,
+      userId: userId,
+      user: req.session.user
+    });
+  },
+
+  /**
+   * Function that responds to a '/addgroup/:id' post request
+   *
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
+   */
+  addRequest: function(req, res) {
+    let groupId = req.body.GroupId;
+    let title = req.body.Title;
+    let admin = req.body.Admin;
+    let userId = req.body.UserId;
+    db.addgroupRequest(groupId, userId, title, admin)
+      .then(result => {
+        let userArr = [];
+        let groupArr = [];
+        let user = req.session.user;
+        req.flash('success', 'Request sent.');
+        res.render('search', {
+          userArr: userArr,
+          groupArr: groupArr,
+          user: user
+        });
+      })
+      .catch(error => {
+        res.status(401).render('../views/search.pug');
+      });
   }
 };

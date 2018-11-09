@@ -58,6 +58,13 @@ module.exports = function(app) {
 
   app.post('/requests', userController.handleRequest);
 
+  app.post('/search', userController.search);
+
+  // app.get('/search', userController.searchGet);
+
+  app.post('/profiles/:id', userController.othersProfile);
+
+  app.post('/addgroup/:id', userController.addRequest);
   app.use('*', function(req, res) {
     res.locals.user = req.user || null;
   });
