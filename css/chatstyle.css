@@ -1,10 +1,12 @@
-/* .container {
-  max-width: 800px;
-  margin: auto;
-} */
-/* img {
-  max-width: 100%;
-} */
+
+/* Back ground for all the pages */
+body{
+  background-color: #43555100;
+  /* background-image: url('/pics/textured-white-wallpaper.jpg');
+  background-position: bottom right; */
+  background-repeat: repeat;
+}
+
 
 .inbox_people {
   background: #f8f8f8 none repeat scroll 0 0;
@@ -189,26 +191,29 @@
 }
 /* @@@@@@@@@@@@@@@@@  NAVIGATION BAR @@@@@@@@@@@@@@@@@@@@@@@@@  */
 
-.navbar-nav {
+/*  For Text in Navbar */
+
+.navbar-nav a{
   margin: 0%;
-  list-style: none;
-  float: left;
-  margin-top: 10px
+  color: rgb(0, 0, 0);
+}
+.navbar-brand{
+  font-family: Helvetica ;
+  color: rgb(0, 0, 0);
+  font-size: 100%;
+  font-weight: bold;
 }
 .navbar-nav li{
   margin: 0fr;
   font-family: Helvetica ;
   display:inline-block;
-  margin-left: 20px;
-  font-size: 125%;  
+  margin-left: 5px;
+  font-size: 100%;
   font-weight: bold;
 }
-.navbar-nav a{
-  margin: 0%;
-  color: rgb(134, 83, 216);
-  text-decoration: rgb(230, 23, 9);
-  
-}
+
+
+
 /* @@@@@@@@@@@@@@@@@  HOME PAGE @@@@@@@@@@@@@@@@@@@@@@@@@  */
 
 .carousel-indicators .active{
@@ -225,6 +230,7 @@
   /* background-size: cover;
   background-position: center; */
 }
+
 /* Description text */
 .carousel-caption p {
   display: table-cell;
@@ -236,6 +242,7 @@
   border-top-right-radius: 10px; 
   color:          rgba(10, 197, 66, 0.76) !important;
   }
+
 .carousel-item img{
   width:600px;
   height:480px;
@@ -258,6 +265,7 @@
   border-top-right-radius: 10px; 
   color:          rgba(10, 197, 66, 0.76) !important;
   }
+  
   /* Button text */
 .carousel-caption .btn {
   font-family:    Garamond;
@@ -267,48 +275,43 @@
 
   /* @@@@@@@@@@@@@@@@@  REGISTERATION PAGE @@@@@@@@@@@@@@@@@@@@@@@@@  */
 
-.container .h4 {
+.container .img {
+  border-radius: 8px;
   position: absolute;
-    left: 10px;
-    top: 150px;
+    left: 50px;
+  
 }
 h3 {
   font-family: Arial, Helvetica, sans-serif;
   text-align: center;
   font-size: 40px;
   /* text-decoration-line: underline overline; */
-  color: #0baa13;
+  color: #000000;
   max-width: 800px;
   margin: inherit;
-
-}  
-/* .container {
-  font-family: Arial, Helvetica, sans-serif;
-  color: #0baa13;
-  max-width: 800px;
-  margin: auto;
-} */
-/* body {
-  background-image: url(/pics/reg1.jpeg);
-} */
+} 
 .container a{
   font-family: "Helvetica";
-  color: rgb(211, 106, 8);
+  color: rgb(0, 0, 0);
   font-size: 15px;
+  max-width: 500px;
   margin: auto;
 }
-.container .form-group label{
+.form-group label{
   font-family: "Helvetica";
-  color:  rgb(211, 106, 8);
+  color:  rgb(0, 0, 0);
   font-size: 20px;
   margin: auto;
 }
 .form-group input{
   font-family: "Helvetica";
   color: #0d0e0d;
+  border-color: green;
   font-size: 15px;
   margin: auto;
 }
+
+/* Reason for the width */
 .container {
   font-family: "Helvetica";
   color: #020202;
@@ -317,7 +320,15 @@ h3 {
   margin: auto;
 }
 .btn {
-  color: #0a0909;
+  background-color: rgb(245, 142, 8); /* Orange */
+  font-family: "Helvetica";
+  color: rgb(0, 0, 0);
+  border-color: green;
   font-size: 20px;
-  margin: auto;
-}
+  font-weight: bold;
+} 
+
+/*@@@@@@@@@@@@@@@@@@@@@@@@@@ LOGIN PAGE @@@@@@@@@@@@@@@@@@@@@@@@@ */
+
+
+
