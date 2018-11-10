@@ -535,5 +535,145 @@ class Database {
       });
     });
   }
+  /**
+   * Function that search users' profiles
+   * @param {searchString} searchString
+   * @return {Promise}
+   * @memberof Database
+   */
+  searchUser(searchString) {
+    let query =
+      "select * from user where FirstName Like '" +
+      searchString +
+      "'or LastName Like '" +
+      searchString +
+      "';";
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) throw err;
+        resolve(res);
+      });
+    });
+  }
+
+  /**
+   * Function that search gourps
+   * @param {searchString} searchString
+   * @return {Promise}
+   * @memberof Database
+   */
+  searchGroup(searchString) {
+    let query = "select * from groups where Title LIke '" + searchString + "';";
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) throw err;
+        resolve(res);
+      });
+    });
+  }
+
+  /**
+   * Function that search gourps
+   * @param {groupId} groupId
+   * @param {myId} myId
+   * @return {Promise}
+   * @memberof Database
+   */
+  searchMyGroup(groupId, myId) {
+    let query =
+      "select GroupId from groupMember where UserId = '" +
+      myId +
+      "' and GroupId ='" +
+      groupId +
+      "';";
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) throw err;
+        resolve(res);
+      });
+    });
+  }
+
+  /**
+   * Function that request to add gourps
+   * @param {groupId} groupId
+   * @param {userId} userId
+   * @param {title} title
+   * @param {admin} admin
+   * @return {Promise}
+   * @memberof Database
+   */
+  addgroupRequest(groupId, userId, title, admin) {
+    let query =
+      "insert into groupRequest(GroupId,UserId,Title,Admin) values ('" +
+      groupId +
+      "', '" +
+      userId +
+      "', '" +
+      title +
+      "', '" +
+      admin +
+      "');";
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) throw err;
+        resolve(res);
+      });
+    });
+  }
+
+  /**
+   * Function that load admin's group
+   
+   * @param {admin} admin
+   * @return {Promise}
+   * @memberof Database
+   */
+  loadAdminGroup(admin) {
+    let query = "SELECT * FROM groups where Admin = '" + admin + "';";
+
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) throw err;
+        resolve(res);
+      });
+    });
+  }
+
+  /**
+   * Function that load admin's group
+   
+   * @param {groupId} groupId
+   * @param {userId} userId
+   * @return {Promise}
+   * @memberof Database
+   */
+  isIntheGroup(groupId, userId) {
+    let query =
+      "SELECT * FROM groupMember where groupId = '" +
+      groupId +
+      "' and userId = '" +
+      userId +
+      "';";
+
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) throw err;
+        resolve(res);
+      });
+    });
+  }
 }
 module.exports = new Database();
