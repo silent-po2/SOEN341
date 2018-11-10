@@ -60,11 +60,18 @@ module.exports = function(app) {
 
   app.post('/search', userController.search);
 
+  app.post('/searchuser', userController.searchUser);
+
   // app.get('/search', userController.searchGet);
 
   app.post('/profiles/:id', userController.othersProfile);
 
   app.post('/addgroup/:id', userController.addRequest);
+
+  app.get('/adduser/:id', userController.adduserGet);
+
+  app.post('/adduser/', userController.adduserPost);
+
   app.use('*', function(req, res) {
     res.locals.user = req.user || null;
   });

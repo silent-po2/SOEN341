@@ -8,15 +8,17 @@ block content
     .container
         ul#myTab.nav.nav-tabs.mb-4(role='tablist')
             li.nav-item
-                a#basicInfo-tab.nav-link.active(data-toggle='tab', href='#privateMessages', role='tab', aria-controls='privateMessages', aria-selected='true') Private
+                a#basicInfo-tab.nav-link(data-toggle='tab', href='#privateMessages', role='tab', aria-controls='privateMessages', aria-selected='true') Private
             li.nav-item
                 a#basicInfo-tab.nav-link(data-toggle='tab', href='#groups', role='tab', aria-controls='groups', aria-selected='true') Group
             li.nav-item
-                a#basicInfo-tab.nav-link(data-toggle='tab', href='#makeGroup', role='tab', aria-controls='makeGroup', aria-selected='true') Make A Group
+                a#basicInfo-tab.nav-link(data-toggle='tab', href='#makeGroup', role='tab', aria-controls='makeGroup', aria-selected='true') Make a group
+            li.nav-item
+                a#basicInfo-tab.nav-link.active(data-toggle='tab', href='#search', role='tab', aria-controls='search', aria-selected='true') Search a user
             li.nav-item
                 a#basicInfo-tab.nav-link(data-toggle='tab', href='#admin', role='tab', aria-controls='admin', aria-selected='true') Admin
         #myTabContent.tab-content.ml-1
-            #privateMessages.tab-pane.fade.show.active(role='tabpanel', aria-labelledby='privateMessages-tab')
+            #privateMessages.tab-pane.fade.show(role='tabpanel', aria-labelledby='privateMessages-tab')
                 each user, i in userList
                     if userArr[0]!=user[0]
                         .row
@@ -37,12 +39,13 @@ block content
             #makeGroup.tab-pane.fade.show(role='tabpanel', aria-labelledby='makeGroup-tab')   
                 form#groupForm.groupForm(action='/contacts', method='post')
                     .form-group
-                        label.col-sm-2(for='text') Name: 
+                        text Group Name: 
                         input#name.form-control.col-sm-8(type='text', name='groupName', placeholder='Enter a name')
-                    hr
-                    .row
-                        input(type='checkbox', name='myId', value=userArr[0], checked='')
-                        text= userArr[2] + ' ' + userArr[3] 
+                        
+                    //- hr
+                    //- .row
+                    //-     input(type='checkbox', name='myId', value=userArr[0], checked='')
+                    //-     text= userArr[2] + ' ' + userArr[3] 
                     hr
                     each user, i in userList
                         if userArr[0]!=user[0]
@@ -51,6 +54,52 @@ block content
                                 text= user[1] + ' ' + user[2]
                             hr
                     input.btn.btn-primary(type='submit', value='Form a group')
+            #search.tab-pane.fade.show.active(role='tabpanel', aria-labelledby='Search-tab')
+                text Search a user: 
+                form.form-inline.my-2.my-lg-0(action='/searchuser', method='post')
+                    input.form-control.mr-sm-2(type='text',name='SearchUser', placeholder='Search', aria-label='Search')
+                    button.btn.btn-outline-success.my-2.my-sm-0(type='submit') Search
+                hr
+                if searchResult
+                    if JSON.stringify(searchResult)=='[]'
+                        text no result...
+                    each user, i in searchResult
+                        //- if userArr[0]!=user[0]
+                        .row
+                            .col-sm-3.col-md-2.col-5
+                                img.img.img-rounded.img-fluid(src='/pics/profile.png', style='width:60%')
+                        .row
+                            .col-sm-3.col-md-2.col-5
+                                label(style='font-weight:bold;') Full Name
+                            .col-md-8.col-6
+                                p= user.FirstName + ' ' + user.LastName
+                            hr
+                            .row
+                                .col-sm-3.col-md-2.col-5
+                                    label(style='font-weight:bold;') UserID
+                                .col-md-8.col-6
+                                    p= user.Id
+                            hr
+                            .row
+                                .col-sm-3.col-md-2.col-5
+                                    label(style='font-weight:bold;') Email
+                                .col-md-8.col-6
+                                    p= user.Email
+                            hr
+                            .row
+                                .col-sm-3.col-md-2.col-5
+                                    label(style='font-weight:bold;') User type
+                                .col-md-8.col-6
+                                    if (user.Type=='P')
+                                        p Parent
+                                    if (user.Type=='T')
+                                        p Teacher
+                            hr
+                            button.btn.btn-primary.btn-sm(type='button',onclick="window.open('/adduser/"+ user.Id +"', 'newwindow', 'width=400, height=350'); return false;") Add to my group
+                   
+
+
+                
             #admin.tab-pane.fade.show(role='tabpanel', aria-labelledby='Admin-tab')
                 each request, i in requestList
                     .row

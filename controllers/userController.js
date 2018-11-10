@@ -296,10 +296,10 @@ module.exports = {
    */
   contactsPost: function(req, res) {
     winston.info('POST contacts');
-    let myId = req.body.myId;
+    let user = new User().create(req.session.user);
     let userArray = req.body.userId;
     let gname = req.body.groupName;
-    winston.debug('title: ' + gname + 'users:' + myId + userArray);
+    winston.debug('title: ' + gname + 'users:' + user.id + userArray);
     if (gname === '') {
       req.flash('danger', 'Please enter a name.');
       res.redirect('/contacts');
@@ -307,12 +307,12 @@ module.exports = {
       req.flash('danger', 'Please select at least one contact.');
       res.redirect('/contacts');
     } else {
-      db.formGroup(gname, myId)
+      db.formGroup(gname, user.id)
         .then(result => {
           let obj = Object.values(result);
           let groupId = Object.values(Object.values(obj[1])[0]);
           winston.debug('groupId: ' + groupId);
-          userArray.push(myId);
+          userArray.push(user.id);
           for (let i = 0; i < userArray.length; i++) {
             db.addGroupMember(groupId, gname, userArray[i])
               .then(result => {})
@@ -462,6 +462,73 @@ module.exports = {
   },
 
   /**
+   * Function that responds to a '/searchuser' post request
+   *
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
+   */
+  searchUser: function(req, res) {
+    if (req.session.user) {
+      let searchString = req.body.SearchUser;
+      let user = new User().create(req.session.user);
+      let userArr = user.toArray();
+      let myId = user.id;
+      db.loadUsers()
+        .then(result => {
+          let userList = result;
+          db.loadGroups(user.id)
+            .then(result => {
+              let groupList = result;
+              db.loadRequest(myId)
+                .then(result => {
+                  let requestList = result;
+                  req.checkBody('SearchUser', 'Search is empty').notEmpty();
+                  let errors = req.validationErrors();
+                  if (errors) {
+                    res.render('contacts', {
+                      errors: errors,
+                      userArr: userArr,
+                      requestList: requestList,
+                      user: req.session.user,
+                      userList: userList,
+                      groupList: groupList
+                    });
+                  } else {
+                    db.searchUser(searchString)
+                      .then(result => {
+                        let searchResult = result;
+                        res.render('contacts', {
+                          errors: errors,
+                          userArr: userArr,
+                          requestList: requestList,
+                          user: req.session.user,
+                          userList: userList,
+                          groupList: groupList,
+                          searchResult: searchResult
+                        });
+                      })
+                      .catch(error => {
+                        res.status(401).render('contacts');
+                      });
+                  }
+                })
+                .catch(error => {
+                  winston.error(error.stack);
+                });
+            })
+            .catch(error => {
+              winston.error(error.stack);
+            });
+        })
+        .catch(error => {
+          winston.error(error.stack);
+        });
+    } else {
+      res.redirect('/login');
+    }
+  },
+
+  /**
    * Function that responds to a '/search' get request
    *
    * @param {Object} req - Request parameter
@@ -525,5 +592,110 @@ module.exports = {
       .catch(error => {
         res.status(401).render('../views/search.pug');
       });
+  },
+
+  /**
+   * Function that responds to a '/adduser' get request
+   *
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
+   */
+  adduserGet: function(req, res) {
+    if (req.session.user) {
+      let user = new User().create(req.session.user);
+      let tobeAdded = req.params.id;
+      winston.info(tobeAdded);
+      db.loadAdminGroup(user.id)
+
+        .then(result => {
+          let myGroup = result;
+          res.render('adduser', {
+            myGroup: myGroup,
+            tobeAdded: tobeAdded,
+            user: req.session.user
+          });
+        })
+        .catch(error => {
+          winston.error(error.stack);
+        });
+    } else {
+      res.redirect('/login');
+    }
+  },
+
+  /**
+   * Function that responds to a '/adduser' post request
+   *
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
+   */
+  adduserPost: function(req, res) {
+    winston.info('POST adduser');
+    if (req.session.user) {
+      let tobeAdded = req.body.UserId;
+      let groupId = req.body.GroupId;
+      let title = req.body.Title;
+      let user = new User().create(req.session.user);
+      db.isIntheGroup(groupId, tobeAdded)
+        .then(result => {
+          if (rows != '[]') {
+            db.loadAdminGroup(user.id)
+              .then(result => {
+                let myGroup = result;
+                req.flash('danger', 'This user is already a group member');
+                res.render('adduser', {
+                  myGroup: myGroup,
+                  tobeAdded: tobeAdded,
+                  user: req.session.user
+                });
+              })
+              .catch(error => {
+                winston.error(error.stack);
+              });
+          } else {
+            db.addGroupMember(groupId, title, tobeAdded)
+              .then(result => {
+                db.loadAdminGroup(user.id)
+                  .then(result => {
+                    let myGroup = result;
+                    req.flash('success', 'Added');
+                    res.render('adduser', {
+                      myGroup: myGroup,
+                      tobeAdded: tobeAdded,
+                      user: req.session.user
+                    });
+                  })
+                  .catch(error => {
+                    winston.error(error.stack);
+                  });
+              })
+              .catch(error => {
+                winston.error(error.stack);
+              });
+          }
+        })
+        .catch(error => {
+          winston.error(error.stack);
+        });
+    } else {
+      res.redirect('/login');
+    }
+  },
+
+  /**
+   * Function that responds to a '/editprofile' GET request
+   *
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
+   */
+  editProfile: function(req, res) {
+    if (req.session.user) {
+      res.render('editprofile', {
+        title: 'Edit Profile',
+        user: req.session.user
+      });
+    } else {
+      res.render('login');
+    }
   }
 };

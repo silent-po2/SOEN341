@@ -629,5 +629,51 @@ class Database {
       });
     });
   }
+
+  /**
+   * Function that load admin's group
+   
+   * @param {admin} admin
+   * @return {Promise}
+   * @memberof Database
+   */
+  loadAdminGroup(admin) {
+    let query = "SELECT * FROM groups where Admin = '" + admin + "';";
+
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) throw err;
+        resolve(res);
+      });
+    });
+  }
+
+  /**
+   * Function that load admin's group
+   
+   * @param {groupId} groupId
+   * @param {userId} userId
+   * @return {Promise}
+   * @memberof Database
+   */
+  isIntheGroup(groupId, userId) {
+    let query =
+      "SELECT * FROM groupMember where groupId = '" +
+      groupId +
+      "' and userId = '" +
+      userId +
+      "';";
+
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) throw err;
+        resolve(res);
+      });
+    });
+  }
 }
 module.exports = new Database();

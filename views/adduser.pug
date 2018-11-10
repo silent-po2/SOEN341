@@ -1,0 +1,33 @@
+html
+  head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+    meta(name='description', content='')
+    meta(name='author', content='')
+    title KiWi - Parents and Teachers
+    script(src='/controllers/userController.js')
+    // Bootstrap core CSS
+    script(src='/node_modules/bootstrap/dist/js/bootstrap.min.js')
+    link(href='/node_modules/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
+    link(href='/css/chatstyle.css', rel='stylesheet')
+    // Custom styles for this template
+  body
+    .container
+      != messages('message', locals)
+      if errors
+        each error, i in errors
+          div(class="alert alert-danger") #{error.msg}
+      block content
+    h5 Which group do you want to add?
+    br
+    if myGroup
+        if JSON.stringify(myGroup)=='[]'
+            text You are not an Admin of any group
+        each group, i in myGroup
+            form(action='/adduser', method='post')
+                input(type='hidden', name='GroupId', value= group.GroupId)
+                input(type='hidden', name='Title', value= group.Title)
+                input(type='hidden', name='UserId', value= tobeAdded)
+                button.btn.btn-primary.btn-sm(type='submit') Send a message to the #{group.Title}
+    
+                
