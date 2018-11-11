@@ -1,0 +1,17 @@
+extends layout
+
+block content
+    br
+    h3 Notifications
+    br
+    .container
+        form#notification-form(method='post', action='/notifications')
+            .form-group
+                p='Dashboard: ' + notifications[0]
+            .form-group
+                p='Chat: ' + notifications[1]
+            .form-group
+                p='Group Chat: ' + notifications[2]
+            button.btn.btn-primary.form-control(type='submit') Mark As Read  
+
+            

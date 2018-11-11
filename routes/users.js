@@ -37,6 +37,10 @@ module.exports = function(app) {
 
   app.get('/contacts', userController.contacts);
 
+  app.get('/notifications', userController.getNotifications);
+
+  app.post('/notifications', userController.readNotifications);
+
   app.post('/contacts', userController.contactsPost);
   // ! not be able to register Error: ER_PARSE_ERROR: You have an error in your SQL syntax;
   app.post('/register', userController.registerPost);

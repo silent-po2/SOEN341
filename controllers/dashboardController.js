@@ -118,7 +118,7 @@ module.exports = {
    * @param {Object} res - Response parameter
    */
   dashboardPost: function(req, res) {
-    let user = req.session.user;
+    let user = new User().create(req.session.user);
     let sender = user.firstName + ' ' + user.lastName;
     let post = req.body.post;
     let image = req.file;
@@ -135,6 +135,9 @@ module.exports = {
         imageName = req.file.filename;
       }
       db.addDashboardMsg(post, imageName, sender)
+        .then(result => {
+          return db.addThreadNotification();
+        })
         .then(result => {
           // req.flash('success', 'Message posted');
           res.redirect('/dashboard');

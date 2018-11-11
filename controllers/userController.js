@@ -6,7 +6,6 @@
 let User = require('../models/user');
 let db = require('../db/Database');
 let winston = require('../config/winston');
-let arrayDiff = require('simple-array-diff');
 
 module.exports = {
   /**
@@ -22,6 +21,39 @@ module.exports = {
     });
   },
 
+  /**
+   * Function that responds to a '/notifications' GET request
+   *
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
+   */
+  getNotifications: function(req, res) {
+    winston.info('GET notifications');
+    let user = new User().create(req.session.user);
+    db.getNotifications(user.id).then(result => {
+      res.render('../views/notification.pug', {
+        user: req.session.user,
+        notifications: result
+      });
+    });
+  },
+
+  /**
+   * Function that responds to a '/notifications' POST request
+   *
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
+   */
+  readNotifications: function(req, res) {
+    let user = new User().create(req.session.user);
+    winston.info('GET notifications');
+    db.removeNotifications(user.id).then(result => {
+      res.render('../views/notification.pug', {
+        user: req.session.user,
+        notifications: [0, 0, 0]
+      });
+    });
+  },
   /**
    * Function that responds to a '/groups' GET request
    *
