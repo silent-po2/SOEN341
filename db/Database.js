@@ -290,7 +290,7 @@ class Database {
         this.connection.connect();
       }
       this.connection.query(query, (err, res) => {
-        winston.debug('db connection open');
+        winston.debug('deleting test users');
         winston.debug('Evaluated query: ' + query);
         if (err) reject(err);
         resolve(res);
