@@ -125,6 +125,7 @@ module.exports = {
       req.checkBody('groupchat', 'Message is empty').notEmpty();
       let errors = req.validationErrors();
       if (errors) {
+        winston.debug(errors);
         let user = req.session.user;
         let groupId = req.params.id;
         let sid = user.id;
@@ -132,7 +133,6 @@ module.exports = {
           res.render('groupchat', {
             errors: errors,
             groupchatList: result,
-            title: title,
             sender: sid
           });
         });

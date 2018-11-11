@@ -16,9 +16,21 @@ module.exports = {
    */
   userHome: function(req, res) {
     winston.info('GET home');
-    res.render('../views/home.pug', {
-      user: req.session.user
-    });
+    if (req.session.user) {
+      let user = new User().create(req.session.user);
+      db.getNotifications(user.id).then(res2 => {
+        let notif = JSON.parse('[' + res2 + ']');
+        notif = notif[0] + notif[1] + notif[2];
+        res.render('../views/home.pug', {
+          user: req.session.user,
+          notif: notif
+        });
+      });
+    } else {
+      res.render('../views/home.pug', {
+        user: req.session.user
+      });
+    }
   },
 
   /**
@@ -29,13 +41,26 @@ module.exports = {
    */
   getNotifications: function(req, res) {
     winston.info('GET notifications');
-    let user = new User().create(req.session.user);
-    db.getNotifications(user.id).then(result => {
-      res.render('../views/notification.pug', {
-        user: req.session.user,
-        notifications: result
+    if (req.session.user) {
+      let user = new User().create(req.session.user);
+      db.getNotifications(user.id)
+        .then(result => {
+          let notif = JSON.parse('[' + result + ']');
+          notif = notif[0] + notif[1] + notif[2];
+          return res.render('../views/notification.pug', {
+            user: req.session.user,
+            notifications: result,
+            notif: notif
+          });
+        })
+        .catch(error => {
+          winston.error(error.stack);
+        });
+    } else {
+      res.render('../views/home.pug', {
+        user: req.session.user
       });
-    });
+    }
   },
 
   /**
@@ -151,11 +176,16 @@ module.exports = {
       let userArr = user.toArray();
       db.loadUsers()
         .then(result => {
-          res.render('../views/profile.pug', {
-            title: 'Profile',
-            userArr: userArr,
-            user: req.session.user,
-            userList: result
+          db.getNotifications(user.id).then(res2 => {
+            let notif = JSON.parse('[' + res2 + ']');
+            notif = notif[0] + notif[1] + notif[2];
+            res.render('../views/profile.pug', {
+              title: 'Profile',
+              userArr: userArr,
+              user: req.session.user,
+              userList: result,
+              notif: notif
+            });
           });
         })
         .catch(error => {
@@ -387,12 +417,17 @@ module.exports = {
             db.loadRequest(myId)
               .then(result => {
                 let requestList = result;
-                res.render('../views/contacts.pug', {
-                  userArr: userArr,
-                  requestList: requestList,
-                  user: req.session.user,
-                  userList: userList,
-                  groupList: groupList
+                db.getNotifications(user.id).then(res2 => {
+                  let notif = JSON.parse('[' + res2 + ']');
+                  notif = notif[0] + notif[1] + notif[2];
+                  res.render('../views/contacts.pug', {
+                    userArr: userArr,
+                    requestList: requestList,
+                    user: req.session.user,
+                    userList: userList,
+                    groupList: groupList,
+                    notif: notif
+                  });
                 });
               })
               .catch(error => {
@@ -460,6 +495,11 @@ module.exports = {
     if (req.session.user) {
       let searchString = req.body.Search;
       let user = new User().create(req.session.user);
+      let notif;
+      db.getNotifications(user.id).then(res2 => {
+        notif = JSON.parse('[' + res2 + ']');
+        notif = notif[0] + notif[1] + notif[2];
+      });
       req.checkBody('Search', 'Search is empty').notEmpty();
       let errors = req.validationErrors();
       if (errors) {
@@ -469,7 +509,8 @@ module.exports = {
           errors: errors,
           userArr: userArr,
           groupArr: groupArr,
-          user: user
+          user: user,
+          notif: notif
         });
       } else {
         db.searchUser(searchString)
@@ -477,10 +518,12 @@ module.exports = {
             let userArr = result;
             db.searchGroup(searchString).then(result => {
               let groupArr = result;
+
               res.render('search', {
                 userArr: userArr,
                 groupArr: groupArr,
-                user: user
+                user: user,
+                notif: notif
               });
             });
           })
@@ -669,8 +712,8 @@ module.exports = {
       let title = req.body.Title;
       let user = new User().create(req.session.user);
       db.isIntheGroup(groupId, tobeAdded)
-        .then(result => {
-          if (rows != '[]') {
+        .then(rows => {
+          if (rows != '') {
             db.loadAdminGroup(user.id)
               .then(result => {
                 let myGroup = result;
