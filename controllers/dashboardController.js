@@ -141,7 +141,7 @@ module.exports = {
           for (let i = 0; i < rows.length; i++) {
             postArr[i] = rows[i];
           }
-          res.render('../views/dashboard.pug', {
+          res.status(401).render('../views/dashboard.pug', {
             errors: errors,
             postArr: postArr,
             userArr: userArr,
