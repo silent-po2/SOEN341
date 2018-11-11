@@ -41,16 +41,26 @@ module.exports = {
    */
   getNotifications: function(req, res) {
     winston.info('GET notifications');
-    let user = new User().create(req.session.user);
-    db.getNotifications(user.id).then(result => {
-      let notif = JSON.parse('[' + res2 + ']');
-      notif = notif[0] + notif[1] + notif[2];
-      res.render('../views/notification.pug', {
-        user: req.session.user,
-        notifications: result,
-        notif: notif
+    if (req.session.user) {
+      let user = new User().create(req.session.user);
+      db.getNotifications(user.id)
+        .then(result => {
+          let notif = JSON.parse('[' + result + ']');
+          notif = notif[0] + notif[1] + notif[2];
+          return res.render('../views/notification.pug', {
+            user: req.session.user,
+            notifications: result,
+            notif: notif
+          });
+        })
+        .catch(error => {
+          winston.error(error.stack);
+        });
+    } else {
+      res.render('../views/home.pug', {
+        user: req.session.user
       });
-    });
+    }
   },
 
   /**
