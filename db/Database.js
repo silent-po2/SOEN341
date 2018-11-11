@@ -449,13 +449,17 @@ class Database {
    */
   like(msgId) {
     let query =
-      "UPDATE messages SET Like = Like + 1 where MsgId='" + msgId + "';";
+      "UPDATE messages SET messages.Like = messages.Like + 1 where MsgId='" +
+      msgId +
+      "';";
+
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
         let likes;
         winston.debug('db connection open');
-        winston.debug('Evaluated query: ' + query);
-        let query = "select Like from messages where MsgId='" + msgId + "';";
+        // winston.debug('Evaluated query: ' + query);
+        let query =
+          "select messages.Like from messages where MsgId='" + msgId + "';";
         this.connection.query(query, (err, res) => {
           if (err) throw err;
           else {

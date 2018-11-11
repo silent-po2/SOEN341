@@ -94,7 +94,6 @@ module.exports = {
           for (let i = 0; i < rows.length; i++) {
             postArr[i] = rows[i];
           }
-          winston.debug(postArr);
           res.render('../views/dashboard.pug', {
             postArr: postArr,
             userArr: userArr,
@@ -147,7 +146,7 @@ module.exports = {
     }
   },
   /**
-   * TODO
+   * Function that responds to a '/like' POST request
    *
    * @param {*} req
    * @param {*} res
@@ -155,7 +154,35 @@ module.exports = {
   like: function(req, res) {
     let msgId = req.body.msgId;
     winston.debug(msgId);
-    db.like(msgId);
-    res.render('dashboard'), { likes: likes };
+    db.like(msgId)
+      .then(result => {
+        let likes = result;
+        let postArr = [];
+        let user = new User().create(req.session.user);
+        let userArr = user.toArray();
+        db.getAllThreads()
+          .then(rows => {
+            for (let i = 0; i < rows.length; i++) {
+              postArr[i] = rows[i];
+            }
+            winston.debug(postArr);
+            res.render('../views/dashboard.pug', {
+              postArr: postArr,
+              userArr: userArr,
+              likes: likes,
+              user: req.session.user
+            });
+          })
+          .catch(error => {
+            winston.error(error.stack);
+            req.flash('danger', 'Fail to load messages, please try again.');
+            res.redirect('/dashboard');
+          });
+      })
+      .catch(error => {
+        winston.error(error.stack);
+        req.flash('danger', 'Fail to load messages, please try again.');
+        res.redirect('/dashboard');
+      });
   }
 };
