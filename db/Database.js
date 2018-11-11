@@ -284,7 +284,7 @@ class Database {
    * @memberof Database
    */
   deleteUser() {
-    let query = "delete from user where Email='test@test.com';";
+    let query = "delete from user where Email LIKE '%@test.com%';";
     return new Promise((resolve, reject) => {
       if (!this.connection) {
         this.connection.connect();
