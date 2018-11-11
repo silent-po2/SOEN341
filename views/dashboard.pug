@@ -24,38 +24,45 @@ block content
             .row
               .col-md-2
                 img.img.img-rounded.img-fluid(src='/pics/profile.png')
-                p= getSender(post)
-                a.float-left
+                p= post.Sender
+                
                 //p.text-secondary.text-center 
               .col-md-10
                 
                 if(getImage(post)!="null")
-                  img.responsive-img(src='/public/uploads/'+ getImage(post))
-                p= getMessage(post)
-                
+                  img.responsive-img(src='/public/uploads/'+ post.ImageName)
+                p= post.Message
+                t.float-right   (#{post.Like})
+                form(action='/likes',method='post')
+                  input(type='hidden', name='like', value= post.Like)
+                  input(type='hidden', name='msgId', value= post.MsgId)
+                  button#completed-task.float-right.btn-sm.btn-primary(type='submit')
+                    i.float-right.fa.fa-thumbs-o-up like
+
                 //- a.float-right.btn.text-white.btn-danger
-                //-   |  Dislike (#{getDislike(post)})
-                script(type='text/javascript').
-                  function like(i){
-                    alert(i[0].id)
-                  }
-                script(type='text/javascript').
-                  function assignId(){
-                    var btArr = document.getElementsByTagName("button")
-                    for (var i = 0; i < btArr.length; i++){
-                      document.getElementsByTagName('button')[i].setAttribute('id',  (i))
-                    } 
-                  }
-                button.float-right(type='button', onclick='myFunction()') Like
-                p.float-right#demo 0
-                script.
-                  var add = (function () {
-                  var counter = 0;
-                  return function () {return counter += 1;}
-                  })();
-                  function myFunction(){
-                  document.getElementById("demo").innerHTML = add();
-                  }
+                //-   | 
+                 Dislike (#{getDislike(post)})
+                //- script(type='text/javascript').
+                //-   function like(i){
+                //-     alert(i[0].id)
+                //-   }
+                //- script(type='text/javascript').
+                //-   function assignId(){
+                //-     var btArr = document.getElementsByTagName("button")
+                //-     for (var i = 0; i < btArr.length; i++){
+                //-       document.getElementsByTagName('button')[i].setAttribute('id',  (i))
+                //-     } 
+                //-   }
+                //- button.float-right(type='button', onclick='myFunction()') Like
+                //- p.float-right#demo 0
+                //- script.
+                //-   var add = (function () {
+                //-   var counter = 0;
+                //-   return function () {return counter += 1;}
+                //-   })();
+                //-   function myFunction(){
+                //-   document.getElementById("demo").innerHTML = add();
+                //-   }
                 //- form(action='/dashboard', name='likes', method='POST')
                 //-   script(type='text/javascript').
                 //-     function currentId(event){

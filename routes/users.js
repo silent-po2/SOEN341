@@ -76,6 +76,8 @@ module.exports = function(app) {
 
   app.post('/adduser/', userController.adduserPost);
 
+  app.post('/likes', dashboardController.like);
+
   app.use('*', function(req, res) {
     res.locals.user = req.user || null;
   });
