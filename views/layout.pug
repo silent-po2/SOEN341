@@ -43,6 +43,9 @@ html(lang='en')
           if user
             li.nav-item
               a.nav-link(href='/logout') Logout
+          if user
+            li.nav-item
+              a.nav-link(href='/notifications') Notifications
         if user      
           form.form-inline.my-2.my-lg-0(action='/search', method='post')
             input.form-control.mr-sm-2(type='text',name='Search', placeholder='Search', aria-label='Search')

@@ -675,5 +675,135 @@ class Database {
       });
     });
   }
+
+  /**
+   * Increments the thread notification counter in the database.
+   *
+   * @param {Object} users A list of users to notify.
+   * @return {Promise}
+   * @memberof Database
+   */
+  addThreadNotification(users) {
+    // TODO: embed update for each friend instead of everyone
+    let query = 'UPDATE user set ThreadNotif = ThreadNotif + 1 ;';
+
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) throw err;
+        resolve(res);
+      });
+    });
+  }
+
+  /**
+   * Increments the chat notification counter in the database.
+   *
+   * @param {Integer} id
+   * @return {Promise}
+   * @memberof Database
+   */
+  addChatNotification(id) {
+    let query =
+      "UPDATE user set chatNotif = chatNotif + 1 where Id ='" + id + "';";
+
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) throw err;
+        resolve(res);
+      });
+    });
+  }
+
+  /**
+   * Increments the group chat notification counter in the database.
+   *
+   * @param {*} groupId
+   * @return {Promise}
+   * @memberof Database
+   */
+  addGroupChatNotification(groupId) {
+    let query =
+      "select groupMember.UserId from groupMember inner join groups on groupMember.GroupId = groups.GroupId where groupMember.GroupId = '" +
+      groupId +
+      "' group by groupMember.UserId;";
+
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) throw err;
+
+        let newQuery =
+          'UPDATE user set groupChatNotif = groupChatNotif + 1 where ';
+        let tempIdQuery = '';
+        res.forEach(elem => {
+          tempIdQuery = tempIdQuery + 'Id = ' + elem.UserId + ' or ';
+        });
+
+        let idQuery = tempIdQuery.substring(0, tempIdQuery.length - 4);
+        newQuery = newQuery + idQuery + ';';
+        this.connection.query(newQuery, (err, res) => {
+          winston.debug('db connection open');
+          winston.debug('Evaluated query: ' + newQuery);
+          if (err) throw err;
+          resolve(res);
+        });
+      });
+    });
+  }
+
+  /**
+   *  Function that removes all notifications for a user
+   *
+   * @param {*} id
+   * @return {Promise}
+   * @memberof Database
+   */
+  removeNotifications(id) {
+    let query =
+      "UPDATE user set threadNotif = 0, chatNotif = 0, groupChatNotif = 0 where Id ='" +
+      id +
+      "';";
+
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) throw err;
+        resolve(res);
+      });
+    });
+  }
+
+  /**
+   *  Function that returns all notifications for a user
+   *
+   * @param {*} id
+   * @return {Promise}
+   * @memberof Database
+   */
+  getNotifications(id) {
+    let query =
+      "Select threadNotif, chatNotif, groupChatNotif from user where Id ='" +
+      id +
+      "';";
+
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) throw err;
+        let notifArray = [];
+        notifArray.push(res[0].threadNotif);
+        notifArray.push(res[0].chatNotif);
+        notifArray.push(res[0].groupChatNotif);
+        resolve(notifArray);
+      });
+    });
+  }
 }
 module.exports = new Database();

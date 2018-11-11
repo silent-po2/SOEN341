@@ -63,9 +63,13 @@ module.exports = {
         let rid = req.params.id;
         let sid = user.id;
         let time = moment.utc(new Date()).format('YYYY-MM-DD HH:mm:ss');
-        db.sendChat(rid, sid, time, chat).catch(error => {
-          winston.error(error.stack);
-        });
+        db.sendChat(rid, sid, time, chat)
+          .then(result => {
+            return db.addChatNotification(rid);
+          })
+          .catch(error => {
+            winston.error(error.stack);
+          });
         db.receiveChat(sid, rid)
           .then(result => {
             res.render('chat', {
@@ -136,10 +140,15 @@ module.exports = {
         let user = req.session.user;
         let groupId = req.params.id;
         let sid = user.id;
-        winston.debug('Sending: ' + chat + 'to id: ' + req.params.id);
-        db.sendGroupChat(groupId, sid, chat).catch(error => {
-          winston.error(error.stack);
-        });
+        winston.debug('Sending: ' + chat + ' to id: ' + req.params.id);
+        db.sendGroupChat(groupId, sid, chat)
+          .then(result => {
+            winston.debug('add group chat notif');
+            return db.addGroupChatNotification(groupId);
+          })
+          .catch(error => {
+            winston.error(error.stack);
+          });
         db.receivegroupChat(groupId)
           .then(result => {
             res.render('groupchat', {

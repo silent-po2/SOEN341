@@ -10,6 +10,9 @@ FirstName varchar(30),
 LastName varchar(30),
 Password varchar(32),
 Type enum('T', 'P') NOT NULL,
+ThreadNotif int default 0,
+chatNotif int default 0,
+groupChatNotif int default 0
 primary key (Id)
 );
 
