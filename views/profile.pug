@@ -11,12 +11,12 @@ block content
                         .card-title.mb-4
                             .d-flex.justify-content-start
                                 .image-container
-                                    img#imgProfile.img-thumbnail(src='/pics/profile.png', style='width: 150px; height: 150px')
+                                    img#imgProfile.img-thumbnail(src='/pics/3.jpg', style='width: 150px; height: 150px')
                                     .middle
                                         //- input#btnChangePicture.btn.btn-secondary(type='button', value='Change')
                                         //- input#profilePicture(type='file', style='display: none;', name='file')
                                 .userData.ml-3
-                                    h2.d-block(style='font-size: 2rem; font-weight: bold')
+                                    h2.d-block(style='font-size: 2rem; font-weight: bold; color: green')
                                         br
                                         br
                                         p= userArr[2] + ' ' + userArr[3]
@@ -45,25 +45,25 @@ block content
                                     #basicInfo.tab-pane.fade.show.active(role='tabpanel', aria-labelledby='basicInfo-tab')
                                         .row
                                             .col-sm-3.col-md-2.col-5
-                                                label(style='font-weight:bold;') Full Name
+                                                label(style='font-weight:bold;') Full Name          :
                                             .col-md-8.col-6
                                                 p= userArr[2] + ' ' + userArr[3]
                                         hr
                                         .row
                                             .col-sm-3.col-md-2.col-5
-                                                label(style='font-weight:bold;') UserID
+                                                label(style='font-weight:bold;') UserID         :
                                             .col-md-8.col-6
                                                 p= userArr[0]
                                         hr
                                         .row
                                             .col-sm-3.col-md-2.col-5
-                                                label(style='font-weight:bold;') Email
+                                                label(style='font-weight:bold;') Email          :
                                             .col-md-8.col-6
                                                 p= userArr[1]
                                         hr
                                         .row
                                             .col-sm-3.col-md-2.col-5
-                                                label(style='font-weight:bold;') User type
+                                                label(style='font-weight:bold;') User type      :
                                             .col-md-8.col-6
                                                 if (userArr[4]=='P')
                                                     p Parent
@@ -78,11 +78,12 @@ block content
                                     #contacts.tab-pane.fade.show(role='tabpanel', aria-labelledby='contacts-tab')
                                         each user, i in userList
                                             .row
-                                                .col-sm-3.col-md-2.col-5
-                                                    img.img.img-rounded.img-fluid(src='/pics/profile.png', style='width:60%')
+                                                .col-sm-3.col-md-2.col-5                                     
+                                                    img.img.img-rounded.img-fluid(src='/pics/4.jpg', style='width:35%')
                                                 .col-md-8.col-6
                                                     h3= user[1] + ' ' + user[2]
-                                                    button.btn.btn-primary.btn-sm(type='button',onclick="window.open('/chat/"+user[0]+"', 'newwindow', 'width=600,height=650'); return false;") Send a message
+                                                button.btn.btn-primary.btn-sm(type='button',onclick="window.open('/chat/"+user[0]+"', 'newwindow', 'width=600,height=650'); return false;") Send a message
+                                                    
 
                                             hr
                                         //- .row

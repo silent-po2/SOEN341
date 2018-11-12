@@ -2,9 +2,9 @@
 /* Back ground for all the pages */
 body{
   background-color: #43555100;
-  /* background-image: url('/pics/textured-white-wallpaper.jpg');
-  background-position: bottom right; */
-  background-repeat: repeat;
+  background-image: url('/pics/huts.jpg');
+  background-position: center ;
+  background-repeat: no-repeat;
 }
 
 
@@ -275,12 +275,11 @@ body{
 
   /* @@@@@@@@@@@@@@@@@  REGISTERATION PAGE @@@@@@@@@@@@@@@@@@@@@@@@@  */
 
-.container .img {
+/* .container .img {
   border-radius: 8px;
   position: absolute;
     left: 50px;
-  
-}
+} */
 h3 {
   font-family: Arial, Helvetica, sans-serif;
   text-align: center;
@@ -293,8 +292,16 @@ h3 {
 .container a{
   font-family: "Helvetica";
   color: rgb(0, 0, 0);
-  font-size: 15px;
+  /* font-size: 15px;
   max-width: 500px;
+  margin: auto; */
+}
+/* Reason for the width */
+.container {
+  font-family: "Helvetica";
+  color: #020202;
+  font-size: 15px;
+  /* max-width: 500px; */
   margin: auto;
 }
 .form-group label{
@@ -311,14 +318,6 @@ h3 {
   margin: auto;
 }
 
-/* Reason for the width */
-.container {
-  font-family: "Helvetica";
-  color: #020202;
-  font-size: 15px;
-  max-width: 500px;
-  margin: auto;
-}
 .btn {
   background-color: rgb(245, 142, 8); /* Orange */
   font-family: "Helvetica";
@@ -328,7 +327,24 @@ h3 {
   font-weight: bold;
 } 
 
-/*@@@@@@@@@@@@@@@@@@@@@@@@@@ LOGIN PAGE @@@@@@@@@@@@@@@@@@@@@@@@@ */
+/*@@@@@@@@@@@@@@@@@@@@@@@@@@ PROFILE PAGE @@@@@@@@@@@@@@@@@@@@@@@@@ */
 
-
+.nav-item {
+  font-family: "Helvetica";
+  color: rgb(0, 0, 0);
+  font-size: 22px;
+  font-weight: bold;
+}
+.row label{
+  font-family: "Helvetica";
+  color: rgb(0, 0, 0);
+  font-size: 18px;
+  font-weight: bold;
+}
+.row .col-md-8.col-6{
+  font-family: "Helvetica";
+  color: rgb(0, 0, 0);
+  font-size: 18px;
+  font-weight: bold;
+}
 
