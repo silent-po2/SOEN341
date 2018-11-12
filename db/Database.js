@@ -284,7 +284,7 @@ class Database {
    * @memberof Database
    */
   deleteUser() {
-    let query = "delete from user where Email='test@test.com';";
+    let query = "delete from user where Email LIKE '%@test.com%';";
     return new Promise((resolve, reject) => {
       if (!this.connection) {
         this.connection.connect();
@@ -449,13 +449,17 @@ class Database {
    */
   like(msgId) {
     let query =
-      "UPDATE messages SET Like = Like + 1 where MsgId='" + msgId + "';";
+      "UPDATE messages SET messages.Like = messages.Like + 1 where MsgId='" +
+      msgId +
+      "';";
+
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
         let likes;
         winston.debug('db connection open');
-        winston.debug('Evaluated query: ' + query);
-        let query = "select Like from messages where MsgId='" + msgId + "';";
+        // winston.debug('Evaluated query: ' + query);
+        let query =
+          "select messages.Like from messages where MsgId='" + msgId + "';";
         this.connection.query(query, (err, res) => {
           if (err) throw err;
           else {
@@ -532,6 +536,276 @@ class Database {
         winston.debug('Evaluated query: ' + query);
         if (err) throw err;
         resolve(res);
+      });
+    });
+  }
+  /**
+   * Function that search users' profiles
+   * @param {searchString} searchString
+   * @return {Promise}
+   * @memberof Database
+   */
+  searchUser(searchString) {
+    let query =
+      "select * from user where FirstName Like '" +
+      searchString +
+      "'or LastName Like '" +
+      searchString +
+      "';";
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) throw err;
+        resolve(res);
+      });
+    });
+  }
+
+  /**
+   * Function that search gourps
+   * @param {searchString} searchString
+   * @return {Promise}
+   * @memberof Database
+   */
+  searchGroup(searchString) {
+    let query = "select * from groups where Title LIke '" + searchString + "';";
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) throw err;
+        resolve(res);
+      });
+    });
+  }
+
+  /**
+   * Function that search gourps
+   * @param {groupId} groupId
+   * @param {myId} myId
+   * @return {Promise}
+   * @memberof Database
+   */
+  searchMyGroup(groupId, myId) {
+    let query =
+      "select GroupId from groupMember where UserId = '" +
+      myId +
+      "' and GroupId ='" +
+      groupId +
+      "';";
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) throw err;
+        resolve(res);
+      });
+    });
+  }
+
+  /**
+   * Function that request to add gourps
+   * @param {groupId} groupId
+   * @param {userId} userId
+   * @param {title} title
+   * @param {admin} admin
+   * @return {Promise}
+   * @memberof Database
+   */
+  addgroupRequest(groupId, userId, title, admin) {
+    let query =
+      "insert into groupRequest(GroupId,UserId,Title,Admin) values ('" +
+      groupId +
+      "', '" +
+      userId +
+      "', '" +
+      title +
+      "', '" +
+      admin +
+      "');";
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) throw err;
+        resolve(res);
+      });
+    });
+  }
+
+  /**
+   * Function that load admin's group
+   
+   * @param {admin} admin
+   * @return {Promise}
+   * @memberof Database
+   */
+  loadAdminGroup(admin) {
+    let query = "SELECT * FROM groups where Admin = '" + admin + "';";
+
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) throw err;
+        resolve(res);
+      });
+    });
+  }
+
+  /**
+   * Function that load admin's group
+   
+   * @param {groupId} groupId
+   * @param {userId} userId
+   * @return {Promise}
+   * @memberof Database
+   */
+  isIntheGroup(groupId, userId) {
+    let query =
+      "SELECT * FROM groupMember where groupId = '" +
+      groupId +
+      "' and userId = '" +
+      userId +
+      "';";
+
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) throw err;
+        resolve(res);
+      });
+    });
+  }
+
+  /**
+   * Increments the thread notification counter in the database.
+   *
+   * @param {Object} users A list of users to notify.
+   * @return {Promise}
+   * @memberof Database
+   */
+  addThreadNotification(users) {
+    // TODO: embed update for each friend instead of everyone
+    let query = 'UPDATE user set ThreadNotif = ThreadNotif + 1 ;';
+
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) throw err;
+        resolve(res);
+      });
+    });
+  }
+
+  /**
+   * Increments the chat notification counter in the database.
+   *
+   * @param {Integer} id
+   * @return {Promise}
+   * @memberof Database
+   */
+  addChatNotification(id) {
+    let query =
+      "UPDATE user set chatNotif = chatNotif + 1 where Id ='" + id + "';";
+
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) throw err;
+        resolve(res);
+      });
+    });
+  }
+
+  /**
+   * Increments the group chat notification counter in the database.
+   *
+   * @param {*} groupId
+   * @return {Promise}
+   * @memberof Database
+   */
+  addGroupChatNotification(groupId) {
+    let query =
+      "select groupMember.UserId from groupMember inner join groups on groupMember.GroupId = groups.GroupId where groupMember.GroupId = '" +
+      groupId +
+      "' group by groupMember.UserId;";
+
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) throw err;
+
+        let newQuery =
+          'UPDATE user set groupChatNotif = groupChatNotif + 1 where ';
+        let tempIdQuery = '';
+        res.forEach(elem => {
+          tempIdQuery = tempIdQuery + 'Id = ' + elem.UserId + ' or ';
+        });
+
+        let idQuery = tempIdQuery.substring(0, tempIdQuery.length - 4);
+        newQuery = newQuery + idQuery + ';';
+        this.connection.query(newQuery, (err, res) => {
+          winston.debug('db connection open');
+          winston.debug('Evaluated query: ' + newQuery);
+          if (err) throw err;
+          resolve(res);
+        });
+      });
+    });
+  }
+
+  /**
+   *  Function that removes all notifications for a user
+   *
+   * @param {*} id
+   * @return {Promise}
+   * @memberof Database
+   */
+  removeNotifications(id) {
+    let query =
+      "UPDATE user set threadNotif = 0, chatNotif = 0, groupChatNotif = 0 where Id ='" +
+      id +
+      "';";
+
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) throw err;
+        resolve(res);
+      });
+    });
+  }
+
+  /**
+   *  Function that returns all notifications for a user
+   *
+   * @param {*} id
+   * @return {Promise}
+   * @memberof Database
+   */
+  getNotifications(id) {
+    let query =
+      "Select threadNotif, chatNotif, groupChatNotif from user where Id ='" +
+      id +
+      "';";
+
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) throw err;
+        let notifArray = [];
+        notifArray.push(res[0].threadNotif);
+        notifArray.push(res[0].chatNotif);
+        notifArray.push(res[0].groupChatNotif);
+        resolve(notifArray);
       });
     });
   }

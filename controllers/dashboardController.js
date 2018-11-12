@@ -94,11 +94,15 @@ module.exports = {
           for (let i = 0; i < rows.length; i++) {
             postArr[i] = rows[i];
           }
-          winston.debug(postArr);
-          res.render('../views/dashboard.pug', {
-            postArr: postArr,
-            userArr: userArr,
-            user: req.session.user
+          db.getNotifications(user.id).then(res2 => {
+            let notif = JSON.parse('[' + res2 + ']');
+            notif = notif[0] + notif[1] + notif[2];
+            res.render('../views/dashboard.pug', {
+              postArr: postArr,
+              userArr: userArr,
+              user: req.session.user,
+              notif: notif
+            });
           });
         })
         .catch(error => {
@@ -118,16 +122,35 @@ module.exports = {
    * @param {Object} res - Response parameter
    */
   dashboardPost: function(req, res) {
-    let user = req.session.user;
+    let user = new User().create(req.session.user);
     let sender = user.firstName + ' ' + user.lastName;
     let post = req.body.post;
     let image = req.file;
     let imageName;
     let msgId = req.body.msgId;
+    let postArr = [];
+    let userArr = user.toArray();
     winston.debug('msgId: ' + msgId);
-    if (post == '') {
-      req.flash('danger', 'Fail to post a message, please try again.');
-      res.status(401).redirect('/dashboard');
+    winston.debug('post: ' + JSON.stringify(post));
+    winston.debug('image: ' + image);
+    req.checkBody('post', 'Post is empty').notEmpty();
+    let errors = req.validationErrors();
+    if (errors) {
+      db.getAllThreads()
+        .then(rows => {
+          for (let i = 0; i < rows.length; i++) {
+            postArr[i] = rows[i];
+          }
+          res.status(401).render('../views/dashboard.pug', {
+            errors: errors,
+            postArr: postArr,
+            userArr: userArr,
+            user: req.session.user
+          });
+        })
+        .catch(error => {
+          winston.error(error.stack);
+        });
     } else {
       if (image == undefined) {
         imageName = null;
@@ -135,6 +158,9 @@ module.exports = {
         imageName = req.file.filename;
       }
       db.addDashboardMsg(post, imageName, sender)
+        .then(result => {
+          return db.addThreadNotification();
+        })
         .then(result => {
           // req.flash('success', 'Message posted');
           res.redirect('/dashboard');
@@ -147,7 +173,7 @@ module.exports = {
     }
   },
   /**
-   * TODO
+   * Function that responds to a '/like' POST request
    *
    * @param {*} req
    * @param {*} res
@@ -155,7 +181,35 @@ module.exports = {
   like: function(req, res) {
     let msgId = req.body.msgId;
     winston.debug(msgId);
-    db.like(msgId);
-    res.render('dashboard'), { likes: likes };
+    db.like(msgId)
+      .then(result => {
+        let likes = result;
+        let postArr = [];
+        let user = new User().create(req.session.user);
+        let userArr = user.toArray();
+        db.getAllThreads()
+          .then(rows => {
+            for (let i = 0; i < rows.length; i++) {
+              postArr[i] = rows[i];
+            }
+            winston.debug(postArr);
+            res.render('../views/dashboard.pug', {
+              postArr: postArr,
+              userArr: userArr,
+              likes: likes,
+              user: req.session.user
+            });
+          })
+          .catch(error => {
+            winston.error(error.stack);
+            req.flash('danger', 'Fail to load messages, please try again.');
+            res.redirect('/dashboard');
+          });
+      })
+      .catch(error => {
+        winston.error(error.stack);
+        req.flash('danger', 'Fail to load messages, please try again.');
+        res.redirect('/dashboard');
+      });
   }
 };

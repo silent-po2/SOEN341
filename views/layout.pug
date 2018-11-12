@@ -12,13 +12,17 @@ html(lang='en')
     script(src='/node_modules/bootstrap/dist/js/bootstrap.min.js')
     link(href='/node_modules/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
     link(href='/css/chatstyle.css', rel='stylesheet')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')
+
+
     // Custom styles for this template
+
   body
-    nav.navbar.navbar-expand-md.navbar-primary
-      a.
-      //span.navbar-text Kiwi
+    nav.navbar.navbar-expand-md
+    
       img(src='/pics/kiwi_logo.png', style= 'width: 80px; height: 80px' , alt="Kiwi")
-      //span.navbar-text Kiwi
+      a.navbar-brand(href='/') Home
       button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarsExampleDefault', aria-controls='navbarsExampleDefault', aria-expanded='false', aria-label='Toggle navigation')
         span.navbar-toggler-icon
       #navbarsExampleDefault.collapse.navbar-collapse
@@ -43,13 +47,19 @@ html(lang='en')
           if user
             li.nav-item
               a.nav-link(href='/logout') Logout
-        //- form.form-inline.my-2.my-lg-0
-        //-   input.form-control.mr-sm-2(type='text', placeholder='Search', aria-label='Search')
-        //-   button.btn.btn-outline-success.my-2.my-sm-0(type='submit') Search
+          if user
+            li.nav-item
+              a.nav-link(href='/notifications') Notifications (#{notif})
+              
+        if user      
+          form.form-inline.my-2.my-lg-0(action='/search', method='post')
+            input.form-control.mr-sm-2(type='text',name='Search', placeholder='Search', aria-label='Search')
+            button.btn.btn-outline-success.my-2.my-sm-0(type='submit') Search
     //main.container(role='main')
     //  .starter-template
     .container
-      != messages('message', locals)
+    
+      //- != messages('message', locals)
       if errors
         each error, i in errors
           div(class="alert alert-danger") #{error.msg}

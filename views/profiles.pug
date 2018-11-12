@@ -1,0 +1,64 @@
+//- inspired by suneelrajpoot44 Bootsnipp https://bootsnipp.com/snippets/E1nNa
+extends layout
+    
+block content
+    br
+    .container
+        .row
+            .col-12
+                .card
+                    .card-body
+                        .card-title.mb-4
+                            .d-flex.justify-content-start
+                                .image-container
+                                    img#imgProfile.img-thumbnail(src='/pics/profile.png', style='width: 150px; height: 150px')
+                                    .middle
+                                        //- input#btnChangePicture.btn.btn-secondary(type='button', value='Change')
+                                        //- input#profilePicture(type='file', style='display: none;', name='file')
+                                .userData.ml-3
+                                    h2.d-block(style='font-size: 2rem; font-weight: bold')
+                                        br
+                                        br
+                                        p= firstName + ' ' + lastName
+                                        
+                                    h6.d-block
+                                        //- a(href='javascript:void(0)') 1,500
+                                        //- |  Video Uploads
+                                    h6.d-block
+                                        //- a(href='javascript:void(0)') 300
+                                        //- |  Blog Posts
+                                
+                        .row
+                            .col-12
+                                ul#myTab.nav.nav-tabs.mb-4(role='tablist')
+                                    li.nav-item
+                                        a#basicInfo-tab.nav-link.active(data-toggle='tab', href='#basicInfo', role='tab', aria-controls='basicInfo', aria-selected='true') Profile
+                                   
+                                #myTabContent.tab-content.ml-1
+                                    #basicInfo.tab-pane.fade.show.active(role='tabpanel', aria-labelledby='basicInfo-tab')
+                                        .row
+                                            .col-sm-3.col-md-2.col-5
+                                                label(style='font-weight:bold;') Full Name
+                                            .col-md-8.col-6
+                                                p= firstName + ' ' + lastName
+                                        hr
+                                        .row
+                                            .col-sm-3.col-md-2.col-5
+                                                label(style='font-weight:bold;') UserID
+                                            .col-md-8.col-6
+                                                p= userId
+                                        hr
+                                        .row
+                                            .col-sm-3.col-md-2.col-5
+                                                label(style='font-weight:bold;') Email
+                                            .col-md-8.col-6
+                                                p= email
+                                        hr
+                                        .row
+                                            .col-sm-3.col-md-2.col-5
+                                                label(style='font-weight:bold;') User type
+                                            .col-md-8.col-6
+                                                if (type=='P')
+                                                    p Parent
+                                                if (type=='T')
+                                                    p Teacher

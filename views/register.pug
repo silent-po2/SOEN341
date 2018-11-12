@@ -10,7 +10,7 @@ block content
   .container
   //- h4 
   //- p
-  //- img.img-responsive(src='/pics/reg1.jpeg' alt='Chania' width='360' height='200')
+  //- img.img(src='/pics/reg1.jpeg' alt='Chania' width='360' height='200')
 
   form#register-form(method='post', action='/register')
       .form-group
@@ -36,6 +36,7 @@ block content
       input(type='radio', name='userType', value='P')
       |I am a Parent
       br
-      button.btn.btn-success.form-control(type='submit') Submit
+      button.btn.btn-warning.form-control(type='submit') Submit
       a(href='/login') Already have an account?
+
     

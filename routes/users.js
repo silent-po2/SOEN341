@@ -37,6 +37,10 @@ module.exports = function(app) {
 
   app.get('/contacts', userController.contacts);
 
+  app.get('/notifications', userController.getNotifications);
+
+  app.post('/notifications', userController.readNotifications);
+
   app.post('/contacts', userController.contactsPost);
   // ! not be able to register Error: ER_PARSE_ERROR: You have an error in your SQL syntax;
   app.post('/register', userController.registerPost);
@@ -57,6 +61,22 @@ module.exports = function(app) {
   app.post('/chat/:id', chatController.chatPost);
 
   app.post('/requests', userController.handleRequest);
+
+  app.post('/search', userController.search);
+
+  app.post('/searchuser', userController.searchUser);
+
+  // app.get('/search', userController.searchGet);
+
+  app.post('/profiles/:id', userController.othersProfile);
+
+  app.post('/addgroup/:id', userController.addRequest);
+
+  app.get('/adduser/:id', userController.adduserGet);
+
+  app.post('/adduser/', userController.adduserPost);
+
+  app.post('/likes', dashboardController.like);
 
   app.use('*', function(req, res) {
     res.locals.user = req.user || null;

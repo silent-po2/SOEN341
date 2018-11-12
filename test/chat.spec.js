@@ -6,6 +6,7 @@ let expect = chai.expect;
 let db = require('../db/Database');
 let agent = chai.request.agent(app);
 
+
 describe('Chat', function() {
     afterEach(() => {
         db.deleteUser().catch(err => {
