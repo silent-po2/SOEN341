@@ -15,16 +15,16 @@ chatNotif int default 0,
 groupChatNotif int default 0
 primary key (Id)
 );
+
 create table thread (
-	PostId int unsigned primary key NOT NULL auto_increment,
-    Post varchar(256),
-    `From` int NOT NULL,
-    `About` int NOT NULL,
-    RepliedTo int unsigned default NULL,
-	DT DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    foreign key (`From`) references user(Id),
-    foreign key (`About`) references child(StudentId),
-    foreign key (RepliedTo) references thread(PostId) ON DELETE CASCADE
+	MsgId int primary key auto_increment,
+    Message varchar(255),
+    ImageName varchar(255),
+    Like int,
+    Dislike int,
+    SenderName varchar(100),
+    SenderId int
+    foreign key (SenderId) references user(Id) on delete cascade
 );
 
 create table chat (
@@ -54,48 +54,3 @@ create table groupChat (
 	foreign key (`From`) references user(Id) on delete cascade,
     foreign key (GroupId) references groups(GroupId) on delete cascade
 );
-
--- create table child (
--- StudentId int auto_increment primary key,
--- FirstName varchar(30),
--- LastName varchar(30)
--- );
-
--- create table isParent (
--- ParentId int,
--- StudentId int,
--- Relation enum('M', 'F'),
--- foreign key (ParentId) references user(Id),
--- foreign key (StudentId) references child(StudentId),
--- primary key (ParentId, StudentId)
--- );
-
--- create table isTeacher (
--- TeacherId int,
--- StudentId int,
--- foreign key (TeacherId) references user(Id),
--- foreign key (StudentId) references child(StudentId),
--- primary key (TeacherId, StudentId)
--- );
-
--- create table course ( 
--- CourseId varchar(10) primary key,
--- courseName varchar(30)
--- );
-
--- create table teaches (
--- TeacherId int,
--- CourseId varchar(30),
--- foreign key (TeacherId) references user(Id),
--- foreign key (CourseId) references course(CourseId),
--- primary key (TeacherId, CourseId)
--- );
-
--- create table isRegistered (
--- StudentId int,
--- CourseId varchar(10),
--- grade int,
--- foreign key (StudentId) references child(StudentId),
--- foreign key (CourseId) references course(CourseId),
--- primary key (StudentID, CourseId)
--- );
