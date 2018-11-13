@@ -31,7 +31,7 @@ class Database {
    */
   close() {
     this.connection.end(err => {
-      if (err) throw err;
+      if (err) reject(err);
       winston.debug('db closed');
     });
   }
@@ -59,7 +59,6 @@ class Database {
         this.connection.connect();
       }
       this.connection.query(query, (err, res) => {
-        winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
         if (res.length === 0) {
           reject(new Error('User not found'));
@@ -100,7 +99,6 @@ class Database {
       "');";
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
-        winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
         if (err) {
           reject(err);
@@ -121,7 +119,6 @@ class Database {
     let query = 'SELECT * FROM messages';
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
-        winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
         if (err) {
           reject(err);
@@ -157,7 +154,6 @@ class Database {
 
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
-        winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
         if (err) {
           reject(err);
@@ -177,7 +173,6 @@ class Database {
     let query = "select Id from user where Email='" + email + "';";
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, rows) => {
-        winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
         if (err) reject(err);
         else resolve(rows[0].Id);
@@ -195,7 +190,6 @@ class Database {
     let query = 'select Id, FirstName, LastName from user';
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
-        winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
         if (res.length === 0) reject(new Error('User not found'));
         else {
@@ -230,7 +224,6 @@ class Database {
       "');";
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
-        winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
         if (err) reject(err);
         else resolve(res);
@@ -260,7 +253,6 @@ class Database {
     // "select * from tempchats where Rid='" + rid + "' and Sid='" + sid + "');";
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
-        winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
         if (res.length === 0) {
           let result = [];
@@ -310,7 +302,6 @@ class Database {
       "select GroupId, Title from groupMember where UserId='" + myId + "';";
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
-        winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
         let result = [];
         for (let i = 0; i < res.length; i++) {
@@ -338,7 +329,6 @@ class Database {
       "'); SELECT LAST_INSERT_ID();";
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
-        winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
         if (err) {
           reject(err);
@@ -365,7 +355,6 @@ class Database {
       "');";
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
-        winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
         if (err) {
           reject(err);
@@ -394,7 +383,6 @@ class Database {
       "');";
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
-        winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
         if (err) reject(err);
         else resolve(res);
@@ -417,7 +405,6 @@ class Database {
       "';";
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
-        winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
         if (res.length === 0) {
           let result = [];
@@ -456,12 +443,11 @@ class Database {
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
         let likes;
-        winston.debug('db connection open');
         // winston.debug('Evaluated query: ' + query);
         let query =
           "select messages.Like from messages where MsgId='" + msgId + "';";
         this.connection.query(query, (err, res) => {
-          if (err) throw err;
+          if (err) reject(err);
           else {
             likes = res;
             resolve(likes);
@@ -491,9 +477,8 @@ class Database {
 
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
-        winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
-        if (err) throw err;
+        if (err) reject(err);
         resolve();
       });
     });
@@ -519,9 +504,8 @@ class Database {
       ');';
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
-        winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
-        if (err) throw err;
+        if (err) reject(err);
         resolve();
       });
     });
@@ -540,9 +524,8 @@ class Database {
       "';";
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
-        winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
-        if (err) throw err;
+        if (err) reject(err);
         resolve(res);
       });
     });
@@ -560,9 +543,8 @@ class Database {
       "';";
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
-        winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
-        if (err) throw err;
+        if (err) reject(err);
         resolve(res);
       });
     });
@@ -582,9 +564,8 @@ class Database {
       "';";
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
-        winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
-        if (err) throw err;
+        if (err) reject(err);
         resolve(res);
       });
     });
@@ -600,9 +581,8 @@ class Database {
     let query = "select * from groups where Title LIke '" + searchString + "';";
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
-        winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
-        if (err) throw err;
+        if (err) reject(err);
         resolve(res);
       });
     });
@@ -624,9 +604,8 @@ class Database {
       "';";
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
-        winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
-        if (err) throw err;
+        if (err) reject(err);
         resolve(res);
       });
     });
@@ -654,9 +633,8 @@ class Database {
       "');";
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
-        winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
-        if (err) throw err;
+        if (err) reject(err);
         resolve(res);
       });
     });
@@ -674,9 +652,8 @@ class Database {
 
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
-        winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
-        if (err) throw err;
+        if (err) reject(err);
         resolve(res);
       });
     });
@@ -700,9 +677,8 @@ class Database {
 
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
-        winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
-        if (err) throw err;
+        if (err) reject(err);
         resolve(res);
       });
     });
@@ -721,9 +697,8 @@ class Database {
 
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
-        winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
-        if (err) throw err;
+        if (err) reject(err);
         resolve(res);
       });
     });
@@ -742,9 +717,8 @@ class Database {
 
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
-        winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
-        if (err) throw err;
+        if (err) reject(err);
         resolve(res);
       });
     });
@@ -765,9 +739,8 @@ class Database {
 
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
-        winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
-        if (err) throw err;
+        if (err) reject(err);
 
         let newQuery =
           'UPDATE user set groupChatNotif = groupChatNotif + 1 where ';
@@ -779,9 +752,8 @@ class Database {
         let idQuery = tempIdQuery.substring(0, tempIdQuery.length - 4);
         newQuery = newQuery + idQuery + ';';
         this.connection.query(newQuery, (err, res) => {
-          winston.debug('db connection open');
           winston.debug('Evaluated query: ' + newQuery);
-          if (err) throw err;
+          if (err) reject(err);
           resolve(res);
         });
       });
@@ -803,9 +775,8 @@ class Database {
 
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
-        winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
-        if (err) throw err;
+        if (err) reject(err);
         resolve(res);
       });
     });
@@ -826,9 +797,8 @@ class Database {
 
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
-        winston.debug('db connection open');
         winston.debug('Evaluated query: ' + query);
-        if (err) throw err;
+        if (err) reject(err);
         let notifArray = [];
         notifArray.push(res[0].threadNotif);
         notifArray.push(res[0].chatNotif);
