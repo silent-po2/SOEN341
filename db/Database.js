@@ -480,7 +480,7 @@ class Database {
   editProfile(user) {
     let query =
       "UPDATE user SET Email = '" +
-      user.Email +
+      user.email +
       "', FirstName = '" +
       user.firstName +
       "', LastName = '" +
