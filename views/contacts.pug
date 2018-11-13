@@ -5,6 +5,7 @@ block content
     br
     h3 My Contacts
     br
+    br
     .container
         ul#myTab.nav.nav-tabs.mb-4(role='tablist')
             li.nav-item
@@ -12,9 +13,9 @@ block content
             li.nav-item
                 a#basicInfo-tab.nav-link(data-toggle='tab', href='#groups', role='tab', aria-controls='groups', aria-selected='true') Group
             li.nav-item
-                a#basicInfo-tab.nav-link(data-toggle='tab', href='#makeGroup', role='tab', aria-controls='makeGroup', aria-selected='true') Make a group
+                a#basicInfo-tab.nav-link(data-toggle='tab', href='#makeGroup', role='tab', aria-controls='makeGroup', aria-selected='true') Make a Group
             li.nav-item
-                a#basicInfo-tab.nav-link.active(data-toggle='tab', href='#search', role='tab', aria-controls='search', aria-selected='true') Search a user
+                a#basicInfo-tab.nav-link.active(data-toggle='tab', href='#search', role='tab', aria-controls='search', aria-selected='true') Search a User
             li.nav-item
                 a#basicInfo-tab.nav-link(data-toggle='tab', href='#admin', role='tab', aria-controls='admin', aria-selected='true') Admin
         #myTabContent.tab-content.ml-1
@@ -23,10 +24,10 @@ block content
                     if userArr[0]!=user[0]
                         .row
                             .col-sm-3.col-md-2.col-5
-                                img.img.img-rounded.img-fluid(src='/pics/profile.png', style='width:60%')
+                                img.img.img-rounded.img-fluid(src='/pics/1.png', style='width:40%')
                             .col-md-8.col-6
                                 h3= user[1] + ' ' + user[2]
-                                button.btn.btn-primary.btn-sm(type='button',onclick="window.open('/chat/"+user[0]+"', 'newwindow', 'width=600,height=650'); return false;") Send a message
+                            button.btn.btn-primary.btn-sm(type='button',onclick="window.open('/chat/"+user[0]+"', 'newwindow', 'width=600,height=650'); return false;") Send a message
                         hr
             
             #groups.tab-pane.fade.show(role='tabpanel', aria-labelledby='groups-tab')
@@ -34,14 +35,13 @@ block content
                     each id, i in groupList
                         .row
                             .col-md-8.col-6
-                                button.btn.btn-primary.btn-sm(type='button',onclick="window.open('/groupchat/"+id.GroupId+"', 'newwindow', 'width=600,height=650'); return false;") Send a message to the #{id.Title}
+                                button.btn.btn-success.btn-sm(type='button',onclick="window.open('/groupchat/"+id.GroupId+"', 'newwindow', 'width=600,height=650'); return false;") Send a message to the #{id.Title}
                         hr
             #makeGroup.tab-pane.fade.show(role='tabpanel', aria-labelledby='makeGroup-tab')   
-                form#groupForm.groupForm(action='/contacts', method='post')
+                form#groupForm.groupForm(method='post', action='/contacts')
                     .form-group
-                        text Group Name: 
-                        input#name.form-control.col-sm-8(type='text', name='groupName', placeholder='Enter a name')
-                        
+                        text(style= 'font-size: 1.5rem') Group Name:
+                        input#name.form-control(type='text', name='groupName', placeholder='Enter Name for Group')                        
                     //- hr
                     //- .row
                     //-     input(type='checkbox', name='myId', value=userArr[0], checked='')
@@ -50,15 +50,24 @@ block content
                     each user, i in userList
                         if userArr[0]!=user[0]
                             .row
-                                input(type='checkbox', name='userId[]', value=user[0])
-                                text= user[1] + ' ' + user[2]
+                                form
+                                    .input-group
+                                        .input-group-prepend
+                                            .input-group-text
+                                                input(type='checkbox')
+                                            input.form-control(type='text', name='userId[]', value=user[1] + ' ' + user[2])
+                                //- input(type='checkbox', name='userId[]', value=user[0])
+                                //- text= user[1] + ' ' + user[2]
                             hr
-                    input.btn.btn-primary(type='submit', value='Form a group')
+
+
+                    input.btn.btn-success(type='submit', value='Create',style='height: 40px; width: 130px')
             #search.tab-pane.fade.show.active(role='tabpanel', aria-labelledby='Search-tab')
-                text Search a user: 
+                br
+                text(style= 'font-size: 1rem; font-weight: bold') Search a user: 
                 form.form-inline.my-2.my-lg-0(action='/searchuser', method='post')
                     input.form-control.mr-sm-2(type='text',name='SearchUser', placeholder='Search', aria-label='Search')
-                    button.btn.btn-outline-success.my-2.my-sm-0(type='submit') Search
+                    button.btn.btn-outline-success.my-2.my-sm-0(type='submit',style='height: 40px; width: 130px') Search
                 hr
                 if searchResult
                     if JSON.stringify(searchResult)=='[]'

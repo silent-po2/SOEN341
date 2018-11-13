@@ -1,12 +1,12 @@
 
 /* Back ground for all the pages */
 body{
-  background-color: #43555100;
-  background-image: url('/pics/huts.jpg');
-  background-position: center ;
-  background-repeat: no-repeat;
+  background-color: #6e5205;
+  background-image: url('/pics/w1.jpg');
+  background-position: cover ;
+  background-size: cover;
+  background-repeat: repeat;
 }
-
 
 .inbox_people {
   background: #f8f8f8 none repeat scroll 0 0;
@@ -200,7 +200,7 @@ body{
 .navbar-brand{
   font-family: Helvetica ;
   color: rgb(0, 0, 0);
-  font-size: 100%;
+  font-size: 110%;
   font-weight: bold;
 }
 .navbar-nav li{
@@ -208,7 +208,7 @@ body{
   font-family: Helvetica ;
   display:inline-block;
   margin-left: 5px;
-  font-size: 100%;
+  font-size: 110%;
   font-weight: bold;
 }
 
@@ -217,74 +217,49 @@ body{
 /* @@@@@@@@@@@@@@@@@  HOME PAGE @@@@@@@@@@@@@@@@@@@@@@@@@  */
 
 .carousel-indicators .active{
-  background-color: #f31111;
+  background-color: #000000;
 }
-.carousel-caption h3{
-  display: table-cell;
+.carousel-caption h3 {
   font-family: Garamond;
+  font-weight: bold;
+  font-size: 50px;
   padding: 5px;
-  background: rgb(0, 0, 0);
-  color: peru !important;
-  border-top-left-radius: 10px;
-  /* border-top-right-radius: 10px;  */
-  /* background-size: cover;
+  /* background: rgb(0, 0, 0); */
+  color: rgba(0, 0, 0, 0.938);
+  /* border-top-left-radius: 10px; */
+  /* border-top-right-radius: 10px; 
+  background-size: cover;
   background-position: center; */
 }
 
 /* Description text */
 .carousel-caption p {
-  display: table-cell;
   padding: 5px;
-  background: rgb(0, 0, 0);
-  font-family:    Garamond;
-  font-size:      100;
-  /* border-top-left-radius: 10px;*/
-  border-top-right-radius: 10px; 
-  color:          rgba(10, 197, 66, 0.76) !important;
-  }
+  background: rgb(231, 134, 8);
+  font-family:Garamond;
+  font-weight: bold;
+  font-size: 20px;
+  margin-left: 20%; 
+  border-top-left-radius: 50px;
+  border-top-right-radius: 50px; 
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+  max-width: 500px;
+  color: rgb(0, 0, 0);
+}
 
-.carousel-item img{
-  width:600px;
-  height:480px;
+/* .carousel-item img{
+  width:1200px;
+  height:700px;
   background-color: #05728f;
-}
-.full-screen {
-  background-size: cover;
-  background-position: cover;
-  background-repeat: no-repeat;
-}
-
-  /* Description text */
-.carousel-caption p {
-  display: table-cell;
-  padding: 5px;
-  background: rgb(0, 0, 0);
-  font-family:    Garamond;
-  font-size:      100;
-  /* border-top-left-radius: 10px;*/
-  border-top-right-radius: 10px; 
-  color:          rgba(10, 197, 66, 0.76) !important;
-  }
-  
-  /* Button text */
-.carousel-caption .btn {
-  font-family:    Garamond;
-  font-size:      1em;
-  color:          rgb(32, 241, 60);
-  } 
+}   */
 
   /* @@@@@@@@@@@@@@@@@  REGISTERATION PAGE @@@@@@@@@@@@@@@@@@@@@@@@@  */
 
-/* .container .img {
-  border-radius: 8px;
-  position: absolute;
-    left: 50px;
-} */
 h3 {
   font-family: Arial, Helvetica, sans-serif;
   text-align: center;
   font-size: 40px;
-  /* text-decoration-line: underline overline; */
   color: #000000;
   max-width: 800px;
   margin: inherit;
@@ -347,4 +322,21 @@ h3 {
   font-size: 18px;
   font-weight: bold;
 }
+
+/*@@@@@@@@@@@@@@@@@@@@@@@@@@ CONTACTS PAGE @@@@@@@@@@@@@@@@@@@@@@@@@ */
+
+.row text{
+  font-family: "Helvetica";
+  color: #020202;
+  font-size: 25px;
+}
+.input-group-prepend input.form-control{
+  font-family: "Helvetica";
+  color: #020202;
+  font-size: 20px;
+  border-color: green;
+}
+
+/*@@@@@@@@@@@@@@@@@@@@@@@@@@ DASHBOARD @@@@@@@@@@@@@@@@@@@@@@@@@ */
+
 
