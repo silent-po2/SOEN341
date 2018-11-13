@@ -4,7 +4,7 @@ extends layout
   
 block content
   br
-  h2 Dashboard
+  h3 Dashboard
   .row
     //- .column.left
     //- 
@@ -16,28 +16,28 @@ block content
         textarea.form-control(type='text', name='post', placeholder='What do you want to say?')
         .file-field.input-field
           input(name='myImage', type='file')
-        input.btn.btn-primary(type='submit', name= 'posting' value='Send')
+        input.btn.btn-success(type='submit', name= 'posting' value='Post')
       hr
       each post, i in postArr
         .card
           .card-body
             .row
               .col-md-2
-                img.img.img-rounded.img-fluid(src='/pics/profile.png')
-                p= post.Sender
-                
+                img.img.img-rounded.img-fluid(src='/pics/6.png')
+                br
+                p(style='font-size: 1.8rem')= post.Sender
                 //p.text-secondary.text-center 
               .col-md-10
                 
                 if(getImage(post)!="null")
-                  img.responsive-img(src='/public/uploads/'+ post.ImageName)
-                p= post.Message
-                t.float-right   (#{post.Like})
+                  img.responsive-img(src='/public/uploads/'+ post.ImageName width='360' height='180')
+                p(style='font-size: 1.5rem')= post.Message
+                t.float-right(style='font-size: 1.2rem')   ( #{post.Like} )
                 form(action='/likes',method='post')
                   input(type='hidden', name='like', value= post.Like)
-                  input(type='hidden', name='msgId', value= post.MsgId)
-                  button#completed-task.float-right.btn-sm.btn-primary(type='submit')
-                    i.float-right.fa.fa-thumbs-o-up like
+                  input(type='hidden', name='msgId',value= post.MsgId)
+                  button#completed-task.float-right.btn-sm.btn-success(type='submit',style='height: 30px')
+                    i.float-right.fa.fa-thumbs-o-up Like
 
                 //- a.float-right.btn.text-white.btn-danger
                 //-   | 
@@ -113,4 +113,3 @@ block content
   //- -function currentIds(event){
   //-     -return currentId(event);
   //- -}
-  
