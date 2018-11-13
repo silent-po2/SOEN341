@@ -470,6 +470,34 @@ class Database {
       });
     });
   }
+  /**
+   * Function that edit a user's profile.
+   *
+   * @param {User} user
+   * @return {Promise}
+   * @memberof Database
+   */
+  editProfile(user) {
+    let query =
+      "UPDATE user SET Email = '" +
+      user.Email +
+      "', FirstName = '" +
+      user.firstName +
+      "', LastName = '" +
+      user.lastName +
+      "' where Id = '" +
+      user.id +
+      "';";
+
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('db connection open');
+        winston.debug('Evaluated query: ' + query);
+        if (err) throw err;
+        resolve();
+      });
+    });
+  }
 
   /**
    * Function that resets a user's password.
