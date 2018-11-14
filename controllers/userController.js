@@ -204,10 +204,19 @@ module.exports = {
    */
   editProfile: function(req, res) {
     if (req.session.user) {
-      res.render('editprofile', {
-        title: 'Edit Profile',
-        user: req.session.user
-      });
+      db.getNotifications(user.id)
+        .then(res2 => {
+          let notif = JSON.parse('[' + res2 + ']');
+          notif = notif[0] + notif[1] + notif[2];
+          res.render('editprofile', {
+            title: 'Edit Profile',
+            user: req.session.user,
+            notif: notif
+          });
+        })
+        .catch(error => {
+          winston.error(error.stack);
+        });
     } else {
       res.render('login');
     }
@@ -505,38 +514,41 @@ module.exports = {
       db.getNotifications(user.id).then(res2 => {
         notif = JSON.parse('[' + res2 + ']');
         notif = notif[0] + notif[1] + notif[2];
-      });
-      req.checkBody('Search', 'Search is empty').notEmpty();
-      let errors = req.validationErrors();
-      if (errors) {
-        let userArr = [];
-        let groupArr = [];
-        res.render('search', {
-          errors: errors,
-          userArr: userArr,
-          groupArr: groupArr,
-          user: user,
-          notif: notif
-        });
-      } else {
-        db.searchUser(searchString)
-          .then(result => {
-            let userArr = result;
-            db.searchGroup(searchString).then(result => {
-              let groupArr = result;
 
-              res.render('search', {
-                userArr: userArr,
-                groupArr: groupArr,
-                user: user,
-                notif: notif
-              });
-            });
-          })
-          .catch(error => {
-            res.status(401).render('../views/search.pug');
+        req.checkBody('Search', 'Search is empty').notEmpty();
+        let errors = req.validationErrors();
+        if (errors) {
+          let userArr = [];
+          let groupArr = [];
+
+          res.render('search', {
+            errors: errors,
+            userArr: userArr,
+            groupArr: groupArr,
+            user: user,
+            notif: notif
           });
-      }
+        } else {
+          db.searchUser(searchString)
+            .then(result => {
+              let userArr = result;
+              db.searchGroup(searchString).then(result => {
+                let groupArr = result;
+
+                winston.debug('notif: ' + notif);
+                res.render('search', {
+                  userArr: userArr,
+                  groupArr: groupArr,
+                  user: user,
+                  notif: notif
+                });
+              });
+            })
+            .catch(error => {
+              res.status(401).render('../views/search.pug');
+            });
+        }
+      });
     } else {
       res.redirect('/login');
     }
@@ -554,8 +566,13 @@ module.exports = {
       let user = new User().create(req.session.user);
       let userArr = user.toArray();
       let myId = user.id;
+      let notif;
       db.loadUsers()
         .then(result => {
+          db.getNotifications(user.id).then(res2 => {
+            notif = JSON.parse('[' + res2 + ']');
+            notif = notif[0] + notif[1] + notif[2];
+          });
           let userList = result;
           db.loadGroups(user.id)
             .then(result => {
@@ -572,7 +589,8 @@ module.exports = {
                       requestList: requestList,
                       user: req.session.user,
                       userList: userList,
-                      groupList: groupList
+                      groupList: groupList,
+                      notif: notif
                     });
                   } else {
                     db.searchUser(searchString)
@@ -585,7 +603,8 @@ module.exports = {
                           user: req.session.user,
                           userList: userList,
                           groupList: groupList,
-                          searchResult: searchResult
+                          searchResult: searchResult,
+                          notif: notif
                         });
                       })
                       .catch(error => {
@@ -663,11 +682,18 @@ module.exports = {
         let userArr = [];
         let groupArr = [];
         let user = req.session.user;
-        req.flash('success', 'Request sent.');
-        res.render('search', {
-          userArr: userArr,
-          groupArr: groupArr,
-          user: user
+        let notif;
+        db.getNotifications(user.id).then(res2 => {
+          notif = JSON.parse('[' + res2 + ']');
+          notif = notif[0] + notif[1] + notif[2];
+          winston.debug('notif' + notif);
+          req.flash('success', 'Request sent.');
+          res.render('search', {
+            userArr: userArr,
+            groupArr: groupArr,
+            user: user,
+            notif: notif
+          });
         });
       })
       .catch(error => {

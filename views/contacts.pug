@@ -50,14 +50,14 @@ block content
                     each user, i in userList
                         if userArr[0]!=user[0]
                             .row
-                                form
-                                    .input-group
-                                        .input-group-prepend
-                                            .input-group-text
-                                                input(type='checkbox')
-                                            input.form-control(type='text', name='userId[]', value=user[1] + ' ' + user[2])
-                                //- input(type='checkbox', name='userId[]', value=user[0])
-                                //- text= user[1] + ' ' + user[2]
+                                
+                                .input-group
+                                    //- .input-group-prepend
+                                        //- .input-group-text
+                                        //-     input(type='checkbox')
+                                        //- input.form-control(type='text', name='userId[]', value=user[1] + ' ' + user[2])
+                                    input(type='checkbox', name='userId[]', value=user[0])
+                                    t= user[1] + ' ' + user[2]
                             hr
 
 
@@ -120,8 +120,8 @@ block content
                                 input(type='hidden', name='Title', value= request.Title)
                                 input(type='hidden', name='UserId', value= request.UserId)
                                 input(type='hidden', name='RequestId', value= request.RequestId)
-                                input(type='submit', name='handler', value='Accept')
-                                input(type='submit', name='handler', value='Reject')
+                                input.btn.btn-outline-success.my-2.my-sm-0(type='submit', name='handler', value='Accept',style='height: 40px; width: 130px')
+                                input.btn.btn-outline-success.my-2.my-sm-0(type='submit', name='handler', value='Reject',style='height: 40px; width: 130px')
 
                             
                     hr

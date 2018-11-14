@@ -86,10 +86,11 @@ class Database {
    * @param {*} post
    * @param {*} imageName
    * @param {*} sender
+   * @param {*} userId
    * @return {Promise}
    * @memberof Database
    */
-  addDashboardMsg(post, imageName, sender,userId) {
+  addDashboardMsg(post, imageName, sender, userId) {
     let query =
       "insert into messages(Message, ImageName, Sender,UserId) values ('" +
       post +

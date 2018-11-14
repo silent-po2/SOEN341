@@ -141,11 +141,17 @@ module.exports = {
           for (let i = 0; i < rows.length; i++) {
             postArr[i] = rows[i];
           }
+
+          db.getNotifications(user.id).then(res2 => {
+            notif = JSON.parse('[' + res2 + ']');
+            notif = notif[0] + notif[1] + notif[2];
+          });
           res.status(401).render('../views/dashboard.pug', {
             errors: errors,
             postArr: postArr,
             userArr: userArr,
-            user: req.session.user
+            user: req.session.user,
+            notif: notif
           });
         })
         .catch(error => {
