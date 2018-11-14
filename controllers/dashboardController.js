@@ -157,13 +157,13 @@ module.exports = {
       } else {
         imageName = req.file.filename;
       }
-      db.addDashboardMsg(post, imageName, sender)
+      db.addDashboardMsg(post, imageName, sender, user.id)
         .then(result => {
           return db.addThreadNotification();
         })
         .then(result => {
           // req.flash('success', 'Message posted');
-          res.redirect(200, '/dashboard');
+          res.redirect('/dashboard');
         })
         .catch(error => {
           winston.error(error.stack);

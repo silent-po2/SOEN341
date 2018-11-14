@@ -89,14 +89,16 @@ class Database {
    * @return {Promise}
    * @memberof Database
    */
-  addDashboardMsg(post, imageName, sender) {
+  addDashboardMsg(post, imageName, sender,userId) {
     let query =
-      "insert into messages(Message, ImageName, Sender) values ('" +
+      "insert into messages(Message, ImageName, Sender,UserId) values ('" +
       post +
       "', '" +
       imageName +
       "', '" +
       sender +
+      "', '" +
+      userId +
       "');";
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
