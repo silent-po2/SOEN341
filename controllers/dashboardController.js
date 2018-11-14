@@ -163,12 +163,12 @@ module.exports = {
         })
         .then(result => {
           // req.flash('success', 'Message posted');
-          res.redirect('/dashboard');
+          res.redirect(200, '/dashboard');
         })
         .catch(error => {
           winston.error(error.stack);
           req.flash('danger', 'Fail to post a message, please try again.');
-          res.status(401).redirect('/dashboard');
+          res.redirect(401, '/dashboard');
         });
     }
   },
