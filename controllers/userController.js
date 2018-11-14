@@ -54,7 +54,7 @@ module.exports = {
           });
         })
         .catch(error => {
-          winston.error(error.stack);
+          winston.error(error.message);
         });
     } else {
       res.render('../views/home.pug', {
@@ -138,7 +138,7 @@ module.exports = {
         return res.redirect('/profile');
       })
       .catch(error => {
-        winston.error(error.stack);
+        winston.error(error.message);
         req.flash(
           'danger',
           'Email not found, password or user type incorrect, please try again.'
@@ -176,7 +176,7 @@ module.exports = {
       let userArr = user.toArray();
       db.loadUsers()
         .then(result => {
-          db.getNotifications(user.id).then(res2 => {
+          return db.getNotifications(user.id).then(res2 => {
             let notif = JSON.parse('[' + res2 + ']');
             notif = notif[0] + notif[1] + notif[2];
             res.render('../views/profile.pug', {
@@ -189,27 +189,10 @@ module.exports = {
           });
         })
         .catch(error => {
-          winston.error(error.stack);
+          winston.error(error.message);
         });
     } else {
       res.redirect('/login');
-    }
-  },
-
-  /**
-   * Function that responds to a '/editprofile' GET request
-   *
-   * @param {Object} req - Request parameter
-   * @param {Object} res - Response parameter
-   */
-  editProfile: function(req, res) {
-    if (req.session.user) {
-      res.render('editprofile', {
-        title: 'Edit Profile',
-        user: req.session.user
-      });
-    } else {
-      res.render('login');
     }
   },
 
@@ -220,41 +203,47 @@ module.exports = {
    * @param {Object} res - Response parameter
    */
   editProfilePost: function(req, res) {
-    let userBeforeChange = req.session.user;
-    let id = userBeforeChange.id;
-    let email = req.body.email.toLowerCase();
-    let firstName = req.body.firstname;
-    let lastName = req.body.lastname;
-    let type = userBeforeChange.type;
-    winston.debug('Registering user: ' + email + ' type: ' + type);
-    // validate the inputs
-    req.checkBody('firstname', 'Firstname is required').notEmpty();
-    req.checkBody('lastname', 'Lastname is required').notEmpty();
-    req.checkBody('email', 'Email is required').notEmpty();
-    let errors = req.validationErrors();
+    if (req.session.user) {
+      let userBeforeChange = req.session.user;
+      let id = userBeforeChange.id;
+      let email = req.body.email.toLowerCase();
+      let firstName = req.body.firstname;
+      let lastName = req.body.lastname;
+      let type = userBeforeChange.type;
+      winston.debug('Editing profile user: ' + email + ' type: ' + type);
+      // validate the inputs
+      req.checkBody('firstname', 'Firstname is required').notEmpty();
+      req.checkBody('lastname', 'Lastname is required').notEmpty();
+      req.checkBody('email', 'Email is required').notEmpty();
+      let errors = req.validationErrors();
 
-    if (errors) {
-      res.render('editprofile', {
-        errors: errors,
-        email: email,
-        firstName: firstName,
-        lastName: lastName
-      });
-    } else {
-      // Create user object
-
-      let user = { id, email, firstName, lastName, type };
-      db.editProfile(user)
-        .then(result => {
-          req.flash('success', 'Proile changed.');
-          req.session.user = user;
-          res.redirect('/profile');
-        })
-        .catch(error => {
-          winston.debug(error.stack);
-          req.flash('danger', 'Email already exists, please try again.');
-          res.status(401).render('../views/editprofile.pug');
+      if (errors) {
+        let user = { id, email, firstName, lastName, type };
+        res.render('editprofile', {
+          errors: errors,
+          email: email,
+          firstName: firstName,
+          lastName: lastName,
+          user: user
         });
+      } else {
+        // Create user object
+
+        let user = { id, email, firstName, lastName, type };
+        db.editProfile(user)
+          .then(result => {
+            req.flash('success', 'Proile changed.');
+            req.session.user = user;
+            res.redirect('/profile');
+          })
+          .catch(error => {
+            winston.error(error.message);
+            req.flash('danger', 'Email already exists, please try again.');
+            res.status(401).render('../views/editprofile.pug');
+          });
+      }
+    } else {
+      res.render('login');
     }
   },
 
@@ -275,7 +264,7 @@ module.exports = {
         res.redirect('/logout');
       })
       .catch(error => {
-        winston.debug(error.stack);
+        winston.debug(error.message);
         req.flash('danger', 'Email already exists, please try again.');
         // TODO Not sure if we need to change the page to a password reset page yet
         res.status(401).render('../views/editprofile.pug');
@@ -379,7 +368,7 @@ module.exports = {
             db.addGroupMember(groupId, gname, userArray[i])
               .then(result => {})
               .catch(error => {
-                winston.error(error.stack);
+                winston.error(error.message);
                 req.flash(
                   'danger',
                   'Fail to add a member to group, please try again.'
@@ -389,7 +378,7 @@ module.exports = {
           }
         })
         .catch(error => {
-          winston.error(error.stack);
+          winston.error(error.message);
           req.flash('danger', 'Fail to form a group, please try again.');
           res.redirect('/contacts');
         });
@@ -431,14 +420,14 @@ module.exports = {
                 });
               })
               .catch(error => {
-                winston.error(error.stack);
+                winston.error(error.message);
               })
               .catch(error => {
-                winston.error(error.stack);
+                winston.error(error.message);
               });
           })
           .catch(error => {
-            winston.error(error.stack);
+            winston.error(error.message);
           });
       });
     } else {
@@ -467,7 +456,7 @@ module.exports = {
             res.redirect('contacts');
           })
           .catch(error => {
-            winston.error(error.stack);
+            winston.error(error.message);
           });
       } else {
         let requestId = req.body.RequestId;
@@ -477,7 +466,7 @@ module.exports = {
             res.redirect('contacts');
           })
           .catch(error => {
-            winston.error(error.stack);
+            winston.error(error.message);
           });
       }
     } else {
@@ -588,15 +577,15 @@ module.exports = {
                   }
                 })
                 .catch(error => {
-                  winston.error(error.stack);
+                  winston.error(error.message);
                 });
             })
             .catch(error => {
-              winston.error(error.stack);
+              winston.error(error.message);
             });
         })
         .catch(error => {
-          winston.error(error.stack);
+          winston.error(error.message);
         });
     } else {
       res.redirect('/login');
@@ -691,7 +680,7 @@ module.exports = {
           });
         })
         .catch(error => {
-          winston.error(error.stack);
+          winston.error(error.message);
         });
     } else {
       res.redirect('/login');
@@ -725,7 +714,7 @@ module.exports = {
                 });
               })
               .catch(error => {
-                winston.error(error.stack);
+                winston.error(error.message);
               });
           } else {
             db.addGroupMember(groupId, title, tobeAdded)
@@ -741,16 +730,16 @@ module.exports = {
                     });
                   })
                   .catch(error => {
-                    winston.error(error.stack);
+                    winston.error(error.message);
                   });
               })
               .catch(error => {
-                winston.error(error.stack);
+                winston.error(error.message);
               });
           }
         })
         .catch(error => {
-          winston.error(error.stack);
+          winston.error(error.message);
         });
     } else {
       res.redirect('/login');
