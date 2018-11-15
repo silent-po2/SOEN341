@@ -1,6 +1,6 @@
 /**
- * This test checks that the dashboard posting process properly returns the correct status code
- * given a succesful post attempt.
+ * This test checks that the password reset process properly returns the correct status code
+ * given a succesful and unsuccesful attempt.
  */
 
 let app = require('../app');
@@ -36,8 +36,8 @@ describe('Dashboard', function() {
     require('../app').stop();
   });
 
-  describe('Register user, login and open dashboard', function() {
-    it('should be able to post to the dashboard', function(done) {
+  describe('With valid second password', function() {
+    it('should be able to reset password and login with new password', function(done) {
       agent
         .post('/register')
         .type('form')
@@ -58,33 +58,43 @@ describe('Dashboard', function() {
               expect(err).to.be.null;
               expect(res).to.have.status(200);
               expect(res).to.redirect;
+
               agent
-                .post('/dashboard')
-                .send({ post: 'test' })
+                .post('/passwordreset')
+                .send({
+                  oldPassword: user.password,
+                  newPassword: '222',
+                  repeatPassword: '222'
+                })
                 .end(function(err, res) {
                   expect(err).to.be.null;
                   expect(res).to.have.status(200);
                   expect(res).to.redirect;
-                  done();
+                  agent
+                    .post('/login')
+                    .type('form')
+                    .send({
+                      email: user.email,
+                      password: '222',
+                      userType: user.userType
+                    })
+                    .end(function(err, res) {
+                      expect(err).to.be.null;
+                      expect(res).to.have.status(200);
+                      expect(res).to.redirect;
+                      done();
+                    });
                 });
             });
         });
     });
   });
-
-  describe('Register user, login and open dashboard', function() {
-    it('should be not be able to post an empty message to the dashboard', function(done) {
+  describe('With unmatching passwords', function() {
+    it('should not be able to reset password', function(done) {
       agent
         .post('/register')
         .type('form')
-        .send({
-          email: 'test@test.com',
-          firstname: 'aaa',
-          lastname: 'aaa',
-          password: '111',
-          password2: '111',
-          userType: 'T'
-        })
+        .send(user)
         .end(function(err, res) {
           expect(err).to.be.null;
           expect(res).to.have.status(200);
@@ -93,20 +103,25 @@ describe('Dashboard', function() {
             .post('/login')
             .type('form')
             .send({
-              email: 'test@test.com',
-              password: '111',
-              userType: 'T'
+              email: user.email,
+              password: user.password,
+              userType: user.userType
             })
             .end(function(err, res) {
               expect(err).to.be.null;
               expect(res).to.have.status(200);
               expect(res).to.redirect;
+
               agent
-                .post('/dashboard')
-                .send({ post: '' })
+                .post('/passwordreset')
+                .send({
+                  oldPassword: user.password,
+                  newPassword: '222',
+                  repeatPassword: '333'
+                })
                 .end(function(err, res) {
                   expect(err).to.be.null;
-                  expect(res).to.have.status(401);
+                  expect(res).to.have.status(200);
                   expect(res).to.not.redirect;
                   done();
                 });

@@ -834,7 +834,7 @@ module.exports = {
           .then(result => {
             req.flash('success', 'Password changed.');
             req.session.user = user;
-            return res.redirect('/profile');
+            return res.redirect('/logout');
           })
           .catch(error => {
             winston.debug(error.stack);
