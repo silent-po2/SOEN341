@@ -761,5 +761,89 @@ module.exports = {
     } else {
       res.render('login');
     }
+  },
+
+  /**
+   * Function that responds to a '/passwordreset' GET request
+   *
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
+   */
+  passwordReset: function(req, res) {
+    let user = new User().create(req.session.user);
+    if (req.session.user) {
+      db.getNotifications(user.id)
+        .then(res2 => {
+          let notif = JSON.parse('[' + res2 + ']');
+          notif = notif[0] + notif[1] + notif[2];
+          res.render('passwordreset', {
+            user: user,
+            notif: notif
+          });
+        })
+        .catch(error => {
+          winston.error(error.stack);
+        });
+    } else {
+      res.render('login');
+    }
+  },
+
+  /**
+   * Function that responds to a '/passwordreset' POST request
+   *
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
+   */
+  passwordResetPost: function(req, res) {
+    if (req.session.user) {
+      let user = new User().create(req.session.user);
+      let oldP = req.body.oldPassword;
+      let newP = req.body.newPassword;
+      let newP2 = req.body.repeatPassword;
+
+      winston.debug(
+        ' old password: ' +
+          oldP +
+          ' new password: ' +
+          newP +
+          ' new password2: ' +
+          newP2
+      );
+      // validate the inputs
+      req.checkBody('oldPassword', 'Old password is required').notEmpty();
+      req.checkBody('newPassword', 'New password is required').notEmpty();
+      req.checkBody('repeatPassword', 'Please repeated').notEmpty();
+      req.checkBody('repeatPassword', 'Passwords do not match').equals(newP);
+      let errors = req.validationErrors();
+
+      if (errors) {
+        db.getNotifications(user.id).then(res2 => {
+          let notif = JSON.parse('[' + res2 + ']');
+          notif = notif[0] + notif[1] + notif[2];
+          res.render('passwordreset', {
+            errors: errors,
+            user: user,
+            notif: notif
+          });
+        });
+      } else {
+        // Create user object
+
+        db.changePassword(user, oldP, newP)
+          .then(result => {
+            req.flash('success', 'Password changed.');
+            req.session.user = user;
+            return res.redirect('/profile');
+          })
+          .catch(error => {
+            winston.debug(error.stack);
+            req.flash('danger', 'Fail to change password, please try again.');
+            res.status(401).render('../views/editprofile.pug');
+          });
+      }
+    } else {
+      res.render('login');
+    }
   }
 };
