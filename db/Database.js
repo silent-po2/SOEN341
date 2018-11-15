@@ -495,13 +495,13 @@ class Database {
    */
   changePassword(user, oldPassword, newPassword) {
     let query =
-      'UPDATE user SET Password = MD5(' +
+      "UPDATE user SET Password = MD5('" +
       newPassword +
-      ') where Email = ' +
+      "') where Email = '" +
       user.email +
-      'AND Password = MD5(' +
+      "'AND Password = MD5('" +
       oldPassword +
-      ');';
+      "');";
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
         winston.debug('Evaluated query: ' + query);

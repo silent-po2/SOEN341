@@ -78,6 +78,10 @@ module.exports = function(app) {
 
   app.post('/likes', dashboardController.like);
 
+  app.get('/passwordreset', userController.passwordReset);
+
+  app.post('/passwordreset', userController.passwordResetPost);
+
   app.use('*', function(req, res) {
     res.locals.user = req.user || null;
   });
