@@ -116,7 +116,7 @@ class Database {
    * @memberof Database
    */
   getAllThreads() {
-    let query = 'SELECT * FROM messages';
+    let query = 'SELECT * FROM messages ORDER by MsgId DESC';
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
         winston.debug('Evaluated query: ' + query);
