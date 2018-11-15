@@ -163,7 +163,7 @@ module.exports = {
         })
         .then(result => {
           // req.flash('success', 'Message posted');
-          res.redirect(200, '/dashboard');
+          res.redirect('/dashboard');
         })
         .catch(error => {
           winston.error(error.stack);
