@@ -224,12 +224,7 @@ body{
   font-weight: bold;
   font-size: 50px;
   padding: 5px;
-  /* background: rgb(0, 0, 0); */
   color: rgba(0, 0, 0, 0.938);
-  /* border-top-left-radius: 10px; */
-  /* border-top-right-radius: 10px; 
-  background-size: cover;
-  background-position: center; */
 }
 
 /* Description text */
@@ -247,12 +242,6 @@ body{
   max-width: 500px;
   color: rgb(0, 0, 0);
 }
-
-/* .carousel-item img{
-  width:1200px;
-  height:700px;
-  background-color: #05728f;
-}   */
 
   /* @@@@@@@@@@@@@@@@@  REGISTERATION PAGE @@@@@@@@@@@@@@@@@@@@@@@@@  */
 
@@ -330,7 +319,7 @@ h3 {
   color: #020202;
   font-size: 25px;
 }
-.input-group-prepend input.form-control{
+.input-group{
   font-family: "Helvetica";
   color: #020202;
   font-size: 20px;
@@ -339,4 +328,7 @@ h3 {
 
 /*@@@@@@@@@@@@@@@@@@@@@@@@@@ DASHBOARD @@@@@@@@@@@@@@@@@@@@@@@@@ */
 
+.column.middle .card{
+  align-content: center;
+}
 
