@@ -20,10 +20,10 @@ create table thread (
 	MsgId int primary key auto_increment,
     Message varchar(255),
     ImageName varchar(255),
-    Like int,
-    Dislike int,
-    SenderName varchar(100),
-    SenderId int
+    `Like` int default 0,
+    Dislike int default 0,
+    Sender varchar(100),
+    SenderId int,
     foreign key (SenderId) references user(Id) on delete cascade
 );
 
