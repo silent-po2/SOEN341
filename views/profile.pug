@@ -74,7 +74,14 @@ block content
                                             .col-sm-3.col-md-2.col-5
                                                 label(style='font-weight:bold;') Edit
                                             .col-md-8.col-6
-                                                a(href='editprofile') Edit File            
+                                                a(href='editprofile') Edit File   
+                                        hr
+                                        .row
+                                            .col-sm-3.col-md-2.col-5
+                                                label(style='font-weight:bold;') Password Reset
+                                            .col-md-8.col-6
+                                                a(href='passwordreset') Reset  
+                                        hr       
                                     #contacts.tab-pane.fade.show(role='tabpanel', aria-labelledby='contacts-tab')
                                         each user, i in userList
                                             .row

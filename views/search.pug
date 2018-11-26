@@ -8,26 +8,30 @@ block content
         each user, i in userArr
                         .row
                             .col-sm-3.col-md-2.col-5
-                                img.img.img-rounded.img-fluid(src='/pics/profile.png', style='width:60%')
+                                img.img.img-rounded.img-fluid(src='/pics/3.jpg', style='width:60%')
                             .col-md-8.col-6
-                                text= user.FirstName + ' ' + user.LastName+' '+ user.Email
+                                text= user.FirstName + ' ' + user.LastName
+                                hr
+                                text=user.Email
                                 form(action="/profiles/"+user.Id, method='post')
                                     input(type='hidden', name='FirstName', value= user.FirstName)
                                     input(type='hidden', name='LastName', value= user.LastName)
                                     input(type='hidden', name='Email', value= user.Email)
                                     input(type='hidden', name='Type', value= user.Type)
                                     input(type='hidden', name='UserId', value= user.Id)
-                                    input(type='submit', value='Go to Profile')
-                        hr
+                                    hr
+                                    input.btn.btn-outline-success.my-2.my-sm-0(type='submit', value='Go to Profile',style='height: 40px; width: 150px')
+                            hr
         each group, i in groupArr
                         .row
                             .col-md-8.col-6
-                                text= 'Group ID: '+ group.GroupId + ', Name: ' + group.Title
-
+                                text= 'Name: ' + group.Title
+                                hr
+                                text= 'Group ID: '+ group.GroupId
                                 form(action="/addgroup/"+group.GroupId, method='post')
                                     input(type='hidden', name='Title', value= group.Title)
                                     input(type='hidden', name='GroupId', value= group.GroupId)
                                     input(type='hidden', name='Admin', value= group.Admin)
                                     input(type='hidden', name='UserId', value= user.id)
-                                    input(type='submit', value='Add into Group')    
+                                    input.btn.btn-outline-success.my-2.my-sm-0(type='submit', value='Add into Group',style='height: 40px; width: 200px')    
                         hr

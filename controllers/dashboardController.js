@@ -157,13 +157,13 @@ module.exports = {
       } else {
         imageName = req.file.filename;
       }
-      db.addDashboardMsg(post, imageName, sender)
+      db.addDashboardMsg(post, imageName, sender, user.id)
         .then(result => {
           return db.addThreadNotification();
         })
         .then(result => {
           // req.flash('success', 'Message posted');
-          res.redirect(200, '/dashboard');
+          res.redirect('/dashboard');
         })
         .catch(error => {
           winston.error(error.stack);
@@ -192,7 +192,7 @@ module.exports = {
             for (let i = 0; i < rows.length; i++) {
               postArr[i] = rows[i];
             }
-            winston.debug(postArr);
+            winston.debug(postArr.toString());
             res.render('../views/dashboard.pug', {
               postArr: postArr,
               userArr: userArr,

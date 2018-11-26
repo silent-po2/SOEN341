@@ -5,111 +5,112 @@ extends layout
 block content
   br
   h3 Dashboard
-  .row
-    //- .column.left
-    //- 
-     
-    .column.middle     
-      form(action='/dashboard', method='POST', name='dash', enctype='multipart/form-data')
-        #form-group
-        label(for='post')
-        textarea.form-control(type='text', name='post', placeholder='What do you want to say?')
-        .file-field.input-field
-          input(name='myImage', type='file')
-        input.btn.btn-success(type='submit', name= 'posting' value='Post')
-      hr
-      each post, i in postArr
-        .card
-          .card-body
-            .row
-              .col-md-2
-                img.img.img-rounded.img-fluid(src='/pics/6.png')
-                br
-                p(style='font-size: 1.8rem')= post.Sender
-                //p.text-secondary.text-center 
-              .col-md-10
-                
-                if(getImage(post)!="null")
-                  img.responsive-img(src='/public/uploads/'+ post.ImageName width='360' height='180')
-                p(style='font-size: 1.5rem')= post.Message
-                t.float-right(style='font-size: 1.2rem')   ( #{post.Like} )
-                form(action='/likes',method='post')
-                  input(type='hidden', name='like', value= post.Like)
-                  input(type='hidden', name='msgId',value= post.MsgId)
-                  button#completed-task.float-right.btn-sm.btn-success(type='submit',style='height: 30px')
-                    i.float-right.fa.fa-thumbs-o-up Like
+  .container
 
-                //- a.float-right.btn.text-white.btn-danger
-                //-   | 
-                 Dislike (#{getDislike(post)})
-                //- script(type='text/javascript').
-                //-   function like(i){
-                //-     alert(i[0].id)
-                //-   }
-                //- script(type='text/javascript').
-                //-   function assignId(){
-                //-     var btArr = document.getElementsByTagName("button")
-                //-     for (var i = 0; i < btArr.length; i++){
-                //-       document.getElementsByTagName('button')[i].setAttribute('id',  (i))
-                //-     } 
-                //-   }
-                //- button.float-right(type='button', onclick='myFunction()') Like
-                //- p.float-right#demo 0
-                //- script.
-                //-   var add = (function () {
-                //-   var counter = 0;
-                //-   return function () {return counter += 1;}
-                //-   })();
-                //-   function myFunction(){
-                //-   document.getElementById("demo").innerHTML = add();
-                //-   }
-                //- form(action='/dashboard', name='likes', method='POST')
-                //-   script(type='text/javascript').
-                //-     function currentId(event){
-                //-     return (event.target.id);
-                //-     }
-                //-   input(name='msgId', type='hidden', value='currentIds(event)') 
-                //-   input.btn.float-right.btn-primary(type='submit', name='like' value='Like('+ getLike(post) +')')
+    .row
+      //- .column.left
+      //- 
       
-      body(onload='assignId()')
-          
-  style.
-      * {
-      box-sizing: border-box;
-      }
-      /* Create three unequal columns that floats next to each other */
-      .column {
-      float: left;
-      padding: 10px;
-      }
-      .left {
-      width: 25%;
-      }
-      .middle {
-      width: 75%;
-      }
-      /* Clear floats after the columns */
-      .row:after {
-      content: "";
-      display: table;
-      clear: both;
-      }
+      .column.middle     
+        form(action='/dashboard', method='POST', name='dash', enctype='multipart/form-data',style='height: 150px; width: 1080px')
+          #form-group
+          label(for='post')
+          textarea.form-control(type='text', name='post', placeholder='What do you want to say?')
+          .file-field.input-field
+            input(name='myImage', type='file')
+          input.btn.btn-success(type='submit', name= 'posting' value='Post',style='height: 40px; width: 95px')
+        hr
+        each post, i in postArr
+          .card(style='height: 260px; width: 1080px')
+            .card-body
+              .row
+                .col-md-2
+                  img.img.img-rounded.img-fluid(src='/pics/6.png')
+                  br
+                  p(style='font-size: 1.8rem')= post.Sender
+                  //p.text-secondary.text-center 
+                .col-md-10                 
+                  if(getImage(post)!="null")
+                    img.responsive-img(src='/public/uploads/'+ post.ImageName width='360' height='180')
+                  p(style='font-size: 1.5rem')= post.Message
+                  t.float-right(style='font-size: 1.2rem')   ( #{post.Like} )
+                  form(action='/likes',method='post',style='height: 180px; width: 1080px')
+                    input(type='hidden', name='like', value= post.Like)
+                    input(type='hidden', name='msgId',value= post.MsgId)
+                    button#completed-task.float-right.btn-sm.btn-success(type='submit',style='height: 30px')
+                      i.float-right.fa.fa-thumbs-o-up Like
 
-  -function getMessage(post){
-      -return post.Message;
-  -}
-  -function getImage(post){
-      -return post.ImageName;
-  -}
-  -function getLike(post){
-      -return post.Like;
-  -}
-  -function getDislike(post){
-      -return post.Dislike;
-  -}
-  -function getSender(post){
-      -return post.Sender;
-  -}
-  //- -function currentIds(event){
-  //-     -return currentId(event);
-  //- -}
+                  //- a.float-right.btn.text-white.btn-danger
+                  //-   | 
+                  //- Dislike (#{getDislike(post)})
+                  //- script(type='text/javascript').
+                  //-   function like(i){
+                  //-     alert(i[0].id)
+                  //-   }
+                  //- script(type='text/javascript').
+                  //-   function assignId(){
+                  //-     var btArr = document.getElementsByTagName("button")
+                  //-     for (var i = 0; i < btArr.length; i++){
+                  //-       document.getElementsByTagName('button')[i].setAttribute('id',  (i))
+                  //-     } 
+                  //-   }
+                  //- button.float-right(type='button', onclick='myFunction()') Like
+                  //- p.float-right#demo 0
+                  //- script.
+                  //-   var add = (function () {
+                  //-   var counter = 0;
+                  //-   return function () {return counter += 1;}
+                  //-   })();
+                  //-   function myFunction(){
+                  //-   document.getElementById("demo").innerHTML = add();
+                  //-   }
+                  //- form(action='/dashboard', name='likes', method='POST')
+                  //-   script(type='text/javascript').
+                  //-     function currentId(event){
+                  //-     return (event.target.id);
+                  //-     }
+                  //-   input(name='msgId', type='hidden', value='currentIds(event)') 
+                  //-   input.btn.float-right.btn-primary(type='submit', name='like' value='Like('+ getLike(post) +')')
+        
+        body(onload='assignId()')
+            
+    style.
+        * {
+        box-sizing: border-box;
+        }
+        /* Create three unequal columns that floats next to each other */
+        .column {
+        float: left;
+        padding: 10px;
+        }
+        .left {
+        width: 25%;
+        }
+        .middle {
+        width: 75%;
+        }
+        /* Clear floats after the columns */
+        .row:after {
+        content: "";
+        display: table;
+        clear: both;
+        }
+
+    -function getMessage(post){
+        -return post.Message;
+    -}
+    -function getImage(post){
+        -return post.ImageName;
+    -}
+    -function getLike(post){
+        -return post.Like;
+    -}
+    -function getDislike(post){
+        -return post.Dislike;
+    -}
+    -function getSender(post){
+        -return post.Sender;
+    -}
+    //- -function currentIds(event){
+    //-     -return currentId(event);
+    //- -}

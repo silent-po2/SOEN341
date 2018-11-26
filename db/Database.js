@@ -85,17 +85,20 @@ class Database {
    * @param {*} post
    * @param {*} imageName
    * @param {*} sender
+   * @param {*} id
    * @return {Promise}
    * @memberof Database
    */
-  addDashboardMsg(post, imageName, sender) {
+  addDashboardMsg(post, imageName, sender, id) {
     let query =
-      "insert into messages(Message, ImageName, Sender) values ('" +
+      "insert into thread(Message, ImageName, Sender, SenderId) values ('" +
       post +
       "', '" +
       imageName +
       "', '" +
       sender +
+      "', '" +
+      id +
       "');";
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
@@ -116,7 +119,7 @@ class Database {
    * @memberof Database
    */
   getAllThreads() {
-    let query = 'SELECT * FROM messages';
+    let query = 'SELECT * FROM thread ORDER by MsgId DESC';
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
         winston.debug('Evaluated query: ' + query);
@@ -436,17 +439,17 @@ class Database {
    */
   like(msgId) {
     let query =
-      "UPDATE messages SET messages.Like = messages.Like + 1 where MsgId='" +
+      "UPDATE thread SET thread.Like = thread.Like + 1 where MsgId='" +
       msgId +
       "';";
 
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
         let likes;
-        // winston.debug('Evaluated query: ' + query);
-        let query =
-          "select messages.Like from messages where MsgId='" + msgId + "';";
+        winston.debug('Evaluated query: ' + query);
+        query = "select thread.Like from thread where MsgId='" + msgId + "';";
         this.connection.query(query, (err, res) => {
+          winston.debug('Evaluated query: ' + query);
           if (err) reject(err);
           else {
             likes = res;
@@ -495,13 +498,13 @@ class Database {
    */
   changePassword(user, oldPassword, newPassword) {
     let query =
-      'UPDATE user SET Password = MD5(' +
+      "UPDATE user SET Password = MD5('" +
       newPassword +
-      ') where Email = ' +
+      "') where Email = '" +
       user.email +
-      'AND Password = MD5(' +
+      "'AND Password = MD5('" +
       oldPassword +
-      ');';
+      "');";
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
         winston.debug('Evaluated query: ' + query);

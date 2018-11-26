@@ -27,7 +27,7 @@ block content
                                 img.img.img-rounded.img-fluid(src='/pics/1.png', style='width:40%')
                             .col-md-8.col-6
                                 h3= user[1] + ' ' + user[2]
-                            button.btn.btn-primary.btn-sm(type='button',onclick="window.open('/chat/"+user[0]+"', 'newwindow', 'width=600,height=650'); return false;") Send a message
+                            button.btn.btn-success(type='button',onclick="window.open('/chat/"+user[0]+"', 'newwindow', 'width=600,height=650'); return false;") Send a message
                         hr
             
             #groups.tab-pane.fade.show(role='tabpanel', aria-labelledby='groups-tab')
@@ -35,7 +35,7 @@ block content
                     each id, i in groupList
                         .row
                             .col-md-8.col-6
-                                button.btn.btn-success.btn-sm(type='button',onclick="window.open('/groupchat/"+id.GroupId+"', 'newwindow', 'width=600,height=650'); return false;") Send a message to the #{id.Title}
+                                button.btn.btn-success(type='button',onclick="window.open('/groupchat/"+id.GroupId+"', 'newwindow', 'width=600,height=650'); return false;") Send a message to the #{id.Title}
                         hr
             #makeGroup.tab-pane.fade.show(role='tabpanel', aria-labelledby='makeGroup-tab')   
                 form#groupForm.groupForm(method='post', action='/contacts')
@@ -50,17 +50,11 @@ block content
                     each user, i in userList
                         if userArr[0]!=user[0]
                             .row
-                                form
-                                    .input-group
-                                        .input-group-prepend
-                                            .input-group-text
-                                                input(type='checkbox')
-                                            input.form-control(type='text', name='userId[]', value=user[1] + ' ' + user[2])
-                                //- input(type='checkbox', name='userId[]', value=user[0])
-                                //- text= user[1] + ' ' + user[2]
+                                
+                                .input-group
+                                    input(type='checkbox', name='userId[]', value=user[0],)
+                                    t= user[1] + ' ' + user[2]
                             hr
-
-
                     input.btn.btn-success(type='submit', value='Create',style='height: 40px; width: 130px')
             #search.tab-pane.fade.show.active(role='tabpanel', aria-labelledby='Search-tab')
                 br
@@ -76,38 +70,36 @@ block content
                         //- if userArr[0]!=user[0]
                         .row
                             .col-sm-3.col-md-2.col-5
-                                img.img.img-rounded.img-fluid(src='/pics/profile.png', style='width:60%')
+                                img.img.img-rounded.img-fluid(src='/pics/3.jpg', style='width:60%')
                         .row
                             .col-sm-3.col-md-2.col-5
-                                label(style='font-weight:bold;') Full Name
+                                label(style='font-size: 1.3rem; font-weight:bold;') Full Name:
                             .col-md-8.col-6
-                                p= user.FirstName + ' ' + user.LastName
+                                p(style='font-size: 1.3rem; font-weight:bold;')= user.FirstName + ' ' + user.LastName
                             hr
-                            .row
-                                .col-sm-3.col-md-2.col-5
-                                    label(style='font-weight:bold;') UserID
-                                .col-md-8.col-6
-                                    p= user.Id
+                        .row
+                            .col-sm-3.col-md-2.col-5
+                                label(style='font-size: 1.3rem; font-weight:bold;') UserID:
+                            .col-md-8.col-6
+                                p(style='font-size: 1.3rem; font-weight:bold;')= user.Id
                             hr
-                            .row
-                                .col-sm-3.col-md-2.col-5
-                                    label(style='font-weight:bold;') Email
-                                .col-md-8.col-6
-                                    p= user.Email
+                        .row
+                            .col-sm-3.col-md-2.col-5
+                                label(style='font-size: 1.3rem; font-weight:bold;') Email:
+                            .col-md-8.col-6
+                                p(style='font-size: 1.3rem; font-weight:bold;')= user.Email
                             hr
-                            .row
-                                .col-sm-3.col-md-2.col-5
-                                    label(style='font-weight:bold;') User type
-                                .col-md-8.col-6
-                                    if (user.Type=='P')
-                                        p Parent
-                                    if (user.Type=='T')
-                                        p Teacher
+                        .row
+                            .col-sm-3.col-md-2.col-5
+                                label(style='font-size: 1.3rem; font-weight:bold;') User type:
+                            .col-md-8.col-6
+                                if (user.Type=='P')
+                                    p(style='font-size: 1.3rem; font-weight:bold;') Parent
+                                if (user.Type=='T')
+                                    p(style='font-size: 1.3rem; font-weight:bold;') Teacher
                             hr
-                            button.btn.btn-primary.btn-sm(type='button',onclick="window.open('/adduser/"+ user.Id +"', 'newwindow', 'width=400, height=350'); return false;") Add to my group
+                            button.btn.btn-success(type='button',onclick="window.open('/adduser/"+ user.Id +"', 'newwindow', 'width=400, height=350'); return false;") Add to Group
                    
-
-
                 
             #admin.tab-pane.fade.show(role='tabpanel', aria-labelledby='Admin-tab')
                 each request, i in requestList
@@ -120,12 +112,10 @@ block content
                                 input(type='hidden', name='Title', value= request.Title)
                                 input(type='hidden', name='UserId', value= request.UserId)
                                 input(type='hidden', name='RequestId', value= request.RequestId)
-                                input(type='submit', name='handler', value='Accept')
-                                input(type='submit', name='handler', value='Reject')
-
+                                input.btn.btn-outline-success.my-2.my-sm-0(type='submit', name='handler', value='Accept',style='height: 40px; width: 100px')
+                                input.btn.btn-outline-success.my-2.my-sm-0(type='submit', name='handler', value='Reject',style='height: 40px; width: 100px')
                             
                     hr
-
                                             //- .row
                                             //-     .col-sm-3.col-md-2.col-5
                                             //-         label(style='font-weight:bold;') Something
@@ -139,7 +129,6 @@ block content
                                             //-         | Something
                                             
                 
-
 //- br
 //- h2 #{title}
 //- each item, i in userArr
