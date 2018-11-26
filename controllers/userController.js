@@ -250,8 +250,8 @@ module.exports = {
   /**
    * Function that handles a POST call to reset a password.
    *
-   * @param {*} req
-   * @param {*} res
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
    */
   resetPassword: function(req, res) {
     let user = new User().create(req.session.user);

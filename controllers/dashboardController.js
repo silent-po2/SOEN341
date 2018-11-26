@@ -10,21 +10,21 @@ let User = require('../models/user');
 
 let storage = multer.diskStorage({
   /**
-   * TODO
+   * Function that sets the storage space for uploads.
    *
-   * @param {*} req
-   * @param {*} file
-   * @param {*} cb
+   * @param {Object} req - request paramter
+   * @param {Object} file - file to be uploaded
+   * @param {Callback} cb - callback parameter
    */
   destination: function(req, file, cb) {
     cb(null, './public/uploads/');
   },
   /**
-   * TODO
+   * Function that sets the filename
    *
-   * @param {*} req
-   * @param {*} file
-   * @param {*} cb
+   * @param {Object} req - request paramter
+   * @param {Object} file - file to be uploaded
+   * @param {Callback} cb - callback parameter
    */
   filename: function(req, file, cb) {
     cb(
@@ -35,11 +35,12 @@ let storage = multer.diskStorage({
 });
 
 /**
- * TODO
+ * Function that checks the file type of an upload to make sure
+ * it is a picture.
  *
- * @param {*} file
- * @param {*} cb
- * @return {cb}
+ * @param {Object} file - file to be uploaded
+ * @param {Callback} cb - callback parameter
+ * @return {Callback}
  */
 function checkFileType(file, cb) {
   // Allowed ext
@@ -57,21 +58,15 @@ function checkFileType(file, cb) {
 }
 
 module.exports = {
-  /**
-   * Function that upload file
-   *
-   * @param {Object} req - Request parameter
-   * @param {Object} res - Response parameter
-   */
   upload: multer({
     storage: storage,
     limits: { fileSize: 1000000 },
     /**
-     * TODO
+     * Function that call to check a file type.
      *
-     * @param {*} req
-     * @param {*} file
-     * @param {*} cb
+     * @param {Object} req - request paramter
+     * @param {Object} file - file to be uploaded
+     * @param {Callback} cb - callback parameter
      */
     fileFilter: function(req, file, cb) {
       checkFileType(file, cb);
@@ -175,8 +170,8 @@ module.exports = {
   /**
    * Function that responds to a '/like' POST request
    *
-   * @param {*} req
-   * @param {*} res
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
    */
   like: function(req, res) {
     let msgId = req.body.msgId;

@@ -84,7 +84,7 @@ describe('Profile', function() {
     });
   });
 
-  // TODO: error is caught and the process lags for some reason...
+  // ! error is caught and the process lags for some reason...
   // I am not sure why the rejected promise is hanging the code
   describe.skip('Login and edit profile', function() {
     it('should not be able to edit with exsisting email', function(done) {

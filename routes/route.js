@@ -3,8 +3,6 @@
  * The request parameter holds the address displayed in the browser.
  */
 
-// todo: add teacher/parent type on the link instead of passing session var
-
 let userController = require('../controllers/userController');
 let dashboardController = require('../controllers/dashboardController');
 let chatController = require('../controllers/chatController');
@@ -42,10 +40,9 @@ module.exports = function(app) {
   app.post('/notifications', userController.readNotifications);
 
   app.post('/contacts', userController.contactsPost);
-  // ! not be able to register Error: ER_PARSE_ERROR: You have an error in your SQL syntax;
+
   app.post('/register', userController.registerPost);
 
-  // ! when login with wrong email or password, login page stucks
   app.post('/login', userController.loginPost);
 
   app.get('/logout', userController.logout);
