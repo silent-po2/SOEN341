@@ -130,7 +130,7 @@ module.exports = {
         let groupId = req.params.id;
         let sid = user.id;
         db.receivegroupChat(groupId).then(result => {
-          res.render('groupchat', {
+          res.status(400).render('groupchat', {
             errors: errors,
             groupchatList: result,
             sender: sid

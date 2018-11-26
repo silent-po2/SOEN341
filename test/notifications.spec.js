@@ -192,9 +192,6 @@ describe('Notifications', function() {
     });
   });
 
-  // --------------------- Group Chat Test ---------------------
-  // TODO
-
   after(() => {
     db.deleteUser().catch(err => {
       // if error is returned, there was no user to delete.
