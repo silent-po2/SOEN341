@@ -87,7 +87,7 @@ module.exports = {
   },
 
   /**
-   * Function that responds to a GOURPCHAT GET request
+   * Function that responds to a '/groupchat/:id' GET request.
    *
    * @param {Object} req - Request parameter
    * @param {Object} res - Response parameter
@@ -114,10 +114,10 @@ module.exports = {
   },
 
   /**
-   * TODO
+   * Function that responds to a '/groupchat/:id' POST request.
    *
-   * @param {*} req
-   * @param {*} res
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
    */
   groupchatPost: function(req, res) {
     if (req.session.user) {

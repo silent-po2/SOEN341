@@ -98,7 +98,7 @@ app.use(
 app.use(morgan('combined', { stream: winston.stream }));
 
 // Load the routes of the app
-require('./routes/users.js')(app);
+require('./routes/route.js')(app);
 
 // Launch application
 let server = app.listen(port);

@@ -39,9 +39,9 @@ class Database {
   /**
    * Returns a promise with the user id if user is found, rejects otherwise
    *
-   * @param {*} email
-   * @param {*} password
-   * @param {*} type
+   * @param {String} email - The email of a user.
+   * @param {String} password - The password of the user.
+   * @param {Char} type - The user type.
    * @return {Promise}
    * @memberof Database
    */
@@ -80,12 +80,12 @@ class Database {
   }
 
   /**
-   * This function inserts a new post to the database
+   * This function inserts a new thread to the database
    *
-   * @param {*} post
-   * @param {*} imageName
-   * @param {*} sender
-   * @param {*} id
+   * @param {String} post - The message of the thread to save.
+   * @param {Object} imageName - The image uploaded.
+   * @param {String} sender - A user name of a the sender.
+   * @param {Integer} id - The sender's user ID.
    * @return {Promise}
    * @memberof Database
    */
@@ -136,7 +136,7 @@ class Database {
    * This function inserts a new user into the database and subsequently into the
    * teacher or parent tables
    *
-   * @param {*} user
+   * @param {User} user - A user object.
    * @return {Promise}
    * @memberof Database
    */
@@ -168,7 +168,7 @@ class Database {
   /**
    * Returns the user id given a user object
    *
-   * @param {*} email
+   * @param {String} email -  The email of a user.
    * @return {Promise}
    * @memberof Database
    */
@@ -209,10 +209,10 @@ class Database {
   /**
    * Inserts a message sent in the private chat into the chat table.
    *
-   * @param {*} rid
-   * @param {*} sid
-   * @param {*} time
-   * @param {*} chat
+   * @param {Integer} rid - A receiver user ID.
+   * @param {Integer} sid - A sender user ID.
+   * @param {String} time - The time stamp of the message.
+   * @param {String} chat - The chat message.
    * @return {Promise}
    * @memberof Database
    */
@@ -237,8 +237,8 @@ class Database {
   /**
    * Returns all messages from a private chat.
    *
-   * @param {*} rid
-   * @param {*} sid
+   * @param {Integer} rid - A receiver user ID.
+   * @param {Integer} sid - A sender user ID.
    * @return {Promise}
    * @memberof Database
    */
@@ -272,8 +272,8 @@ class Database {
   }
 
   /**
-   * This is used for the register test case to delete the test users created,
-   * only if the user has email test@test.com
+   * This is used for test cases to delete the test users created,
+   * only if the user has email '...@test.com'
    *
    * @return {Promise}
    * @memberof Database
@@ -294,15 +294,15 @@ class Database {
   }
 
   /**
-   * Returns all users' group chats.
+   * Returns group chat data for a user.
    *
-   * @param {*} myId
+   * @param {Integer} id
    * @return {Promise}
    * @memberof Database
    */
-  loadGroups(myId) {
+  loadGroups(id) {
     let query =
-      "select GroupId, Title from groupMember where UserId='" + myId + "';";
+      "select GroupId, Title from groupMember where UserId='" + id + "';";
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
         winston.debug('Evaluated query: ' + query);
@@ -318,8 +318,8 @@ class Database {
   /**
    * Creates a group chat.
    *
-   * @param {*} title
-   * @param {*} admin
+   * @param {String} title - The title of the group chat.
+   * @param {Integer} admin - The user ID of the admin of the group chat.
    * @return {Promise}
    * @memberof Database
    */
@@ -341,9 +341,10 @@ class Database {
   }
   /**
    * Add a member to a group.
-   * @param {*} groupId
-   * @param {*} title
-   * @param {*} userId
+   *
+   * @param {Integer} groupId - A group chat ID.
+   * @param {String} title - The title of the group chat.
+   * @param {Integer} userId - A user ID.
    * @return {Promise}
    * @memberof Database
    */
@@ -369,9 +370,9 @@ class Database {
   /**
    * Inserts a message passed to group chat in group chat table.
    *
-   * @param {*} groupId
-   * @param {*} sid
-   * @param {*} chat
+   * @param {Integer} groupId - A group chat ID.
+   * @param {Integer} sid -  A sender user ID.
+   * @param {String} chat - The message to be saved.
    * @return {Promise}
    * @memberof Database
    */
@@ -393,11 +394,10 @@ class Database {
     });
   }
 
-  // select the group chat for the group
   /**
+   * Selects all group chat data from a user.
    *
-   *
-   * @param {*} id
+   * @param {Integer} id - A group chat ID.
    * @return {Promise}
    * @memberof Database
    */
@@ -431,9 +431,9 @@ class Database {
   }
 
   /**
+   * Function that updates the like counter of a thread message.
    *
-   *
-   * @param {*} msgId
+   * @param {Integer} msgId - A message ID in the dashboard.
    * @return {Promise}
    * @memberof Database
    */
@@ -462,7 +462,7 @@ class Database {
   /**
    * Function that edit a user's profile.
    *
-   * @param {User} user
+   * @param {User} user - A user object.
    * @return {Promise}
    * @memberof Database
    */
@@ -488,11 +488,11 @@ class Database {
   }
 
   /**
-   * Function that resets a user's password.
+   * Function that updates a user's password.
    *
-   * @param {User} user
-   * @param {string} oldPassword
-   * @param {string} newPassword
+   * @param {User} user - A user object.
+   * @param {String} oldPassword - The old password.
+   * @param {String} newPassword - The new password.
    * @return {Promise}
    * @memberof Database
    */
@@ -516,14 +516,15 @@ class Database {
 
   /**
    * Function that load group requests for admin
-   *@param {myId} myId
+   *
+   *@param {Integer} id - A user ID.
    * @return {Promise}
    * @memberof Database
    */
-  loadRequest(myId) {
+  loadRequest(id) {
     let query =
       "SELECT * FROM groupRequest inner join user on groupRequest.userId = user.Id where groupRequest.Read = 'F' and Admin = '" +
-      myId +
+      id +
       "';";
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
@@ -535,7 +536,8 @@ class Database {
   }
   /**
    * Function that load group requests for admin
-   *@param {myId} requestId
+   *
+   *@param {Integer} requestId - A user ID.
    * @return {Promise}
    * @memberof Database
    */
@@ -554,7 +556,8 @@ class Database {
   }
   /**
    * Function that search users' profiles
-   * @param {searchString} searchString
+   *
+   * @param {String} searchString - A string to search for.
    * @return {Promise}
    * @memberof Database
    */
@@ -576,7 +579,8 @@ class Database {
 
   /**
    * Function that search gourps
-   * @param {searchString} searchString
+   *
+   * @param {String} searchString - A string to search for.
    * @return {Promise}
    * @memberof Database
    */
@@ -593,15 +597,16 @@ class Database {
 
   /**
    * Function that search gourps
-   * @param {groupId} groupId
-   * @param {myId} myId
+   *
+   * @param {groupId} groupId - A group chat ID.
+   * @param {Integer} id - A user ID.
    * @return {Promise}
    * @memberof Database
    */
-  searchMyGroup(groupId, myId) {
+  searchMyGroup(groupId, id) {
     let query =
       "select GroupId from groupMember where UserId = '" +
-      myId +
+      id +
       "' and GroupId ='" +
       groupId +
       "';";
@@ -616,10 +621,11 @@ class Database {
 
   /**
    * Function that request to add gourps
-   * @param {groupId} groupId
-   * @param {userId} userId
-   * @param {title} title
-   * @param {admin} admin
+   *
+   * @param {groupId} groupId - A group chat ID.
+   * @param {userId} userId -  A user ID.
+   * @param {title} title - The title of the group chat.
+   * @param {admin} admin - The ID of the admin of the group chat.
    * @return {Promise}
    * @memberof Database
    */
@@ -646,7 +652,7 @@ class Database {
   /**
    * Function that load admin's group
    
-   * @param {admin} admin
+   * @param {admin} admin - An user ID that is the admin of a group.
    * @return {Promise}
    * @memberof Database
    */
@@ -665,8 +671,8 @@ class Database {
   /**
    * Function that load admin's group
    
-   * @param {groupId} groupId
-   * @param {userId} userId
+   * @param {groupId} groupId - A group chat ID.
+   * @param {userId} userId - A user ID.
    * @return {Promise}
    * @memberof Database
    */
@@ -710,7 +716,7 @@ class Database {
   /**
    * Increments the chat notification counter in the database.
    *
-   * @param {Integer} id
+   * @param {Integer} id - A user ID.
    * @return {Promise}
    * @memberof Database
    */
@@ -730,7 +736,7 @@ class Database {
   /**
    * Increments the group chat notification counter in the database.
    *
-   * @param {*} groupId
+   * @param {Integer} groupId - A group chat ID.
    * @return {Promise}
    * @memberof Database
    */
@@ -752,7 +758,7 @@ class Database {
           tempIdQuery = tempIdQuery + 'Id = ' + elem.UserId + ' or ';
         });
 
-        let idQuery = tempIdQuery.substring(0, tempIdQuery.length - 4);
+        let idQuery = tempIdQuery.subString(0, tempIdQuery.length - 4);
         newQuery = newQuery + idQuery + ';';
         this.connection.query(newQuery, (err, res) => {
           winston.debug('Evaluated query: ' + newQuery);
@@ -766,7 +772,7 @@ class Database {
   /**
    *  Function that removes all notifications for a user
    *
-   * @param {*} id
+   * @param {Integer} id A user ID.
    * @return {Promise}
    * @memberof Database
    */
@@ -788,7 +794,7 @@ class Database {
   /**
    *  Function that returns all notifications for a user
    *
-   * @param {*} id
+   * @param {Integer} id - A user ID.
    * @return {Promise}
    * @memberof Database
    */

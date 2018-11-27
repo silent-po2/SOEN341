@@ -31,13 +31,12 @@ let logger = winston.createLogger({
 
 logger.stream = {
   /**
-   * TODO
+   * Output stream of what the logger prints to the console based on given level.
    *
-   * @param {*} message
-   * @param {*} encoding
+   * @param {String} message
+   * @param {Object} encoding
    */
   write: function(message, encoding) {
-    // use the 'info' log level so the output will be picked up by both transports (file and console)
     logger.silly(message);
   }
 };
