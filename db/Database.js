@@ -184,6 +184,24 @@ class Database {
   }
 
   /**
+  * Returns the user email given a user object
+  *
+  * @param {*} email
+  * @return {Promise}
+  * @memberof Database
+  */
+  confirmEmail(email) {
+    let query = "select 1 from user where Email='" + email + "';";
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('Evaluated query: ' + query);
+        if (res.length === 0) reject(new Error('User not found'));
+        else resolve(res);
+      });
+    });
+  }
+
+  /**
    * Returns all users from user table.
    *
    * @return {Promise}
@@ -505,6 +523,30 @@ class Database {
       "'AND Password = MD5('" +
       oldPassword +
       "');";
+    return new Promise((resolve, reject) => {
+      this.connection.query(query, (err, res) => {
+        winston.debug('Evaluated query: ' + query);
+        if (err) reject(err);
+        resolve();
+      });
+    });
+  }
+
+  /**
+ * Function that resets a user's password.
+ *
+ * @param {Email} email
+ * @param {string} newPassword
+ * @return {Promise}
+ * @memberof Database
+ */
+  forgotPassword(email, newPassword) {
+    let query =
+      "UPDATE user SET Password = MD5('" +
+      newPassword +
+      "') where Email = '" +
+      email +
+      "';";
     return new Promise((resolve, reject) => {
       this.connection.query(query, (err, res) => {
         winston.debug('Evaluated query: ' + query);

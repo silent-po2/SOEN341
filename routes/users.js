@@ -14,7 +14,7 @@ let chatController = require('../controllers/chatController');
  *
  * @param {Object} app - Express app that holds HTTP methods to handle requests.
  */
-module.exports = function(app) {
+module.exports = function (app) {
   app.get('/', userController.userHome);
 
   app.get('/login', userController.login);
@@ -82,7 +82,16 @@ module.exports = function(app) {
 
   app.post('/passwordreset', userController.passwordResetPost);
 
-  app.use('*', function(req, res) {
+  app.get('/passwordforgot', userController.passwordForgot);
+
+  app.post('/passwordforgot', userController.passwordForgotPost);
+
+  app.get('/passwordforgotredirect/:email', userController.passwordForgotRedirect);
+
+  app.post('/passwordforgotredirect/:email', userController.passwordForgotRedirectPost);
+
+  app.use('*', function (req, res) {
     res.locals.user = req.user || null;
   });
 };
+

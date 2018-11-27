@@ -6,6 +6,8 @@
 let User = require('../models/user');
 let db = require('../db/Database');
 let winston = require('../config/winston');
+const nodemailer = require('nodemailer');
+
 
 module.exports = {
   /**
@@ -14,7 +16,7 @@ module.exports = {
    * @param {Object} req - Request parameter
    * @param {Object} res - Response parameter
    */
-  userHome: function(req, res) {
+  userHome: function (req, res) {
     winston.info('GET home');
     if (req.session.user) {
       let user = new User().create(req.session.user);
@@ -39,7 +41,7 @@ module.exports = {
    * @param {Object} req - Request parameter
    * @param {Object} res - Response parameter
    */
-  getNotifications: function(req, res) {
+  getNotifications: function (req, res) {
     winston.info('GET notifications');
     if (req.session.user) {
       let user = new User().create(req.session.user);
@@ -69,7 +71,7 @@ module.exports = {
    * @param {Object} req - Request parameter
    * @param {Object} res - Response parameter
    */
-  readNotifications: function(req, res) {
+  readNotifications: function (req, res) {
     let user = new User().create(req.session.user);
     winston.info('GET notifications');
     db.removeNotifications(user.id).then(result => {
@@ -85,7 +87,7 @@ module.exports = {
    * @param {Object} req - Request parameter
    * @param {Object} res - Response parameter
    */
-  groups: function(req, res) {
+  groups: function (req, res) {
     res.render('../views/groups.pug', {
       user: req.session.user
     });
@@ -96,7 +98,7 @@ module.exports = {
    * @param {Object} req - Request parameter
    * @param {Object} res - Response parameter
    */
-  login: function(req, res) {
+  login: function (req, res) {
     winston.info('GET login');
     res.render('../views/login.pug', {
       title: 'Login'
@@ -109,7 +111,7 @@ module.exports = {
    * @param {Object} req - Request parameter
    * @param {Object} res - Response parameter
    */
-  loginPost: function(req, res) {
+  loginPost: function (req, res) {
     winston.info('POST login');
 
     let email = req.body.email.toLowerCase();
@@ -153,7 +155,7 @@ module.exports = {
    * @param {Object} req - Request parameter
    * @param {Object} res - Response parameter
    */
-  logout: function(req, res) {
+  logout: function (req, res) {
     winston.info('GET logout');
     if (req.session.user) {
       req.session.destroy();
@@ -169,7 +171,7 @@ module.exports = {
    * @param {Object} req - Request parameter
    * @param {Object} res - Response parameter
    */
-  profile: function(req, res) {
+  profile: function (req, res) {
     winston.info('GET profile');
     if (req.session.user) {
       let user = new User().create(req.session.user);
@@ -202,7 +204,7 @@ module.exports = {
    * @param {Object} req - Request parameter
    * @param {Object} res - Response parameter
    */
-  editProfilePost: function(req, res) {
+  editProfilePost: function (req, res) {
     if (req.session.user) {
       let userBeforeChange = req.session.user;
       let id = userBeforeChange.id;
@@ -253,7 +255,7 @@ module.exports = {
    * @param {*} req
    * @param {*} res
    */
-  resetPassword: function(req, res) {
+  resetPassword: function (req, res) {
     let user = new User().create(req.session.user);
     // TODO add newPassword2 check to make sure new password is enterered twice the right way
     // TODO do a checkbody on it newPassword and newPassowrd2
@@ -277,7 +279,7 @@ module.exports = {
    * @param {Object} req - Request parameter
    * @param {Object} res - Response parameter
    */
-  register: function(req, res) {
+  register: function (req, res) {
     winston.info('GET register');
     res.render('../views/register.pug', {
       title: 'Register'
@@ -290,7 +292,7 @@ module.exports = {
    * @param {Object} req - Request parameter
    * @param {Object} res - Response parameter
    */
-  registerPost: function(req, res) {
+  registerPost: function (req, res) {
     winston.info('POST register');
     let email = req.body.email.toLowerCase();
     let firstName = req.body.firstname;
@@ -345,7 +347,7 @@ module.exports = {
    * @param {Object} req - Request parameter
    * @param {Object} res - Response parameter
    */
-  contactsPost: function(req, res) {
+  contactsPost: function (req, res) {
     winston.info('POST contacts');
     let user = new User().create(req.session.user);
     let userArray = req.body.userId;
@@ -366,7 +368,7 @@ module.exports = {
           userArray.push(user.id);
           for (let i = 0; i < userArray.length; i++) {
             db.addGroupMember(groupId, gname, userArray[i])
-              .then(result => {})
+              .then(result => { })
               .catch(error => {
                 winston.error(error.message);
                 req.flash(
@@ -392,7 +394,7 @@ module.exports = {
    * @param {Object} req - Request parameter
    * @param {Object} res - Response parameter
    */
-  contacts: function(req, res) {
+  contacts: function (req, res) {
     winston.info('GET contacts');
     if (req.session.user) {
       let user = new User().create(req.session.user);
@@ -441,7 +443,7 @@ module.exports = {
    * @param {Object} req - Request parameter
    * @param {Object} res - Response parameter
    */
-  handleRequest: function(req, res) {
+  handleRequest: function (req, res) {
     if (req.session.user) {
       let handler = req.body.handler;
       if (handler == 'Accept') {
@@ -480,7 +482,7 @@ module.exports = {
    * @param {Object} req - Request parameter
    * @param {Object} res - Response parameter
    */
-  search: function(req, res) {
+  search: function (req, res) {
     if (req.session.user) {
       let searchString = req.body.Search;
       let user = new User().create(req.session.user);
@@ -531,7 +533,7 @@ module.exports = {
    * @param {Object} req - Request parameter
    * @param {Object} res - Response parameter
    */
-  searchUser: function(req, res) {
+  searchUser: function (req, res) {
     if (req.session.user) {
       let searchString = req.body.SearchUser;
       let user = new User().create(req.session.user);
@@ -613,7 +615,7 @@ module.exports = {
    * @param {Object} req - Request parameter
    * @param {Object} res - Response parameter
    */
-  othersProfile: function(req, res) {
+  othersProfile: function (req, res) {
     let firstName = req.body.FirstName;
     let lastName = req.body.LastName;
     let email = req.body.Email;
@@ -636,7 +638,7 @@ module.exports = {
    * @param {Object} req - Request parameter
    * @param {Object} res - Response parameter
    */
-  addRequest: function(req, res) {
+  addRequest: function (req, res) {
     let groupId = req.body.GroupId;
     let title = req.body.Title;
     let admin = req.body.Admin;
@@ -664,7 +666,7 @@ module.exports = {
    * @param {Object} req - Request parameter
    * @param {Object} res - Response parameter
    */
-  adduserGet: function(req, res) {
+  adduserGet: function (req, res) {
     if (req.session.user) {
       let user = new User().create(req.session.user);
       let tobeAdded = req.params.id;
@@ -693,7 +695,7 @@ module.exports = {
    * @param {Object} req - Request parameter
    * @param {Object} res - Response parameter
    */
-  adduserPost: function(req, res) {
+  adduserPost: function (req, res) {
     winston.info('POST adduser');
     if (req.session.user) {
       let tobeAdded = req.body.UserId;
@@ -752,7 +754,7 @@ module.exports = {
    * @param {Object} req - Request parameter
    * @param {Object} res - Response parameter
    */
-  editProfile: function(req, res) {
+  editProfile: function (req, res) {
     if (req.session.user) {
       res.render('editprofile', {
         title: 'Edit Profile',
@@ -769,7 +771,7 @@ module.exports = {
    * @param {Object} req - Request parameter
    * @param {Object} res - Response parameter
    */
-  passwordReset: function(req, res) {
+  passwordReset: function (req, res) {
     let user = new User().create(req.session.user);
     if (req.session.user) {
       db.getNotifications(user.id)
@@ -795,7 +797,7 @@ module.exports = {
    * @param {Object} req - Request parameter
    * @param {Object} res - Response parameter
    */
-  passwordResetPost: function(req, res) {
+  passwordResetPost: function (req, res) {
     if (req.session.user) {
       let user = new User().create(req.session.user);
       let oldP = req.body.oldPassword;
@@ -804,11 +806,11 @@ module.exports = {
 
       winston.debug(
         ' old password: ' +
-          oldP +
-          ' new password: ' +
-          newP +
-          ' new password2: ' +
-          newP2
+        oldP +
+        ' new password: ' +
+        newP +
+        ' new password2: ' +
+        newP2
       );
       // validate the inputs
       req.checkBody('oldPassword', 'Old password is required').notEmpty();
@@ -844,6 +846,141 @@ module.exports = {
       }
     } else {
       res.render('login');
+    }
+  },
+
+  /**
+   * Function that responds to a '/passwordforgot' GET request
+   *
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
+   */
+
+  passwordForgot: function (req, res) {
+    winston.info('GET passwordforgot');
+    res.render('../views/passwordforgot.pug', {
+      title: 'Forgot Password'
+    });
+  },
+
+  /**
+   * Function that responds to a '/passwordforgot' POST request
+   *
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
+   */
+  passwordForgotPost: function (req, res) {
+
+    let email = req.body.email;
+
+    winston.debug('User email: ' + email);
+
+    // Promise that resolves if email params are correct.
+    let verifyEmail = new Promise((resolve, reject) => {
+      req.checkBody('email', 'Email is required').notEmpty();
+      req.checkBody('email', 'Email is not valid').isEmail();
+      let err = req.validationErrors();
+      if (err) reject(new Error('Email not found.'));
+      resolve(null);
+    });
+    verifyEmail
+      .then(() => {
+        return db.confirmEmail(email);
+      })
+      .then(result => {
+        req.flash('success', 'An email reset link was sent to');
+
+        nodemailer.createTestAccount((err, account) => {
+          // create reusable transporter object using the default SMTP transport
+          let transporter = nodemailer.createTransport({
+            host: 'smtp.ethereal.email',
+            port: 587,
+            secure: false, // true for 465, false for other ports
+            auth: {
+              user: account.user, // generated ethereal user
+              pass: account.pass // generated ethereal password
+            }
+          });
+
+          // setup email data with unicode symbols
+          let mailOptions = {
+            from: '"Kiwi Application" <multanitanya786@gmail.com>', // sender address
+            to: email, // list of receivers
+            subject: 'Password Reset', // Subject line
+            //text: 'Hello world?', // plain text body
+            html: '<b><a href="http://localhost:3000/passwordforgotredirect/' + email + '"> Click here to reset password. </a></b>' // html body
+          };
+
+          // send mail with defined transport object
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              return console.log(error);
+            }
+            console.log('Message sent: %s', info.messageId);
+            // Preview only available when sending through an Ethereal account
+            console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+
+            // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+            // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+          });
+        });
+
+        return res.redirect('/passwordforgot');
+      })
+      .catch(error => {
+        winston.error(error.message);
+        req.flash('danger', 'No account with that email address exists.');
+        return res.status(401).render('../views/passwordforgot.pug');
+      });
+
+  },
+  /**
+   * Function that responds to a '/passwordforgotredirect' GET request
+   *
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
+   */
+  passwordForgotRedirect: function (req, res) {
+    winston.info('GET passwordforgotredirect');
+    res.render('../views/passwordforgotredirect.pug', {
+      title: 'forgot password'
+    });
+  },
+
+  /**
+   * Function that responds to a '/passwordforgotredirect' POST request
+   *
+   * @param {Object} req - Request parameter
+   * @param {Object} res - Response parameter
+   */
+  passwordForgotRedirectPost: function (req, res) {
+    let email = req.originalUrl.substring(req.originalUrl.indexOf("passwordforgotredirect/") + 23);
+    //let email = "tm@gmail.com"
+    let newP = req.body.newPassword;
+    let newP2 = req.body.repeatPassword;
+
+    winston.debug('email: ' + email + ' new password: ' + newP + ' new password2: ' + newP2);
+    // validate the inputs
+    req.checkBody('newPassword', 'New password is required').notEmpty();
+    req.checkBody('repeatPassword', 'Please repeat').notEmpty();
+    req.checkBody('repeatPassword', 'Passwords do not match').equals(newP);
+    let errors = req.validationErrors();
+    if (errors) {
+      reject(
+        new Error('Some parameters are not defined or passwords not equal.')
+      );
+      resolve();
+    } else {
+      db.forgotPassword(email, newP)
+        .then(result => {
+          req.flash('success', 'Password changed.');
+          return res.redirect('/login');
+        })
+        .catch(error => {
+          winston.debug(error.stack);
+          req.flash('danger', 'Fail to change password, please try again.');
+          res.status(401).render('../views/passwordforgotredirect.pug');
+        });
     }
   }
 };
