@@ -758,7 +758,7 @@ class Database {
           tempIdQuery = tempIdQuery + 'Id = ' + elem.UserId + ' or ';
         });
 
-        let idQuery = tempIdQuery.subString(0, tempIdQuery.length - 4);
+        let idQuery = tempIdQuery.substring(0, tempIdQuery.length - 4);
         newQuery = newQuery + idQuery + ';';
         this.connection.query(newQuery, (err, res) => {
           winston.debug('Evaluated query: ' + newQuery);

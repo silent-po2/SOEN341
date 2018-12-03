@@ -29,6 +29,8 @@ html
                           p6= prettyDate(chat[3])
                 if chat[1]==receiver
                   .outgoing_msg
+                    .outgoing_msg_img
+                      img(src='/pics/6.png', alt='hi' width='70' height='70')
                     .sent_msg
                       p= chat[0]
                       span.time_date

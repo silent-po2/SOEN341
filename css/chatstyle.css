@@ -184,61 +184,74 @@ h3 {
 
 /*@@@@@@@@@@@@@@@@@@@@@@@@@@ CHAT @@@@@@@@@@@@@@@@@@@@@@@@@ */
 
-.type_msg{
-    border-top: 1px solid #c4c4c4;
-    position: relative;
-  }
-  .received_msg {
-    font-family: "Helvetica";
-    display: inline-block;
-    color: #020202;
-    border-color: black;
-    font-size: 20px;
-    padding: 0 0 0 10px;
-    vertical-align: top;
-    width: 92%;
-  }
-  .received_withd_msg p {
-    font-family: "Helvetica";
-    background: rgb(243, 207, 154);
-    border-radius: 10px;
-    color: #000000;
-    border-color: black;
-    font-size: 20px;
-    margin: 0;
-    padding: 5px 10px 5px 12px;
-    width: 100%;
-  }
-  
-  .sent_msg p {
-    font-family: "Helvetica";
-    width: 46%;
-    background: rgb(150, 212, 150);
-    border-radius: 10px;
-    font-size: 20px;
-    border-color: black;
-    margin: 0;
-    padding: 5px 10px 5px 12px;
-    width: 100%;
-  }
-  .sent_msg p{
+.incoming_msg_img {
+  display: inline-block;
+  width: 6%;
+}
+.outgoing_msg_img {
+  /* display: inline-block; */
   float: right;
-  width: 46%;
-  }
-  .sent_msg {
-    font-family: "Helvetica";
-    display: inline-block;
-    color: #020202;
-    border-color: black;
-    font-size: 20px;
-    padding: 0 0 0 10px;
-    vertical-align: top;
-  }
-  .outgoing_msg {
-    overflow: hidden;
-    margin: 26px 0 26px;
-  }
-  .input_msg_write input {
+  width: 6%;
+}
+.received_msg {
+  font-family: "Helvetica";
+  display: inline-block;
+  color: #020202;
+  border-color: black;
+  font-size: 20px;
+  padding: 0 0 0 10px;
+  vertical-align: top;
+}
+.received_withd_msg p {
+  font-family: "Helvetica";
+  float: right;
+  background: rgb(243, 207, 154);
+  border-radius: 10px;
+  font-size: 20px;
+  border-color: black;
+  margin: 0;
+  padding: 5px 10px 5px 12px;
+  width: 100%;
+}
+
+.mesgs {
+  float: left;
+  padding: 30px 15px 0 25px;
+  width: 100%;
+}
+  
+.sent_msg p {
+  font-family: "Helvetica";
+  display: inline-block;    background: rgb(150, 212, 150);
+  border-radius: 10px;
+  font-size: 20px;
+  border-color: black;
+  margin: 0;
+  padding: 5px 10px 5px 12px;
+  width: 100%;
+}
+
+.sent_msg {
+  font-family: "Helvetica";
+  color: #020202;
+  float: right;
+  border-color: black;
+  font-size: 20px;
+  padding: 0 0 0 10px;
+  vertical-align: top;
+}
+
+.outgoing_msg {
+  overflow: hidden;
+  margin: 26px 0 26px;
+}
+
+.type_msg{
+  border-top: 1px solid #c4c4c4;
+  position: relative;
+}
+
+.input_msg_write input {
     background-color: rgb(245, 142, 8); /* Orange */
     font-family: "Helvetica";
     color: rgb(0, 0, 0);
@@ -248,7 +261,7 @@ h3 {
     width: 100%;
   }
   
-  .msg_send_btn {
+.msg_send_btn {
     background-color: rgb(245, 142, 8); /* Orange */
     font-family: "Helvetica";
     color: rgb(0, 0, 0);
@@ -256,95 +269,83 @@ h3 {
     font-size: 20px;
     font-weight: bold;
   }
-  .messaging {
+.messaging {
     padding: 0 0 0 0;
   }
-  .msg_history {
+.msg_history {
     height: 450px;
     overflow-y: auto;
   }
-  .inbox_people {
+
+
+.inbox_people {
     background: #f8f8f8 none repeat scroll 0 0;
     float: left;
     overflow: hidden;
     width: 40%;
     border-right: 1px solid #c4c4c4;
   }
-  .inbox_msg {
+.inbox_msg {
     border: 1px solid #c4c4c4;
     border-color: black;
     clear: both;
     overflow: hidden;
   }
-  .top_spac {
+.top_spac {
     margin: 20px 0 0;
   }
-  
-  .recent_heading {
+.recent_heading {
     float: left;
     width: 40%;
   }
-  .chat_ib h5 {
+.chat_ib h5 {
     font-size: 15px;
     color: #464646;
     margin: 0 0 8px 0;
   }
-  .chat_ib h5 span {
+.chat_ib h5 span {
     font-size: 13px;
     float: right;
   }
-  .chat_ib p {
+.chat_ib p {
     font-size: 14px;
     color: #989898;
     margin: auto;
   }
-  .chat_img {
+.chat_img {
     float: left;
     width: 11%;
   }
-  .chat_ib {
+.chat_ib {
     float: left;
     padding: 0 0 0 15px;
     width: 88%;
   }
   
-  .chat_people {
+.chat_people {
     overflow: hidden;
     clear: both;
   }
-  .chat_list {
+.chat_list {
     border-bottom: 1px solid #c4c4c4;
     margin: 0;
     padding: 18px 16px 10px;
   }
   
-  .active_chat {
+.active_chat {
     background: #ebebeb;
   }
   
-  .incoming_msg_img {
-    display: inline-block;
-    border-color: black;
-    width: 6%;
-  }
-  .time_date {
+.time_date {
     color: #747474;
     display: block;
     border-color: black;
     font-size: 12px;
     margin: 8px 0 0;
-  }
+}
   
-  .inbox_chat {
+.inbox_chat {
     height: 550px;
     overflow-y: scroll;
-  }
+ }
 
-  .received_withd_msg {
-    width: 57%;
-  }
-  .mesgs {
-    float: left;
-    padding: 30px 15px 0 25px;
-    width: 100%;
-  }
