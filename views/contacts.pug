@@ -45,7 +45,7 @@ block content
                     //- fields to enter group name and make group
                     .form-group
                         text(style= 'font-size: 1.5rem') Group Name:
-                        input#name.form-control(type='text', name='groupName', placeholder='Enter Name for Group')   
+                        input#name.form-control(type='text', name='groupName', placeholder='Enter Name for Group')                        
                     hr
                     //- loading the list of users
                     each user, i in userList
@@ -69,7 +69,6 @@ block content
                     if JSON.stringify(searchResult)=='[]'
                         text no result...
                     each user, i in searchResult
-                        //- showing mini profile for the users matching searching criteria
                         .row
                             .col-sm-3.col-md-2.col-5
                                 img.img.img-rounded.img-fluid(src='/pics/3.jpg', style='width:60%')
@@ -118,4 +117,4 @@ block content
                                 input.btn.btn-outline-success.my-2.my-sm-0(type='submit', name='handler', value='Accept',style='height: 40px; width: 100px')
                                 input.btn.btn-outline-success.my-2.my-sm-0(type='submit', name='handler', value='Reject',style='height: 40px; width: 100px')
                             
-                   
+                    hr

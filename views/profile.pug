@@ -1,6 +1,6 @@
 //- inspired by suneelrajpoot44 Bootsnipp https://bootsnipp.com/snippets/E1nNa
 extends layout
-//- User Profile page for current logged in user. Loading and displaying an array of users "userArr" info : ID, firstname lastname, type, email.    
+//- Profile page of other users. Loading and displaying an array of users "userArr" info : ID, firstname lastname, type, email.          
 block content
     br
     .container
@@ -29,7 +29,7 @@ block content
                                     li.nav-item
                                         a#basicInfo-tab.nav-link.active(data-toggle='tab', href='#basicInfo', role='tab', aria-controls='basicInfo', aria-selected='true') Profile
                                     li.nav-item
-                                        a#basicInfo-tab.nav-link(data-toggle='tab', href='#contacts', role='tab', aria-controls='contacts', aria-selected='true') Friends
+                                        a#basicInfo-tab.nav-link(data-toggle='tab', href='#contacts', role='tab', aria-controls='contacts', aria-selected='true') Contacts
                                     li.nav-item
                                         if userArr[4] == 'T'
                                             a#connectedServices-tab.nav-link(data-toggle='tab', href='#class_children', role='tab', aria-controls='class_children', aria-selected='false') Class
@@ -64,14 +64,12 @@ block content
                                                 if (userArr[4]=='T')
                                                     p Teacher
                                         hr
-                                        //-  editing profile link
                                         .row
                                             .col-sm-3.col-md-2.col-5
                                                 label(style='font-weight:bold;') Edit
                                             .col-md-8.col-6
                                                 a(href='editprofile') Edit File   
                                         hr
-                                        //-  password reset link
                                         .row
                                             .col-sm-3.col-md-2.col-5
                                                 label(style='font-weight:bold;') Password Reset
@@ -86,5 +84,8 @@ block content
                                                 .col-md-8.col-6
                                                     h3= user[1] + ' ' + user[2]
                                                 button.btn.btn-primary.btn-sm(type='button',onclick="window.open('/chat/"+user[0]+"', 'newwindow', 'width=600,height=650'); return false;") Send a message
+                                                    
+
                                             hr
-                                   
+                                        
+                                    #class_children.tab-pane.fade(role='tabpanel', aria-labelledby='class_children-tab')
