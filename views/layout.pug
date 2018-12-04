@@ -58,8 +58,6 @@ html(lang='en')
     //main.container(role='main')
     //  .starter-template
     .container
-    
-      //- != messages('message', locals)
       if errors
         each error, i in errors
           div(class="alert alert-danger") #{error.msg}

@@ -8,15 +8,12 @@ block content
   br
   h3 Dashboard
   .container
-
     .row
-      //- .column.left
-      //- 
-      
       .column.middle
         .container
           form(action='/dashboard', method='POST', name='dash', enctype='multipart/form-data',style='height: 150px; width: 1080px')
             #form-group
+            //- Jquery imported for tagging feature.
             script(src='/node_modules/jquery/dist/jquery.js')
             script(src='/node_modules/jquery/dist/jquery.min.js')
             script(src='/node_modules/bootstrap-suggest/node_modules/bootstrap/dist/js/bootstrap.min.js')
@@ -43,10 +40,12 @@ block content
               })
 
             .file-field.input-field
+              //- uploading pictures button
               input(name='myImage', type='file')
             input.btn.btn-success(type='submit', name= 'posting' value='Post',style='height: 40px; width: 95px')
           hr
         each post, i in postArr
+          //- displaying dashboard posts 
           .card(style='height: 330px; width: 1080px')
             .card-body
               .row

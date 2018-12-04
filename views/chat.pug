@@ -18,6 +18,7 @@ html
           .mesgs
             .msg_history
               each chat, i in chatList
+                //- loading and displaying chat msgs. if msgs' id is current user's id, shown as sent, else shown as received
                 if chat[2]==receiver
                   .incoming_msg
                     .incoming_msg_img

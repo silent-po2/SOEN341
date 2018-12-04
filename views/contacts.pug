@@ -7,6 +7,7 @@ block content
     br
     br
     .container
+        //- 5 sections for private msg; making groups; search; admin
         ul#myTab.nav.nav-tabs.mb-4(role='tablist')
             li.nav-item
                 a#basicInfo-tab.nav-link(data-toggle='tab', href='#privateMessages', role='tab', aria-controls='privateMessages', aria-selected='true') Private
@@ -20,6 +21,7 @@ block content
                 a#basicInfo-tab.nav-link(data-toggle='tab', href='#admin', role='tab', aria-controls='admin', aria-selected='true') Admin
         #myTabContent.tab-content.ml-1
             #privateMessages.tab-pane.fade.show(role='tabpanel', aria-labelledby='privateMessages-tab')
+                //- loading the list of users
                 each user, i in userList
                     if userArr[0]!=user[0]
                         .row
@@ -32,6 +34,7 @@ block content
             
             #groups.tab-pane.fade.show(role='tabpanel', aria-labelledby='groups-tab')
                 form(action='/contacts', method='post')
+                    //- loading Group list
                     each id, i in groupList
                         .row
                             .col-md-8.col-6
@@ -39,14 +42,12 @@ block content
                         hr
             #makeGroup.tab-pane.fade.show(role='tabpanel', aria-labelledby='makeGroup-tab')   
                 form#groupForm.groupForm(method='post', action='/contacts')
+                    //- fields to enter group name and make group
                     .form-group
                         text(style= 'font-size: 1.5rem') Group Name:
                         input#name.form-control(type='text', name='groupName', placeholder='Enter Name for Group')                        
-                    //- hr
-                    //- .row
-                    //-     input(type='checkbox', name='myId', value=userArr[0], checked='')
-                    //-     text= userArr[2] + ' ' + userArr[3] 
                     hr
+                    //- loading the list of users
                     each user, i in userList
                         if userArr[0]!=user[0]
                             .row
@@ -63,11 +64,11 @@ block content
                     input.form-control.mr-sm-2(type='text',name='SearchUser', placeholder='Search', aria-label='Search')
                     button.btn.btn-outline-success.my-2.my-sm-0(type='submit',style='height: 40px; width: 130px') Search
                 hr
+                //- showing search result
                 if searchResult
                     if JSON.stringify(searchResult)=='[]'
                         text no result...
                     each user, i in searchResult
-                        //- if userArr[0]!=user[0]
                         .row
                             .col-sm-3.col-md-2.col-5
                                 img.img.img-rounded.img-fluid(src='/pics/3.jpg', style='width:60%')
@@ -102,6 +103,7 @@ block content
                    
                 
             #admin.tab-pane.fade.show(role='tabpanel', aria-labelledby='Admin-tab')
+                //- loading the add-group requsts
                 each request, i in requestList
                     .row
                         .col-md-8.col-6
@@ -116,29 +118,3 @@ block content
                                 input.btn.btn-outline-success.my-2.my-sm-0(type='submit', name='handler', value='Reject',style='height: 40px; width: 100px')
                             
                     hr
-                                            //- .row
-                                            //-     .col-sm-3.col-md-2.col-5
-                                            //-         label(style='font-weight:bold;') Something
-                                            //-     .col-md-8.col-6
-                                            //-         | Something
-                                            //- hr
-                                            //- .row
-                                            //-     .col-sm-3.col-md-2.col-5
-                                            //-         label(style='font-weight:bold;') Something
-                                            //-     .col-md-8.col-6
-                                            //-         | Something
-                                            
-                
-//- br
-//- h2 #{title}
-//- each item, i in userArr
-//-     p= item
-    //-   h4 Group Chat
-    //-   form(action='/action_page.php', method='get')
-    //-     each user, i in userList
-    //-       .row
-    //-           .col-md-8.col-6
-    //-               input(type='checkbox', name='vehicle', value='Bike')
-    //-               text= user[1] + ' ' + user[2]
-    //-       hr
-    //-     input.btn.btn-primary(type='submit', value='Group Chat')
