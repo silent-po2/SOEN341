@@ -1,6 +1,6 @@
 //- inspired by suneelrajpoot44 Bootsnipp https://bootsnipp.com/snippets/E1nNa
 extends layout
-    
+//- Profile page of other users. Loading and displaying an array of users "userArr" info : ID, firstname lastname, type, email.      
 block content
     br
     .container
@@ -13,21 +13,13 @@ block content
                                 .image-container
                                     img#imgProfile.img-thumbnail(src='/pics/profile.png', style='width: 150px; height: 150px')
                                     .middle
-                                        //- input#btnChangePicture.btn.btn-secondary(type='button', value='Change')
-                                        //- input#profilePicture(type='file', style='display: none;', name='file')
                                 .userData.ml-3
                                     h2.d-block(style='font-size: 2rem; font-weight: bold')
                                         br
                                         br
                                         p= firstName + ' ' + lastName
-                                        
                                     h6.d-block
-                                        //- a(href='javascript:void(0)') 1,500
-                                        //- |  Video Uploads
                                     h6.d-block
-                                        //- a(href='javascript:void(0)') 300
-                                        //- |  Blog Posts
-                                
                         .row
                             .col-12
                                 ul#myTab.nav.nav-tabs.mb-4(role='tablist')

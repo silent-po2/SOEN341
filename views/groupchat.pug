@@ -18,6 +18,7 @@ html
           .mesgs
             .msg_history
               each groupchat, i in groupchatList
+                //- loading and displaying chat msgs. if msgs' id is current user's id, shown as sent, else shown as received
                 if groupchat[2]!=sender
                   .incoming_msg
                     .received_msg

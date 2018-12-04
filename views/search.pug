@@ -5,6 +5,7 @@ block content
     h3 Search Result
     br
     .container
+        //- search result of  matching users
         each user, i in userArr
                         .row
                             .col-sm-3.col-md-2.col-5
@@ -22,6 +23,7 @@ block content
                                     hr
                                     input.btn.btn-outline-success.my-2.my-sm-0(type='submit', value='Go to Profile',style='height: 40px; width: 150px')
                             hr
+        //- search result of  matching groups                    
         each group, i in groupArr
                         .row
                             .col-md-8.col-6
